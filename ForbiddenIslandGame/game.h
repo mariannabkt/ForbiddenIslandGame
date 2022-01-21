@@ -17,10 +17,10 @@ class Game
 	int m_cur_player = 0;
 	Player* m_active_player;
 
-	list<Player*> m_players;
-	map<player_role, DemoPlayer*> m_demo_players;
-	map<button_func, Button*> m_buttons;
-	list<Event*> m_events;
+	list<Player*> m_players = list<Player*>();
+	map<player_role, DemoPlayer*> m_demo_players = map<player_role, DemoPlayer*>();
+	map<button_func, Button*> m_buttons = map<button_func, Button*>();
+	list<Event*> m_events = list<Event*>();
 
 	Game() {}
 	void drawINIT();
