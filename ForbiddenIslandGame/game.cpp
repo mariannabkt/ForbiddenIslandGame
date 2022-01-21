@@ -362,17 +362,38 @@ void Game::processEvents()
 */
 void Game::clearCollections()
 {
-	while (!m_players.empty()) {
-		delete m_players.front();
-		m_players.pop_front();
-	}
-
-	for (auto demo : m_demo_players)
-		delete demo.second;
+	for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
 	m_demo_players.clear();
-	 
 
-	for (auto button : m_buttons)
+	for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void{ delete item.second; });
+	m_demo_players.clear();
+
+	for_each(m_buttons.begin(), m_buttons.end(), [](auto item)->void{ delete item.second; });
+	m_buttons.clear();
+
+	for_each(m_events.begin(), m_events.end(), [](auto item)->void{ delete item; });
+	m_events.clear();
+
+	/*m_players.clear();
+	delete & m_players;
+
+	m_demo_players.clear();
+	delete & m_demo_players;
+
+	m_buttons.clear();
+	delete& m_buttons;
+
+	m_events.clear();
+	delete & m_events;*/
+
+
+	/*std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
+	while (itr != m_demo_players.end()) {
+		m_demo_players.get_allocator().destroy(itr._Ptr);
+		m_demo_players.erase(itr++);  
+	}*/
+
+	/*for (auto button : m_buttons)
 		delete button.second;
 	m_buttons.clear(); 
 
@@ -380,7 +401,7 @@ void Game::clearCollections()
 	while (!m_events.empty()) {
 		delete m_events.front();
 		m_events.pop_front();
-	}
+	}*/
 }
 
 Game::~Game() 

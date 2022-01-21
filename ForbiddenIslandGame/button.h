@@ -1,6 +1,6 @@
 #pragma once
 #include "defines.h"
-#include <sgg/graphics.h>
+#include "sgg/graphics.h"
 
 using namespace graphics;
 
