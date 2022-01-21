@@ -28,9 +28,9 @@ void DemoPlayer::draw()
 {
 	Game* game = Game::getInstance();
 
-	DemoPlayer* explorer = game->getDemoPlayerMap().find(EXPLORER)->second;
-	DemoPlayer* diver = game->getDemoPlayerMap().find(DIVER)->second;
-	DemoPlayer* pilot = game->getDemoPlayerMap().find(PILOT)->second;
+	DemoPlayer* explorer = game->getDemoPlayerMap().at(EXPLORER);
+	DemoPlayer* diver = game->getDemoPlayerMap().at(DIVER);
+	DemoPlayer* pilot = game->getDemoPlayerMap().at(PILOT);
 
 	//   --- DRAW PLAYER'S BACK LIGHT ---
 	explorer->drawBackLight(-7.0f, 4.0f);
@@ -64,12 +64,6 @@ void DemoPlayer::update()
 		{
 			setActive(true);
 			game->setActivePlayer(this);
-
-			// push selected demo player in the player list
-			if (game->getPlayerList()->empty() || (game->getCurPlayer() && game->getPlayerList()->size() == 1))
-				game->getPlayerList()->push_back(this);
-			else
-				game->getPlayerList()->emplace_back(this);
 
 			// disable other players
 			for (auto dp : game->getDemoPlayerMap())

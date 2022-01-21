@@ -202,15 +202,9 @@ void Game::drawCHOOSE()
 	br.texture = CHOOSE_PLAYER_BACKGROUND;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
-	string player;
-	if (!getCurPlayer())
-		player = "PLAYER 1";
-	else
-		player = "PLAYER 2";
-
 	SETCOLOR(br.fill_color, 0.5f, 0.2f, 0.2f);
 	graphics::setFont(IMMORTAL_FONT);
-	graphics::drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, player + to_string(m_players.size()), br);
+	graphics::drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER " + to_string(getCurPlayer()+1), br);
 
 	for (auto p : m_demo_players)
 		p.second->draw();
@@ -362,17 +356,11 @@ void Game::processEvents()
 */
 void Game::clearCollections()
 {
-	for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
+	/*for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
 	m_demo_players.clear();
-
-	for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void{ delete item.second; });
-	m_demo_players.clear();
-
-	for_each(m_buttons.begin(), m_buttons.end(), [](auto item)->void{ delete item.second; });
-	m_buttons.clear();
 
 	for_each(m_events.begin(), m_events.end(), [](auto item)->void{ delete item; });
-	m_events.clear();
+	m_events.clear();*/
 
 	/*m_players.clear();
 	delete & m_players;
@@ -386,22 +374,51 @@ void Game::clearCollections()
 	m_events.clear();
 	delete & m_events;*/
 
+	for (auto player : m_players)
+		delete player;
+	delete & m_players;
 
-	/*std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
+	/*for (auto demo : m_demo_players)
+		delete demo.second;
+	delete & m_demo_players;
+
+	for (auto button : m_buttons)
+		delete button.second;
+	delete & m_buttons;*/
+
+	/*for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void { delete item.second; item.erase()});
+	m_demo_players.clear();
+
+	for_each(m_buttons.begin(), m_buttons.end(), [](auto item)->void { delete item.second; });
+	m_buttons.clear();*/
+
+	/*for (auto event : m_events)
+		delete event;
+	delete & m_events;*/
+
+	
+
+	std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
 	while (itr != m_demo_players.end()) {
 		m_demo_players.get_allocator().destroy(itr._Ptr);
 		m_demo_players.erase(itr++);  
-	}*/
+	}
+
+	std::map<button_func, Button*>::iterator it = m_buttons.begin();
+	while (it != m_buttons.end()) {
+		m_buttons.get_allocator().destroy(it._Ptr);
+		m_buttons.erase(it++);
+	}
 
 	/*for (auto button : m_buttons)
 		delete button.second;
-	m_buttons.clear(); 
+	m_buttons.clear(); */
 
 
 	while (!m_events.empty()) {
 		delete m_events.front();
 		m_events.pop_front();
-	}*/
+	}
 }
 
 Game::~Game() 

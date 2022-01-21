@@ -55,8 +55,8 @@ public:
 	void setActivePlayer(Player* pl) { m_active_player = pl; }
 	void changePlayer() { m_cur_player == 0 ? m_cur_player++ : m_cur_player--; }
 
-	list<Player*>* getPlayerList() { return &m_players; }
-	map<player_role, DemoPlayer*> getDemoPlayerMap() { return m_demo_players; }
-	map<button_func, Button*> getButtonMap() { return m_buttons; }
-	list<Event*> getEventList() { return m_events; }
+	list<Player*>& getPlayerList() { return m_players; }
+	map<player_role, DemoPlayer*>& getDemoPlayerMap() { return m_demo_players; }
+	map<button_func, Button*>& getButtonMap() { return m_buttons; }
+	list<Event*>& getEventList() { return m_events; }
 };

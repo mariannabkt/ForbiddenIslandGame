@@ -118,16 +118,25 @@ void Button::updateButton()
 
 			case OK:
 
-				if (!game->getCurPlayer() && !game->getPlayerList()->empty())
+				if (!game->getCurPlayer())
 				{
 					for (auto dp : game->getDemoPlayerMap())
 						if (dp.second == game->getActivePlayer())
+						{
 							dp.second->setSelected(true);
-					
+							game->getPlayerList().push_back(dp.second);
+						}
 					game->changePlayer();
 				}
-				else if (game->getCurPlayer() && game->getPlayerList()->size() == 2)
+				else if (game->getCurPlayer())
 				{ 
+					for (auto dp : game->getDemoPlayerMap())
+						if (dp.second == game->getActivePlayer())
+						{
+							dp.second->setSelected(true);
+							game->getPlayerList().push_back(dp.second);
+						}
+					game->getDemoPlayerMap().clear();
 					game->changePlayer();
 					game->setState(PLAYING);
 					game->init();

@@ -91,7 +91,7 @@ void Player::update()
 			game->setActivePlayer(this);
 			
 			// disable other players
-			for (auto player : *game->getPlayerList())
+			for (auto player : game->getPlayerList())
 			{
 				if (player != game->getActivePlayer())
 					player->setActive(false);
