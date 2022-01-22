@@ -1,6 +1,7 @@
 #include "game.h"
 #include "button.h"
 #include "defines.h"
+#include "tile.h"
 #include <sgg/graphics.h>
 
 using namespace graphics;
@@ -236,9 +237,15 @@ void Game::drawPLAYING()
 	br.texture = PLAYING_BACKGROUND;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
-	SETCOLOR(br.fill_color, 0.5f, 0.2f, 0.2f);
-	setFont(IMMORTAL_FONT);
-	drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, to_string(m_players.size()), br);
+	vector<Tile*>::iterator itr = m_tiles.begin();
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 6; j++)
+			if (Tile::getArray()[i][j])
+			{
+				Tile* temp = *itr;
+				temp->draw((i + 2.5f) ,   (j + 5.5f) );
+				++itr;
+			}
 
 	for (auto p : m_players)
 		p->drawPlayer();
@@ -287,6 +294,8 @@ void Game::update() {
 		updateButtons();
 		for (auto p : m_players)
 			p->updatePlayer();
+		for (auto t : m_tiles)
+			t->update();
 		processEvents();
 		break;
 	}

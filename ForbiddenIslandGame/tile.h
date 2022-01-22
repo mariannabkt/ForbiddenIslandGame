@@ -1,6 +1,8 @@
 #pragma once
 #include "defines.h"
 
+static int m_tiles_array[4][6] = { {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0} };
+
 class Tile
 {
 	string m_image_path;
@@ -11,14 +13,14 @@ class Tile
 	bool m_treasureTaken = false;
 	bool m_hasPlayer = false;
 
-	int m_tiles_array[4][6] = { {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0} };
-
-	
-
 public:
 
-	Tile(string tile_name);
+	Tile(string tile_name); 
 	~Tile() {};
 
-	int* getTileArray() { return *m_tiles_array; }
+
+	static int(&getArray())[4][6] { return m_tiles_array; }
+
+	void draw(float x, float y);
+	void update();
 };
