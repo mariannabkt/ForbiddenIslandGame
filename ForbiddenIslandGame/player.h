@@ -25,8 +25,8 @@ public:
 	Player(player_role r);
 
 
-	virtual void draw();
-	virtual void update();
+	void drawPlayer();
+	void updatePlayer();
 
 	float getPosX() { return m_player_posX; }
 	float getPosY() { return m_player_posY; }

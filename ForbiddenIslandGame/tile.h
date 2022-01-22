@@ -3,10 +3,22 @@
 
 class Tile
 {
+	string m_image_path;
 	tile_type m_type;
-	bool m_sunken;
-	bool m_flooded;
-	bool m_hasTreasure;
-	bool m_treasureTaken;
-	bool m_hasPlayer;
+	bool m_sunken = false;;
+	bool m_flooded = false;;
+	bool m_hasTreasure = false;
+	bool m_treasureTaken = false;
+	bool m_hasPlayer = false;
+
+	int m_tiles_array[4][6] = { {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0} };
+
+	
+
+public:
+
+	Tile(string tile_name);
+	~Tile() {};
+
+	int* getTileArray() { return *m_tiles_array; }
 };

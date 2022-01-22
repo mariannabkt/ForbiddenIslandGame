@@ -53,22 +53,23 @@ void Player::drawIcon(float center_width_offset, float center_height_offset, flo
 void Player::drawPawn(float center_width_offset, float center_height_offset)
 {
 	Brush pawn;
-	pawn.outline_opacity = 0.0f;
 	pawn.texture = m_pawn_path;
-	drawRect(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset, PLAYER_SIZE, PLAYER_SIZE, pawn);
+	pawn.outline_opacity = 0.0f;
+	drawRect(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
+	setCords(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset);
 }
 
 
-void Player::draw() 
+void Player::drawPlayer() 
 {
-	//   --- DRAW PLAYER'S BACK LIGHT ---
+	//--- DRAW PLAYER'S BACK LIGHT ---
 	drawBackLight(0.0f, 0.0f);
 
-	//   --- DRAW PLAYER'S PAWN ---
+	//--- DRAW PLAYER'S PAWN ---
 	drawPawn(0.0f, 0.0f);
 }
 
-void Player::update() 
+void Player::updatePlayer() 
 {
 	Game* game = Game::getInstance();
 
@@ -91,7 +92,7 @@ void Player::update()
 			game->setActivePlayer(this);
 			
 			// disable other players
-			for (auto player : game->getPlayerList())
+			for (auto player : game->getPlayers())
 			{
 				if (player != game->getActivePlayer())
 					player->setActive(false);

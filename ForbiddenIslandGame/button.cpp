@@ -120,23 +120,24 @@ void Button::updateButton()
 
 				if (!game->getCurPlayer())
 				{
-					for (auto dp : game->getDemoPlayerMap())
+					for (auto dp : game->getDemoPlayers())
 						if (dp.second == game->getActivePlayer())
 						{
 							dp.second->setSelected(true);
-							game->getPlayerList().push_back(dp.second);
+							game->getPlayers().push_back(dp.second);
+							break;
 						}
 					game->changePlayer();
 				}
 				else if (game->getCurPlayer())
 				{ 
-					for (auto dp : game->getDemoPlayerMap())
+					for (auto dp : game->getDemoPlayers())
 						if (dp.second == game->getActivePlayer())
 						{
 							dp.second->setSelected(true);
-							game->getPlayerList().push_back(dp.second);
+							game->getPlayers().push_back(dp.second);
 						}
-					game->getDemoPlayerMap().clear();
+					DemoPlayer::setDefault();
 					game->changePlayer();
 					game->setState(PLAYING);
 					game->init();

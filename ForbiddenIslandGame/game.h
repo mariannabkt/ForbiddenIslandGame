@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include <map>
 #include <list>
 #include <vector>
@@ -7,6 +8,7 @@
 #include "demoPlayer.h"
 #include "button.h"
 #include "event.h"
+#include "tile.h"
 
 class Game 
 {
@@ -17,10 +19,11 @@ class Game
 	int m_cur_player = 0;
 	Player* m_active_player;
 
-	list<Player*> m_players = list<Player*>();
+	vector<Player*> m_players = vector<Player*>();
 	map<player_role, DemoPlayer*> m_demo_players = map<player_role, DemoPlayer*>();
 	map<button_func, Button*> m_buttons = map<button_func, Button*>();
 	list<Event*> m_events = list<Event*>();
+	vector<Tile*> m_tiles = vector<Tile*>();
 
 	Game() {}
 	void drawINIT();
@@ -55,8 +58,9 @@ public:
 	void setActivePlayer(Player* pl) { m_active_player = pl; }
 	void changePlayer() { m_cur_player == 0 ? m_cur_player++ : m_cur_player--; }
 
-	list<Player*>& getPlayerList() { return m_players; }
-	map<player_role, DemoPlayer*>& getDemoPlayerMap() { return m_demo_players; }
-	map<button_func, Button*>& getButtonMap() { return m_buttons; }
-	list<Event*>& getEventList() { return m_events; }
+	vector<Player*>& getPlayers() { return m_players; }
+	map<player_role, DemoPlayer*>& getDemoPlayers() { return m_demo_players; }
+	map<button_func, Button*>& getButtons() { return m_buttons; }
+	list<Event*>& getEvents() { return m_events; }
+	vector<Tile*>& getTiles() { return m_tiles; }
 };

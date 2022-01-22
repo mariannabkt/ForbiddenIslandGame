@@ -16,10 +16,11 @@ Game* Game::m_instance = nullptr;
 */
 void Game::init() 
 {
+	
 	switch (m_state)
 	{
 	case INIT:
-
+	{
 		preloadBitmaps(ASSET_PATH);
 
 		m_buttons[EXIT] = new Button(EXIT);
@@ -28,8 +29,20 @@ void Game::init()
 		m_buttons[NEXT] = new Button(NEXT);
 		m_buttons[PREV] = new Button(PREV);
 		m_buttons[OK] = new Button(OK);
-		break;
 
+		m_demo_players[EXPLORER] = new DemoPlayer(EXPLORER);
+		m_demo_players[DIVER] = new DemoPlayer(DIVER);
+		m_demo_players[PILOT] = new DemoPlayer(PILOT);
+
+		string tile_names[20] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
+			VRAXOS, GEFIRA, KIPOS_PSI, KIPOS_KRA, NAOS_ILIOY, NAOS_FEGGARIOY,PALATI_PAL,
+			PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO };
+
+		for (auto t : tile_names)
+			m_tiles.push_back(new Tile(t));
+
+		break;
+	}
 	case MAIN_MENU:
 
 		stopMusic(1);
@@ -59,10 +72,6 @@ void Game::init()
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
 
-		m_demo_players[EXPLORER] = new DemoPlayer(EXPLORER);
-		m_demo_players[DIVER] = new DemoPlayer(DIVER);
-		m_demo_players[PILOT] = new DemoPlayer(PILOT);
-
 		for (auto b : m_buttons)
 			b.second->disable();
 		m_buttons[EXIT]->enable();
@@ -79,7 +88,7 @@ void Game::init()
 		m_buttons[EXIT]->enable();
 		break;
 	}
-	//addEvent(new FadeFromBlackEvent);
+	//addEvent(new FadeFromBlackEvent());
 }
 
 
@@ -203,11 +212,11 @@ void Game::drawCHOOSE()
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
 	SETCOLOR(br.fill_color, 0.5f, 0.2f, 0.2f);
-	graphics::setFont(IMMORTAL_FONT);
-	graphics::drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER " + to_string(getCurPlayer()+1), br);
+	setFont(IMMORTAL_FONT);
+	drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER " + to_string(getCurPlayer()+1), br);
 
 	for (auto p : m_demo_players)
-		p.second->draw();
+		p.second->drawDemoPlayer();
 
 	m_buttons[EXIT]->drawButton(13.0f, -7.0f, 1.0f, 1.0f);
 	m_buttons[OK]->drawButton(11.0f, 6.0f, 1.0f, 1.0f);
@@ -227,8 +236,12 @@ void Game::drawPLAYING()
 	br.texture = PLAYING_BACKGROUND;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
+	SETCOLOR(br.fill_color, 0.5f, 0.2f, 0.2f);
+	setFont(IMMORTAL_FONT);
+	drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, to_string(m_players.size()), br);
+
 	for (auto p : m_players)
-		p->draw();
+		p->drawPlayer();
 
 	m_buttons[EXIT]->drawButton(13.0f, -7.0f, 1.0f, 1.0f);
 }
@@ -265,7 +278,7 @@ void Game::update() {
 	
 		updateButtons();
 		for (auto player : m_demo_players)
-			player.second->update();
+			player.second->updateDemoPlayer();
 		processEvents();
 		break;
 
@@ -273,7 +286,8 @@ void Game::update() {
 
 		updateButtons();
 		for (auto p : m_players)
-			p->update();
+			p->updatePlayer();
+		processEvents();
 		break;
 	}
 }
@@ -287,10 +301,8 @@ void Game::update() {
 void Game::updateButtons()
 {
 	for (auto button : m_buttons)
-	{
 		if (button.second->isActive())
-		button.second->updateButton();
-	}
+			button.second->updateButton();
 }
 
 /*_________________________________
@@ -331,7 +343,7 @@ void Game::releaseInstance()
 */
 void Game::addEvent(Event* event)
 {
-	m_events.push_front(event);
+	m_events.push_back(event);
 	event->draw();
 }
 
@@ -356,12 +368,6 @@ void Game::processEvents()
 */
 void Game::clearCollections()
 {
-	/*for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
-	m_demo_players.clear();
-
-	for_each(m_events.begin(), m_events.end(), [](auto item)->void{ delete item; });
-	m_events.clear();*/
-
 	/*m_players.clear();
 	delete & m_players;
 
@@ -374,56 +380,62 @@ void Game::clearCollections()
 	m_events.clear();
 	delete & m_events;*/
 
-	for (auto player : m_players)
-		delete player;
-	delete & m_players;
+	
+	/*for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
+	m_demo_players.clear();
 
-	/*for (auto demo : m_demo_players)
-		delete demo.second;
-	delete & m_demo_players;
+	for_each(m_events.begin(), m_events.end(), [](auto item)->void{ delete item; });
+	m_events.clear();
 
-	for (auto button : m_buttons)
-		delete button.second;
-	delete & m_buttons;*/
-
-	/*for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void { delete item.second; item.erase()});
+	for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void { delete item.second; });
 	m_demo_players.clear();
 
 	for_each(m_buttons.begin(), m_buttons.end(), [](auto item)->void { delete item.second; });
 	m_buttons.clear();*/
-
-	/*for (auto event : m_events)
-		delete event;
-	delete & m_events;*/
-
 	
 
-	std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
+	/*std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
 	while (itr != m_demo_players.end()) {
-		m_demo_players.get_allocator().destroy(itr._Ptr);
 		m_demo_players.erase(itr++);  
 	}
 
 	std::map<button_func, Button*>::iterator it = m_buttons.begin();
 	while (it != m_buttons.end()) {
-		m_buttons.get_allocator().destroy(it._Ptr);
 		m_buttons.erase(it++);
+	}*/
+
+
+	while (!m_players.empty()) {
+		delete m_players.back();
+		m_players.pop_back();
 	}
-
-	/*for (auto button : m_buttons)
-		delete button.second;
-	m_buttons.clear(); */
-
 
 	while (!m_events.empty()) {
-		delete m_events.front();
-		m_events.pop_front();
+		delete m_events.back();
+		m_events.pop_back();
 	}
+
+	while (!m_tiles.empty()) {
+		delete m_tiles.back();
+		m_tiles.pop_back();
+	}
+
+	for (auto demo : m_demo_players) {
+		delete demo.second;
+		m_demo_players.erase(demo.first);
+	}
+
+	for (auto button : m_buttons) {
+		delete button.second;
+		m_buttons.erase(button.first);
+	}
+	
 }
 
 Game::~Game() 
 {
 	clearCollections();
+	delete m_active_player;
 }
 
 

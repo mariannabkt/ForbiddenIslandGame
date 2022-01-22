@@ -24,13 +24,13 @@ void DemoPlayer::drawBackLight(float center_width_offset, float center_height_of
 	drawDisk(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset, DEMO_PLAYER_SIZE + 0.1f, back);
 }
 
-void DemoPlayer::draw()
+void DemoPlayer::drawDemoPlayer()
 {
 	Game* game = Game::getInstance();
 
-	DemoPlayer* explorer = game->getDemoPlayerMap().at(EXPLORER);
-	DemoPlayer* diver = game->getDemoPlayerMap().at(DIVER);
-	DemoPlayer* pilot = game->getDemoPlayerMap().at(PILOT);
+	DemoPlayer* explorer = game->getDemoPlayers()[EXPLORER];
+	DemoPlayer* diver = game->getDemoPlayers()[DIVER];
+	DemoPlayer* pilot = game->getDemoPlayers()[PILOT];
 
 	//   --- DRAW PLAYER'S BACK LIGHT ---
 	explorer->drawBackLight(-7.0f, 4.0f);
@@ -43,7 +43,7 @@ void DemoPlayer::draw()
 	pilot->drawIcon(7.0f, 4.0f, 7.0f, 4.0f);
 }
 
-void DemoPlayer::update()
+void DemoPlayer::updateDemoPlayer()
 {
 	Game* game = Game::getInstance();
 
@@ -66,7 +66,7 @@ void DemoPlayer::update()
 			game->setActivePlayer(this);
 
 			// disable other players
-			for (auto dp : game->getDemoPlayerMap())
+			for (auto dp : game->getDemoPlayers())
 			{
 				if (dp.second != game->getActivePlayer())
 					dp.second->setActive(false);
@@ -81,3 +81,15 @@ bool DemoPlayer::contains(float x, float y)
 {
 	return (distance(x, y, m_player_posX, m_player_posY) < DEMO_PLAYER_SIZE);
 }
+
+void DemoPlayer::setDefault()
+{
+	Game* game = Game::getInstance();
+	for (auto dp : game->getDemoPlayers())
+	{
+		dp.second->setActive(false);
+		dp.second->setSelected(false);
+	}
+}
+
+
