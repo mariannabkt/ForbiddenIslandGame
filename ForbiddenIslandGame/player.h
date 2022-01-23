@@ -1,5 +1,6 @@
 #pragma once
 #include "defines.h"
+#include "tile.h"
 
 class Player 
 {
@@ -15,10 +16,11 @@ protected:
 	player_role m_role;
 	string m_icon_path;
 	string m_pawn_path;
+	Tile* m_start_tile;
 
-	virtual void drawBackLight(float center_width_offset, float center_height_offset);
-	void drawIcon(float center_width_offset, float center_height_offset, float width, float height);
-	void drawPawn(float center_width_offset, float center_height_offset);
+	virtual void drawBackLight(float x, float y);
+	void drawIcon(float x, float y, float width, float height);
+	void drawPawn(float x, float y);
 
 public:
 	
@@ -31,6 +33,7 @@ public:
 	float getPosX() { return m_player_posX; }
 	float getPosY() { return m_player_posY; }
 
+	Tile* getStartTile() { return m_start_tile; }
 	player_role getPlayerPole() { return m_role; }
 
 	void setCords(float x, float y) { m_player_posX = x; m_player_posY = y; }

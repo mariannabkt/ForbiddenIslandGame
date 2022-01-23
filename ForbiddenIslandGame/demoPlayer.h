@@ -5,6 +5,10 @@
 class DemoPlayer : public Player
 {
 protected:
+
+	float m_posDemo_x;
+	float m_posDemo_y;
+
 	bool m_selected = false;
 	bool m_highlighted = false;
 

@@ -11,6 +11,8 @@ using namespace std;
 
 Player::Player(player_role r) : m_role(r)
 {
+	Game* game = Game::getInstance();
+	
 	switch (m_role)
 	{
 	case EXPLORER:
@@ -29,44 +31,53 @@ Player::Player(player_role r) : m_role(r)
 		SETCOLOR(m_color, 0.0f, 0.0f, 0.3f);
 		break;
 	}
+
+	for (auto t : game->getTiles())
+	{
+		if (t->getImage() == PILI_AGNOIAS && m_role == EXPLORER)
+			m_start_tile = t;
+		else if (t->getImage() == PILI_PROSMONIS && m_role == DIVER)
+			m_start_tile = t;
+		else if (t->getImage() == XEFWTO && m_role == PILOT)
+			m_start_tile = t;
+	}
+	setCords(m_start_tile->getPosX(), m_start_tile->getPosY());
 }
 
 
-void Player::drawBackLight(float center_width_offset, float center_height_offset)
+void Player::drawBackLight(float x, float y)
 {
 	Brush back;
 	back.fill_opacity = 1.0f * isActive();
 	back.outline_opacity = 0.0f;
 	back.texture = WHITE_PAWN;
-	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, PLAYER_SIZE + 0.1f, PLAYER_SIZE + 0.1f, back);
+	drawRect(x, y, PLAYER_SIZE + 0.1f, PLAYER_SIZE + 0.2f, back);
 }
 
-void Player::drawIcon(float center_width_offset, float center_height_offset, float width, float height)
+void Player::drawIcon(float x, float y, float width, float height)
 {
 	Brush icon;
 	icon.texture = m_icon_path;
 	icon.outline_opacity = 0.0f;
-	drawRect(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset, 7.0f, 4.0f, icon);
-	setCords(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset);
+	drawRect(x, y, width, height, icon);
 }
 
-void Player::drawPawn(float center_width_offset, float center_height_offset)
+void Player::drawPawn(float x, float y)
 {
 	Brush pawn;
 	pawn.texture = m_pawn_path;
 	pawn.outline_opacity = 0.0f;
-	drawRect(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
-	setCords(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset);
+	drawRect(x, y, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
 }
 
 
 void Player::drawPlayer() 
 {
 	//--- DRAW PLAYER'S BACK LIGHT ---
-	drawBackLight(0.0f, 0.0f);
+	drawBackLight(m_player_posX, m_player_posY);
 
 	//--- DRAW PLAYER'S PAWN ---
-	drawPawn(0.0f, 0.0f);
+	drawPawn(m_player_posX, m_player_posY);
 }
 
 void Player::updatePlayer() 

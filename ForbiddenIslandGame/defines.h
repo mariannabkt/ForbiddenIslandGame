@@ -24,7 +24,7 @@ enum tile_type { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 #define DEMO_PLAYER_SIZE 1.8f
 #define PLAYER_SIZE 0.8f
 #define PLAYER_MOTION_RANGE 2.0f
-#define TILE_SIZE 1.8f
+#define TILE_SIZE 2.2f
 
 inline void sleep(int ms)
 {

@@ -42,6 +42,15 @@ void Game::init()
 		for (auto t : tile_names)
 			m_tiles.push_back(new Tile(t));
 
+		vector<Tile*>::iterator itr = m_tiles.begin();
+		for (int i = 0; i < 6; i++)
+			for (int j = 0; j < 4; j++)
+			{
+				Tile* temp = *itr;
+				temp->setCords(i + 2.7f, j + 1.0f);
+				++itr;
+			}
+
 		break;
 	}
 	case MAIN_MENU:
@@ -238,18 +247,18 @@ void Game::drawPLAYING()
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
 	vector<Tile*>::iterator itr = m_tiles.begin();
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 6; j++)
-			if (Tile::getArray()[i][j])
+	for (int i = 0; i < 6; i++)
+		for (int j = 0; j < 4; j++)
+			if (Tile::getTilesArray()[i][j])
 			{
 				Tile* temp = *itr;
-				temp->draw((i + 2.5f) ,   (j + 5.5f) );
+				temp->draw( (i + 2.7f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
 				++itr;
 			}
 
 	for (auto p : m_players)
 		p->drawPlayer();
-
+	
 	m_buttons[EXIT]->drawButton(13.0f, -7.0f, 1.0f, 1.0f);
 }
 

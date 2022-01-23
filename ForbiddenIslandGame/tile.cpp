@@ -32,6 +32,8 @@ Tile::Tile(string tile_name) : m_image_path(tile_name)
 	else 
 		m_type = BASIC;
 }
+
+
 void Tile::draw(float x, float y)
 {
 	Brush br;
@@ -40,7 +42,16 @@ void Tile::draw(float x, float y)
 	br.texture = m_image_path;
 	drawRect(x, y, TILE_SIZE, TILE_SIZE, br);
 }
+
+
 void Tile::update()
 {
+}
+
+
+void Tile::setCords(float x, float y)
+{
+	m_pos_x = x;
+	m_pos_y = y;
 }
 ;
