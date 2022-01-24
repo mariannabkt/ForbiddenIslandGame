@@ -32,7 +32,7 @@ bool Event::waiting()
 
 void SoundEvent::draw()
 {
-	playSound(ASSET_PATH + string("sounds\\unlock-game-notofication.wav"), 1, false);
+	playSound(NOTIFICATION, 1, false);
 }
 
 void FadeFromBlackEvent::draw() {
@@ -45,7 +45,6 @@ void FadeFromBlackEvent::draw() {
 	float s = m_elapsed_time / m_duration;
 	br.fill_opacity = 1.0f - s;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
-
 }
 
 void PlayerMotionEvent::update() {

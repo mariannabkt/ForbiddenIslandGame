@@ -1,46 +1,77 @@
 #include "button.h"
 #include "game.h"
 
+using namespace graphics;
 
-Button::Button(button_func b) : m_func(b)
+
+/*_______________________________________________________________________________
+
+  >>>>> CREATE NEW BUTTON AND INITIALIZE IT'S FIELDS BASED ON IT'S FUNCTION <<<<<
+  _______________________________________________________________________________
+*/
+Button::Button(button_func b, float center_width_offset, float center_height_offset, float width, float height) 
+	: m_func(b), m_button_posX(center_width_offset), m_button_posY(center_height_offset), 
+	  m_button_width(width), m_button_height(height)
 {
 	switch (m_func)
 	{
 	case PLAY:
-		m_image_path = PLAY_BUTTON;
+		m_button_img = PLAY_BUTTON;
 		break;
 	case HOW_TO:
-		m_image_path = HOW_TO_PLAY_BUTTON;
+		m_button_img = HOW_TO_PLAY_BUTTON;
 		break;
 	case EXIT:
-		m_image_path = EXIT_BUTTON;
+		m_button_img = EXIT_BUTTON;
 		break;
 	case NEXT:
-		m_image_path = NEXT_BUTTON;
+		m_button_img = NEXT_BUTTON;
 		break;
 	case PREV:
-		m_image_path = PREV_BUTTON;
+		m_button_img = PREV_BUTTON;
 		break;
 	case OK:
-		m_image_path = OK_BUTTON;
+		m_button_img = OK_BUTTON;
 		break;
 	}
-}
-
-void Button::drawButton(float center_width_offset, float center_height_offset, float width, float height)
-{
-	m_button_left = CANVAS_WIDTH / 2 + center_width_offset - width / 2;
+	m_button_left  = CANVAS_WIDTH / 2 + center_width_offset - width / 2;
 	m_button_right = CANVAS_WIDTH / 2 + center_width_offset + width / 2;
-	m_button_up = CANVAS_HEIGHT / 2 + center_height_offset - height / 2;
-	m_button_down = CANVAS_HEIGHT / 2 + center_height_offset + height / 2;
-
-	button.outline_opacity = 0.0f;
-	button.fill_opacity = 1.0f * m_highlighted + 0.85f;
-	button.texture = m_image_path;
-	drawRect(CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset, width, height, button);
+	m_button_up    = CANVAS_HEIGHT / 2 + center_height_offset - height / 2;
+	m_button_down  = CANVAS_HEIGHT / 2 + center_height_offset + height / 2;
 }
 
-void Button::updateButton()
+
+/*____________________________________________
+
+  >>>>> CHECK IF BUTTON IS INSIDE BOUNDS <<<<<
+  ____________________________________________
+*/
+bool Button::contains(float x, float y)
+{
+	return (x > m_button_left && x < m_button_right && y > m_button_up && y < m_button_down);
+}
+
+
+/*_______________________
+
+  >>>>> DRAW BUTTON <<<<<
+  _______________________
+*/
+void Button::draw()
+{
+	m_button_br.outline_opacity = 0.0f;
+	m_button_br.fill_opacity = 1.0f * m_highlighted + 0.85f;
+	m_button_br.texture = m_button_img;
+	drawRect(CANVAS_WIDTH / 2 + m_button_posX, CANVAS_HEIGHT / 2 + m_button_posY, m_button_width, m_button_height, m_button_br);
+}
+
+
+/*_________________________
+
+  >>>>> UPDATE BUTTON <<<<<
+  _________________________
+*/
+void Button::update()
 {
 	Game* game = Game::getInstance();
 
@@ -62,12 +93,10 @@ void Button::updateButton()
 			{
 			case PLAY:
 				game->setState(CHOOSE_PLAYER);
-				game->init();
 				break;
 
 			case HOW_TO:
 				game->setState(HELP);
-				game->init();
 				break;
 
 			case EXIT:
@@ -75,84 +104,28 @@ void Button::updateButton()
 				break;
 
 			case NEXT:
-				
-				switch (game->getPage())
-				{
-				case ONE:
-					game->setPage(TWO);
-					break;
-				case TWO:
-					game->setPage(THREE);
-					break;
-				case THREE:
-					game->setPage(FOUR);
-					break;
-				case FOUR:
-					game->setPage(ONE);
-					game->setState(MAIN_MENU);
-					game->init();
-					break;
-
-				}
+				game->flipNextPage();
 				break;
 
 			case PREV:
-				
-				switch (game->getPage())
-				{
-				case ONE:
-					game->setState(MAIN_MENU);
-					game->init();
-					break;
-				case TWO:
-					game->setPage(ONE);
-					break;
-				case THREE:
-					game->setPage(TWO);
-					break;
-				case FOUR:
-					game->setPage(THREE);
-					break;
-				}
+				game->flipPrevPage();
 				break;
 
 			case OK:
-
-				if (!game->getCurPlayer())
-				{
-					for (auto dp : game->getDemoPlayers())
-						if (dp.second == game->getActivePlayer())
-						{
-							dp.second->setSelected(true);
-							game->getPlayers().push_back(dp.second);
-							break;
-						}
-					game->changePlayer();
-				}
-				else if (game->getCurPlayer())
-				{ 
-					for (auto dp : game->getDemoPlayers())
-						if (dp.second == game->getActivePlayer())
-						{
-							dp.second->setSelected(true);
-							game->getPlayers().push_back(dp.second);
-						}
-					DemoPlayer::setDefault();
-					game->changePlayer();
+				for (auto dp : game->getPlayers())
+					if (dp.second == game->getActivePlayer())
+					{
+						dp.second->setSelected(true);
+						dp.second->setPlayersTurn(game->getCurPlayer() + 1);
+						dp.second->findStartTile();
+					}
+				if (game->getCurPlayer()) 
 					game->setState(PLAYING);
-					game->init();
-				}
-
+				game->changePlayer();
 				break;
 			}
 		}
 	}
 	else 
 		setHighlight(false);
-}
-
-
-bool Button::contains(float x, float y)
-{
-	return (x > m_button_left && x < m_button_right && y > m_button_up && y < m_button_down);
 }

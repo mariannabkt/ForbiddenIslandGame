@@ -18,7 +18,8 @@ void draw()
 
 int  main(int argc, char** argv) 
 {
-	createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Forbbiden Island");
+	createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Forbbiden Island Game");
+	//setFullScreen(true);
 	
 	setCanvasSize(CANVAS_WIDTH, CANVAS_HEIGHT);
 	setCanvasScaleMode(CANVAS_SCALE_FIT);

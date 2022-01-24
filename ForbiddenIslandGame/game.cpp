@@ -1,6 +1,6 @@
+#include "defines.h"
 #include "game.h"
 #include "button.h"
-#include "defines.h"
 #include "tile.h"
 #include <sgg/graphics.h>
 
@@ -17,39 +17,53 @@ Game* Game::m_instance = nullptr;
 */
 void Game::init() 
 {
-	
 	switch (m_state)
 	{
 	case INIT:
 	{
+		// preload assets
 		preloadBitmaps(ASSET_PATH);
 
-		m_buttons[EXIT] = new Button(EXIT);
-		m_buttons[PLAY] = new Button(PLAY);
-		m_buttons[HOW_TO] = new Button(HOW_TO);
-		m_buttons[NEXT] = new Button(NEXT);
-		m_buttons[PREV] = new Button(PREV);
-		m_buttons[OK] = new Button(OK);
+		// init button list
+		m_buttons[EXIT]   = new Button(EXIT, 13.0f, -7.0f, 1.0f, 1.0f);
+		m_buttons[PLAY]   = new Button(PLAY, -8.0f, 4.5f, 5.0f, 2.0f);
+		m_buttons[HOW_TO] = new Button(HOW_TO, -1.0f, 4.5f, 7.0f, 2.0f);
+		m_buttons[NEXT]   = new Button(NEXT, 12.5f, 0.0f, 1.5f, 1.5f);
+		m_buttons[PREV]   = new Button(PREV, -12.5f, 0.0f, 1.5f, 1.5f);
+		m_buttons[OK]     = new Button(OK, 11.0f, 6.0f, 1.0f, 1.0f);
 
-		m_demo_players[EXPLORER] = new DemoPlayer(EXPLORER);
-		m_demo_players[DIVER] = new DemoPlayer(DIVER);
-		m_demo_players[PILOT] = new DemoPlayer(PILOT);
+		// init player list
+		m_players[EXPLORER] = new Player(EXPLORER);
+		m_players[DIVER]    = new Player(DIVER);
+		m_players[PILOT]    = new Player(PILOT);
 
+		// fill tile names(image paths) array
 		string tile_names[20] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
 			VRAXOS, GEFIRA, KIPOS_PSI, KIPOS_KRA, NAOS_ILIOY, NAOS_FEGGARIOY,PALATI_PAL,
 			PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO };
 
-		for (auto t : tile_names)
-			m_tiles.push_back(new Tile(t));
+		// init grid tiles
+		for (int i = 0; i < 20; ++i)
+			m_tiles[i] = new Tile(tile_names[i]);
 
-		vector<Tile*>::iterator itr = m_tiles.begin();
-		for (int i = 0; i < 6; i++)
-			for (int j = 0; j < 4; j++)
-			{
-				Tile* temp = *itr;
-				temp->setCords(i + 2.7f, j + 1.0f);
-				++itr;
+		/*int t = 0;
+		for (int i = 0; i < 6; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				m_tiles[t++]->setCords((i + 4.0f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
 			}
+		}*/
+
+		// set cords for every tile on the grid
+		int i = 0, j = 0;
+		for (auto tile : m_tiles) {
+			tile->setCords((i + 4.0f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
+			if (j < 4) 
+				++j;
+			else {
+				++i;
+				j = 0;
+			}
+		}
 
 		break;
 	}
@@ -58,6 +72,7 @@ void Game::init()
 		stopMusic(1);
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
+		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
 		m_buttons[EXIT]->enable();
@@ -70,6 +85,7 @@ void Game::init()
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
 
+		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
 		m_buttons[EXIT]->enable();
@@ -82,6 +98,10 @@ void Game::init()
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
 
+		for (auto p : m_players)
+			p.second->init();
+
+		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
 		m_buttons[EXIT]->enable();
@@ -93,6 +113,24 @@ void Game::init()
 		stopMusic(1);
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
+		// init tiles for new play session
+		for (auto t : m_tiles)
+			t->init();
+
+		// prepare players for playing session start
+		for (auto p : m_players)
+		{
+			if (p.second->getPlayersTurn() == 1)
+				p.second->setActive(true);
+
+			else if (p.second->getPlayersTurn() == 2)
+				p.second->setActive(false);
+
+			if (p.second->isSelected())
+				p.second->findStartTile();
+		}
+
+		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
 		m_buttons[EXIT]->enable();
@@ -144,7 +182,7 @@ void Game::drawINIT()
 	Brush br;
 	SETCOLOR(br.fill_color, 0.7f, 0.1f, 0.1f);
 	graphics::setFont(SCRATCHED_FONT);
-	graphics::drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2, 2.0f, "  LOADING ASSETS", br);
+	graphics::drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2 + 1.0f, 2.0f, "  LOADING ASSETS", br);
 }
 
 
@@ -157,13 +195,12 @@ void Game::drawMAIN()
 {
 	Brush br;
 	br.outline_opacity = 0.0f;
-	
 	br.texture = MAIN_BACKGROUND;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 	
-	m_buttons[EXIT]->drawButton(13.0f, -7.0f, 1.0f, 1.0f);
-	m_buttons[PLAY]->drawButton(-8.0f, 4.5f, 5.0f, 2.0f);
-	m_buttons[HOW_TO]->drawButton(-1.0f, 4.5f, 7.0f, 2.0f);
+	m_buttons[EXIT]->draw();
+	m_buttons[PLAY]->draw();
+	m_buttons[HOW_TO]->draw();
 }
 
 
@@ -176,37 +213,14 @@ void Game::drawHELP()
 {
 	Brush br;
 	br.outline_opacity = 0.0f;
+	br.texture = m_cur_page_img;
+	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
-	switch (m_cur_page)
-	{
-	case ONE:
-	
-		br.texture = PAGE_ONE;
-		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
-		break;
-	
-	case TWO:
-	
-		br.texture = PAGE_TWO;
-		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
-		break;
-	
-	case THREE:
-	
-		br.texture = PAGE_THREE;
-		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
-		break;
-	
-	case FOUR:
-	
-		br.texture = PAGE_FOUR;
-		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
-		break;
-	}
-	m_buttons[EXIT]->drawButton(13.0f, -7.0f, 1.0f, 1.0f); 
-	m_buttons[NEXT]->drawButton(12.5f, 0.0f, 1.5f, 1.5f);
-	m_buttons[PREV]->drawButton(-12.5f, 0.0f, 1.5f, 1.5f);
+	m_buttons[EXIT]->draw(); 
+	m_buttons[NEXT]->draw();
+	m_buttons[PREV]->draw();
 }
+
 
 /*_____________________________________
 
@@ -217,7 +231,6 @@ void Game::drawCHOOSE()
 {
 	Brush br;
 	br.outline_opacity = 0.0f;
-
 	br.texture = CHOOSE_PLAYER_BACKGROUND;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
@@ -225,11 +238,11 @@ void Game::drawCHOOSE()
 	setFont(IMMORTAL_FONT);
 	drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER " + to_string(getCurPlayer()+1), br);
 
-	for (auto p : m_demo_players)
-		p.second->drawDemoPlayer();
+	for (auto p : m_players)
+		p.second->draw();
 
-	m_buttons[EXIT]->drawButton(13.0f, -7.0f, 1.0f, 1.0f);
-	m_buttons[OK]->drawButton(11.0f, 6.0f, 1.0f, 1.0f);
+	m_buttons[EXIT]->draw();
+	m_buttons[OK]->draw();
 }
 
 
@@ -242,24 +255,34 @@ void Game::drawPLAYING()
 {
 	Brush br;
 	br.outline_opacity = 0.0f;
-
 	br.texture = PLAYING_BACKGROUND;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 
-	vector<Tile*>::iterator itr = m_tiles.begin();
-	for (int i = 0; i < 6; i++)
-		for (int j = 0; j < 4; j++)
-			if (Tile::getTilesArray()[i][j])
-			{
-				Tile* temp = *itr;
-				temp->draw( (i + 2.7f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
-				++itr;
-			}
+	Brush wl;
+	wl.outline_opacity = 0.0f;
+	wl.texture = WATER_LEVEL;
+	drawRect(CANVAS_WIDTH / 2 + 11.5f, CANVAS_HEIGHT / 2 + 4.7f, 4.5f, 5.5f, wl);
+
+	int i = 0, j = 0;
+	for (auto tile : m_tiles) {
+		if (j < 4) {
+			if (Tile::getTilesGrid()[i][j])
+				tile->draw();
+			++j;
+		}
+		else {
+			++i;
+			j = 0;
+		}
+	}
 
 	for (auto p : m_players)
-		p->drawPlayer();
-	
-	m_buttons[EXIT]->drawButton(13.0f, -7.0f, 1.0f, 1.0f);
+	{
+		if (p.second->isSelected())
+			p.second->draw();
+	}
+		
+	m_buttons[EXIT]->draw();
 }
 
 
@@ -293,8 +316,8 @@ void Game::update() {
 	case CHOOSE_PLAYER:
 	
 		updateButtons();
-		for (auto player : m_demo_players)
-			player.second->updateDemoPlayer();
+		for (auto player : m_players)
+			player.second->update();
 		processEvents();
 		break;
 
@@ -302,7 +325,10 @@ void Game::update() {
 
 		updateButtons();
 		for (auto p : m_players)
-			p->updatePlayer();
+		{
+			if (p.second->isSelected())
+				p.second->update();
+		}
 		for (auto t : m_tiles)
 			t->update();
 		processEvents();
@@ -320,7 +346,7 @@ void Game::updateButtons()
 {
 	for (auto button : m_buttons)
 		if (button.second->isActive())
-			button.second->updateButton();
+			button.second->update();
 }
 
 /*_________________________________
@@ -354,9 +380,74 @@ void Game::releaseInstance()
 }
 
 
+/*___________________________________________
+
+  >>>>> FLIP TO NEXT PAGE OF HELP STATE <<<<<
+  ___________________________________________
+*/
+void Game::flipNextPage()
+{
+	switch (getPage())
+	{
+	case ONE:
+		setPage(TWO);
+		setPageImage(PAGE_TWO);
+		break;
+
+	case TWO:
+		setPage(THREE);
+		setPageImage(PAGE_THREE);
+		break;
+
+	case THREE:
+		setPage(FOUR);
+		setPageImage(PAGE_FOUR);
+		break;
+
+	case FOUR:
+		setPage(ONE);
+		setPageImage(PAGE_ONE);
+		setState(MAIN_MENU);
+		break;
+	}
+}
+
+
+/*___________________________________________
+
+  >>>>> FLIP TO PREV PAGE OF HELP STATE <<<<<
+  ___________________________________________
+*/
+void Game::flipPrevPage()
+{
+	switch (getPage())
+	{
+	case ONE:
+		setState(MAIN_MENU);
+		init();
+		break;
+
+	case TWO:
+		setPage(ONE);
+		setPageImage(PAGE_ONE);
+		break;
+
+	case THREE:
+		setPage(TWO);
+		setPageImage(PAGE_TWO);
+		break;
+
+	case FOUR:
+		setPage(THREE);
+		setPageImage(PAGE_THREE);
+		break;
+	}
+}
+
+
 /*________________________________________________
 
-  >>>>> ADD AN EVENT AT THE LIST AND DRAW IT <<<<<
+  >>>>> ADD AN EVENT IN THE LIST AND DRAW IT <<<<<
   ________________________________________________
 */
 void Game::addEvent(Event* event)
@@ -386,68 +477,23 @@ void Game::processEvents()
 */
 void Game::clearCollections()
 {
-	/*m_players.clear();
-	delete & m_players;
-
-	m_demo_players.clear();
-	delete & m_demo_players;
-
-	m_buttons.clear();
-	delete& m_buttons;
-
-	m_events.clear();
-	delete & m_events;*/
-
-	
-	/*for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
-	m_demo_players.clear();
-
-	for_each(m_events.begin(), m_events.end(), [](auto item)->void{ delete item; });
-	m_events.clear();
-
-	for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void { delete item.second; });
-	m_demo_players.clear();
-
-	for_each(m_buttons.begin(), m_buttons.end(), [](auto item)->void { delete item.second; });
-	m_buttons.clear();*/
-	
-
-	/*std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
-	while (itr != m_demo_players.end()) {
-		m_demo_players.erase(itr++);  
-	}
-
-	std::map<button_func, Button*>::iterator it = m_buttons.begin();
-	while (it != m_buttons.end()) {
-		m_buttons.erase(it++);
-	}*/
-
-
-	while (!m_players.empty()) {
-		delete m_players.back();
-		m_players.pop_back();
-	}
-
 	while (!m_events.empty()) {
 		delete m_events.back();
 		m_events.pop_back();
 	}
 
-	while (!m_tiles.empty()) {
-		delete m_tiles.back();
-		m_tiles.pop_back();
-	}
+	for (auto tile : m_tiles)
+		delete tile;
 
-	for (auto demo : m_demo_players) {
+	for (auto demo : m_players) {
 		delete demo.second;
-		m_demo_players.erase(demo.first);
+		m_players.erase(demo.first);
 	}
 
 	for (auto button : m_buttons) {
 		delete button.second;
 		m_buttons.erase(button.first);
 	}
-	
 }
 
 Game::~Game() 
@@ -467,15 +513,51 @@ Game::~Game()
 			p->setPosY(CANVAS_HEIGHT * (j + 0.5f) / 2.0f);
 		}
 	}
-	*/
+*/
 
-	/*
-		Brush sq;
-		sq.outline_opacity = 0.3f;
-		sq.fill_opacity = 0.0f;
-		for (int i = 0; i < CANVAS_WIDTH / PLAYER_SIZE; i++) {
-			for (int j = 0; j < CANVAS_HEIGHT / PLAYER_SIZE; j++) {
-				drawRect((i + 0.5f) * PLAYER_SIZE, (j + 0.5f) * PLAYER_SIZE, PLAYER_SIZE, PLAYER_SIZE, sq);
-			}
+/*
+	Brush sq;
+	sq.outline_opacity = 0.3f;
+	sq.fill_opacity = 0.0f;
+	for (int i = 0; i < CANVAS_WIDTH / PLAYER_SIZE; i++) {
+		for (int j = 0; j < CANVAS_HEIGHT / PLAYER_SIZE; j++) {
+			drawRect((i + 0.5f) * PLAYER_SIZE, (j + 0.5f) * PLAYER_SIZE, PLAYER_SIZE, PLAYER_SIZE, sq);
 		}
-		*/
+	}
+*/
+
+/*m_players.clear();
+	delete & m_players;
+
+	m_demo_players.clear();
+	delete & m_demo_players;
+
+	m_buttons.clear();
+	delete& m_buttons;
+
+	m_events.clear();
+	delete & m_events;*/
+
+
+	/*for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
+	m_demo_players.clear();
+
+	for_each(m_events.begin(), m_events.end(), [](auto item)->void{ delete item; });
+	m_events.clear();
+
+	for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void { delete item.second; });
+	m_demo_players.clear();
+
+	for_each(m_buttons.begin(), m_buttons.end(), [](auto item)->void { delete item.second; });
+	m_buttons.clear();*/
+
+
+	/*std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
+	while (itr != m_demo_players.end()) {
+		m_demo_players.erase(itr++);
+	}
+
+	std::map<button_func, Button*>::iterator it = m_buttons.begin();
+	while (it != m_buttons.end()) {
+		m_buttons.erase(it++);
+	}*/

@@ -8,9 +8,14 @@ class Button
 {
 protected:
 
-	Brush button;
-	string m_image_path;
+	Brush m_button_br;
+	string m_button_img;
 	button_func m_func;
+
+	float m_button_posX;
+	float m_button_posY;
+	float m_button_width;
+	float m_button_height;
 	
 	float m_button_left;
 	float m_button_right;
@@ -22,10 +27,10 @@ protected:
 
 public:
 
-	Button(button_func b);
+	Button(button_func b, float center_width_offset, float center_height_offset, float width, float height);
 	
-	void drawButton(float center_width_offset, float center_height_offset, float width, float height);
-	void updateButton();
+	void draw();
+	void update();
 
 	void enable() { m_active = true; }
 	void disable() { m_active = false; }

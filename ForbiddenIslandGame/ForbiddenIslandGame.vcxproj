@@ -149,7 +149,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="button.cpp" />
-    <ClCompile Include="demoPlayer.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -159,7 +158,6 @@
   <ItemGroup>
     <ClInclude Include="button.h" />
     <ClInclude Include="defines.h" />
-    <ClInclude Include="demoPlayer.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="player.h" />
