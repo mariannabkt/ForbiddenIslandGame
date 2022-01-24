@@ -34,7 +34,6 @@ int  main(int argc, char** argv)
 
 	destroyWindow();
 
-	game->~Game();
 	Game::releaseInstance();
 
 	return 0;

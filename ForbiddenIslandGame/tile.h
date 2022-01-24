@@ -20,7 +20,7 @@ class Tile
 public:
 
 	Tile(string tile_name); 
-	~Tile() {};
+	//~Tile() {};
 
 	void init();
 	void draw();

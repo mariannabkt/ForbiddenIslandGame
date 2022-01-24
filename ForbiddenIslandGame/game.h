@@ -23,7 +23,7 @@ class Game
 	map<player_role, Player*> m_players = map<player_role, Player*>();
 	map<button_func, Button*> m_buttons = map<button_func, Button*>();
 	list<Event*> m_events = list<Event*>();
-	Tile* m_tiles[20];
+	Tile* m_tiles[20] = { 0 };
 
 	Game() {}
 	void drawINIT();

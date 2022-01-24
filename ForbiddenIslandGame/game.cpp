@@ -46,24 +46,25 @@ void Game::init()
 		for (int i = 0; i < 20; ++i)
 			m_tiles[i] = new Tile(tile_names[i]);
 
-		/*int t = 0;
+		int t = 0;
 		for (int i = 0; i < 6; ++i) {
 			for (int j = 0; j < 4; ++j) {
-				m_tiles[t++]->setCords((i + 4.0f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
-			}
-		}*/
-
-		// set cords for every tile on the grid
-		int i = 0, j = 0;
-		for (auto tile : m_tiles) {
-			tile->setCords((i + 4.0f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
-			if (j < 4) 
-				++j;
-			else {
-				++i;
-				j = 0;
+				if (Tile::getTilesGrid()[i][j])
+					m_tiles[t++]->setCords((i + 4.0f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
 			}
 		}
+
+		//// set cords for every tile on the grid
+		//int i = 0, j = 0;
+		//for (auto tile : m_tiles) {
+		//	tile->setCords((i + 4.0f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
+		//	if (j < 4) 
+		//		++j;
+		//	else {
+		//		++i;
+		//		j = 0;
+		//	}
+		//}
 
 		break;
 	}
@@ -136,7 +137,7 @@ void Game::init()
 		m_buttons[EXIT]->enable();
 		break;
 	}
-	//addEvent(new FadeFromBlackEvent());
+	addEvent(new FadeFromBlackEvent());
 }
 
 
@@ -482,24 +483,24 @@ void Game::clearCollections()
 		m_events.pop_back();
 	}
 
-	for (auto tile : m_tiles)
-		delete tile;
+	for (int i = 0; i<20; ++i)
+		delete m_tiles[i];
 
 	for (auto demo : m_players) {
 		delete demo.second;
-		m_players.erase(demo.first);
 	}
+	m_players.clear();
 
 	for (auto button : m_buttons) {
 		delete button.second;
-		m_buttons.erase(button.first);
 	}
+	m_buttons.clear();
 }
 
 Game::~Game() 
 {
 	clearCollections();
-	delete m_active_player;
+	// delete m_active_player;
 }
 
 
