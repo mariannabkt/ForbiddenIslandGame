@@ -24,7 +24,7 @@ Player::Player(player_role r) : m_role(r)
 		m_icon_path = EXPLORER_ROLE;
 		m_pawn_path = EXPLORER_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.3f, 0.0f);
-		setCords(CANVAS_WIDTH / 2 - 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2 - 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
 
 	case DIVER:
@@ -32,7 +32,7 @@ Player::Player(player_role r) : m_role(r)
 		m_icon_path = DIVER_ROLE;
 		m_pawn_path = DIVER_PAWN;
 		SETCOLOR(m_color, 0.1f, 0.1f, 0.1f);
-		setCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
 
 	case PILOT:
@@ -40,7 +40,7 @@ Player::Player(player_role r) : m_role(r)
 		m_icon_path = PILOT_ROLE;
 		m_pawn_path = PILOT_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.0f, 0.3f);
-		setCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
 	}
 }
@@ -57,6 +57,19 @@ void Player::init()
 	m_active = false;
 	m_selected = false;
 	m_highlighted = false;
+	setPawnCords(m_start_tile->getPosX(), m_start_tile->getPosY());
+
+	switch (m_role) {
+	case EXPLORER:
+		setIconCords(CANVAS_WIDTH / 2 - 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		break;
+	case DIVER:
+		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 4.0f);
+		break;
+	case PILOT:
+		setIconCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		break;
+	}
 }
 
 
@@ -65,7 +78,7 @@ void Player::init()
   >>>>> DRAW PLAYER'S ICON WITH BACK LIGHT <<<<<
   ______________________________________________
 */
-void Player::drawIcon(float x, float y, float width, float height)
+void Player::drawIcon(float width, float height)
 {
 	//--- DRAW PLAYER'S ICON BACK LIGHT ---
 	Brush back;
@@ -82,13 +95,13 @@ void Player::drawIcon(float x, float y, float width, float height)
 		SETCOLOR(back.fill_color, m_color[0], m_color[1], m_color[2]);
 		back.fill_opacity = 0.9f;
 	}
-	drawDisk(x, y, height / 2, back);
+	drawDisk(m_icon_posX, m_icon_posY, height / 2, back);
 
 	//--- DRAW PLAYER'S ICON ---
 	Brush icon;
 	icon.texture = m_icon_path;
 	icon.outline_opacity = 0.0f;
-	drawRect(x, y, width, height, icon);
+	drawRect(m_icon_posX, m_icon_posY, width, height, icon);
 }
 
 
@@ -104,13 +117,13 @@ void Player::drawPawn()
 	back.fill_opacity = 1.0f * isActive();
 	back.outline_opacity = 0.0f;
 	back.texture = WHITE_PAWN;
-	drawRect(m_player_posX, m_player_posY, PLAYER_SIZE + 0.17f, PLAYER_SIZE + 0.22f, back);
+	drawRect(m_pawn_posX, m_pawn_posY, PLAYER_SIZE + 0.15f, PLAYER_SIZE + 0.20f, back);
 
 	//--- DRAW PLAYER'S PAWN ---
 	Brush pawn;
 	pawn.texture = m_pawn_path;
 	pawn.outline_opacity = 0.0f;
-	drawRect(m_player_posX, m_player_posY, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
+	drawRect(m_pawn_posX, m_pawn_posY, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
 }
 
 
@@ -146,33 +159,32 @@ void Player::drawActions(float x, float y)
 void Player::draw()
 {
 	if (game->getState() == CHOOSE_PLAYER)
-		drawIcon(m_player_posX, m_player_posY, 7.0f, 4.0f);
+		drawIcon(7.0f, 4.0f);
 
 	else if (game->getState() == PLAYING)
 	{
-		drawPawn();
+		Brush br;
 		setFont(SCRATCHED_FONT);
+		SETCOLOR(br.fill_color, m_color[0], m_color[1], m_color[2]);
 
 		if (m_turn == 1)
 		{
-			drawIcon(1.5f, 1.5f, 3.5f, 2.0f);
+			setIconCords(1.5f, 1.5f);
 			drawActions(1.5f, 3.2f);
 
-			Brush pl1;
-			SETCOLOR(pl1.fill_color, m_color[0], m_color[1], m_color[2]);
-			drawText(3.0f, 1.5f, 0.7f, "PLAYER " + to_string(m_turn), pl1);
-			drawText(3.0f, 2.2f, 0.7f, m_name, pl1);
+			drawText(3.0f, 1.5f, 0.7f, "PLAYER " + to_string(m_turn), br);
+			drawText(3.0f, 2.2f, 0.7f, m_name, br);
 		}
 		else if (m_turn == 2)
 		{
-			drawIcon(1.5f, 14.5f, 3.5f, 2.0f);
+			setIconCords(1.5f, 14.5f);
 			drawActions(1.5f, 10.5f);
 
-			Brush pl2;
-			SETCOLOR(pl2.fill_color, m_color[0], m_color[1], m_color[2]);
-			drawText(3.0f, 14.5f, 0.7f, "PLAYER " + to_string(m_turn), pl2);
-			drawText(3.0f, 15.2f, 0.7f, m_name, pl2);
+			drawText(3.0f, 14.5f, 0.7f, "PLAYER " + to_string(m_turn), br);
+			drawText(3.0f, 15.2f, 0.7f, m_name, br);
 		}
+		drawPawn();
+		drawIcon(3.5f, 2.0f);
 	}
 }
 
@@ -225,24 +237,14 @@ void Player::update()
   >>>>> FIND STARTING TILE FOR THE PLAYING SESSION <<<<<
   ______________________________________________________
 */
-void Player::findStartTile()
+void Player::isStartTile(Tile* t)
 {
-	if (game->getState() == CHOOSE_PLAYER)
+	if ((t->getImage() == PILI_AGNOIAS && m_role == EXPLORER) ||
+		(t->getImage() == PILI_PROSMONIS && m_role == DIVER) ||
+		(t->getImage() == XEFWTO && m_role == PILOT))
 	{
-		for (auto t : game->getTiles())
-		{
-			if ((t->getImage() == PILI_AGNOIAS && m_role == EXPLORER) ||
-				(t->getImage() == PILI_PROSMONIS && m_role == DIVER) ||
-				(t->getImage() == XEFWTO && m_role == PILOT))
-			{
-				m_start_tile = t;
-				t->setTaken(true);
-			}
-		}
-	}
-	else if (game->getState() == PLAYING)
-	{
-		setCords(m_start_tile->getPosX(), m_start_tile->getPosY());
+		m_start_tile = t;
+		setPawnCords(m_start_tile->getPosX(), m_start_tile->getPosY());
 	}
 }
 
@@ -254,5 +256,5 @@ void Player::findStartTile()
 */
 bool Player::contains(float x, float y)
 {
-	return (distance(x, y, m_player_posX, m_player_posY) < DEMO_PLAYER_SIZE);
+	return (distance(x, y, m_icon_posX, m_icon_posY) < DEMO_PLAYER_SIZE);
 }

@@ -6,8 +6,6 @@ using namespace graphics;
 
 class Button
 {
-protected:
-
 	Brush m_button_br;
 	string m_button_img;
 	button_func m_func;

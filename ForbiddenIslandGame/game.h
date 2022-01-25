@@ -1,7 +1,6 @@
 #pragma once
 #include <map>
 #include <list>
-#include <vector>
 #include "defines.h"
 #include "player.h"
 #include "button.h"
@@ -25,22 +24,14 @@ class Game
 	list<Event*> m_events = list<Event*>();
 	Tile* m_tiles[20] = { 0 };
 
-	Game() {}
-	void drawINIT();
-	void drawMAIN();
-	void drawHELP();
-	void drawCHOOSE();
-	void drawPLAYING();
-
+	Game();
 	void updateButtons();
 	void processEvents();
-	void clearCollections();
 
 public:
 
 	~Game();
 
-	void init();
 	void draw();
 	void update();
 
@@ -48,21 +39,21 @@ public:
 	static void releaseInstance();
 
 	game_state getState() { return m_state; }
+	void setState(game_state new_state);
+
 	help_page getPage() { return m_cur_page; }
-	int getCurPlayer() { return m_cur_player; }
-	Player* getActivePlayer() { return m_active_player; }
-
-	void setState(game_state new_state) { m_state = new_state; init(); }
-	void setActivePlayer(Player* pl) { m_active_player = pl; }
-
 	void setPage(help_page new_page) { m_cur_page = new_page; }
 	void setPageImage(string new_page_img) { m_cur_page_img = new_page_img; }
+
+	int getCurPlayer() { return m_cur_player; }
+	Player* getActivePlayer() { return m_active_player; }
+	void setActivePlayer(Player* pl) { m_active_player = pl; }
 
 	void flipNextPage();
 	void flipPrevPage();
 
-	void addEvent(Event* event);
-	void changePlayer() { m_cur_player == 0 ? m_cur_player++ : m_cur_player--; }
+	void addEvent(Event* event) { m_events.push_back(event); }
+	void changePlayer() { m_cur_player == 0 ? ++m_cur_player : --m_cur_player; }
 
 	map<player_role, Player*>& getPlayers() { return m_players; }
 	map<button_func, Button*>& getButtons() { return m_buttons; }

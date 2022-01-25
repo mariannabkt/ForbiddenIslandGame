@@ -28,12 +28,10 @@ int  main(int argc, char** argv)
 	setUpdateFunction(update);
 
 	Game* game = Game::getInstance();
-	game->init();
 
 	startMessageLoop();
 
 	destroyWindow();
-
 	Game::releaseInstance();
 
 	return 0;

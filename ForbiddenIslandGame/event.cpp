@@ -30,18 +30,15 @@ bool Event::waiting()
 	return m_elapsed_delay < m_delay;
 }
 
-void SoundEvent::draw()
-{
-	playSound(NOTIFICATION, 1, false);
-}
 
-void FadeFromBlackEvent::draw() {
-	if (waiting()) {
+void FadeFromBlackEvent::draw() 
+{
+	if (waiting()) 
 		return;
-	}
+	
 	Brush br;
-	SETCOLOR(br.fill_color, 0.0f, 0.0f, 0.0f);
 	br.outline_opacity = 0.0f;
+	SETCOLOR(br.fill_color, 0.0f, 0.0f, 0.0f);
 	float s = m_elapsed_time / m_duration;
 	br.fill_opacity = 1.0f - s;
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
@@ -56,11 +53,11 @@ void PlayerMotionEvent::update() {
 	if (waiting()) {
 		return;
 	}
-	//float s = m_elapsed_time / m_duration;
-	//float x = m_start_x * (1.0f - s) + m_stop_x * s;
-	//float y = m_start_y * (1.0f - s) + m_stop_y * s;
-	//m_player->setPosX(x);
-	//m_player->setPosY(y);
+	/*float s = m_elapsed_time / m_duration;
+	float x = m_start_x * (1.0f - s) + m_stop_x * s;
+	float y = m_start_y * (1.0f - s) + m_stop_y * s;
+	m_player->setPosX(x);
+	m_player->setPosY(y);*/
 }
 
 

@@ -4,10 +4,10 @@
 
 class Player 
 {
-protected:
-
-	float m_player_posX = 0.0f;
-	float m_player_posY = 0.0f;
+	float m_icon_posX;
+	float m_icon_posY;
+	float m_pawn_posX;
+	float m_pawn_posY;
 	float m_color[3];
 
 	bool m_active = false;
@@ -22,8 +22,8 @@ protected:
 	string m_pawn_path;
 	Tile* m_start_tile;
 
-	void drawIcon(float x, float y, float width, float height);
 	void drawPawn();
+	void drawIcon(float width, float height);
 	void drawActions(float x, float y);
 
 public:
@@ -33,19 +33,21 @@ public:
 	void init();
 	void draw();
 	void update();
+	void isStartTile(Tile* t);
+	bool contains(float x, float y);
 
-	float getPosX() { return m_player_posX; }
-	float getPosY() { return m_player_posY; }
-
-	void findStartTile();
 	Tile* getStartTile() { return m_start_tile; }
 	player_role getPlayerRole() { return m_role; }
 
-	void setCords(float x, float y) { m_player_posX = x; m_player_posY = y; }
+	float getPosX() { return m_pawn_posX; }
+	float getPosY() { return m_pawn_posY; }
 
-	void setActive(bool a) { m_active = a; }
+	void setPawnCords(float x, float y) { m_pawn_posX = x; m_pawn_posY = y; }
+	void setIconCords(float x, float y) { m_icon_posX = x; m_icon_posY = y; }
+
 	bool isActive() { return m_active; }
-
+	void setActive(bool a) { m_active = a; }
+	
 	bool isSelected() { return m_selected; }
 	void setSelected(bool s) { m_selected = s; }
 
@@ -54,6 +56,4 @@ public:
 
 	int getPlayersTurn() { return m_turn; }
 	void setPlayersTurn(int t) { m_turn = t; }
-
-	bool contains(float x, float y);
 };

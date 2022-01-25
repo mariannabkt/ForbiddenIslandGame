@@ -24,16 +24,12 @@ public:
 	virtual void draw() {};
 	virtual void update() ;
 
-	bool active() { return m_active; }
+	bool isActive() { return m_active; }
 	void disable() { m_active = false; }
 	bool waiting();
 
 };
 
-class SoundEvent : public Event {
-public:
-	void draw() override;
-};
 
 class FadeFromBlackEvent : public Event {
 public:

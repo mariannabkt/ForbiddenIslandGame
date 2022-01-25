@@ -37,7 +37,7 @@ inline float distance(float x1, float y1, float x2, float y2)
 
 enum game_state  { INIT, MAIN_MENU, HELP, CHOOSE_PLAYER, PLAYING };
 enum help_page   { ONE, TWO, THREE, FOUR };
-enum button_func { PLAY, HOW_TO, EXIT, NEXT, PREV, OK };
+enum button_func { PLAY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
 enum player_role { DIVER, EXPLORER, PILOT };
 enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 
@@ -56,6 +56,7 @@ enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 #define PLAY_BUTTON        ".\\assets\\buttons\\play button.png"
 #define OK_BUTTON          ".\\assets\\buttons\\ok button.png"
 #define EXIT_BUTTON        ".\\assets\\buttons\\exit button.png"
+#define HOME_BUTTON		   ".\\assets\\buttons\\home button.png"
 #define NEXT_BUTTON        ".\\assets\\buttons\\next button.png"
 #define PREV_BUTTON        ".\\assets\\buttons\\previous button.png"
 #define HOW_TO_PLAY_BUTTON ".\\assets\\buttons\\how to play button.png"

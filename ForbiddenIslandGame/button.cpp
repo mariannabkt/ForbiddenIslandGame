@@ -21,6 +21,9 @@ Button::Button(button_func b, float center_width_offset, float center_height_off
 	case HOW_TO:
 		m_button_img = HOW_TO_PLAY_BUTTON;
 		break;
+	case HOME:
+		m_button_img = HOME_BUTTON;
+		break;
 	case EXIT:
 		m_button_img = EXIT_BUTTON;
 		break;
@@ -41,17 +44,6 @@ Button::Button(button_func b, float center_width_offset, float center_height_off
 }
 
 
-/*____________________________________________
-
-  >>>>> CHECK IF BUTTON IS INSIDE BOUNDS <<<<<
-  ____________________________________________
-*/
-bool Button::contains(float x, float y)
-{
-	return (x > m_button_left && x < m_button_right && y > m_button_up && y < m_button_down);
-}
-
-
 /*_______________________
 
   >>>>> DRAW BUTTON <<<<<
@@ -60,7 +52,7 @@ bool Button::contains(float x, float y)
 void Button::draw()
 {
 	m_button_br.outline_opacity = 0.0f;
-	m_button_br.fill_opacity = 1.0f * m_highlighted + 0.85f;
+	m_button_br.fill_opacity = 1.0f * m_highlighted + 0.88f;
 	m_button_br.texture = m_button_img;
 	drawRect(CANVAS_WIDTH / 2 + m_button_posX, CANVAS_HEIGHT / 2 + m_button_posY, m_button_width, m_button_height, m_button_br);
 }
@@ -99,6 +91,10 @@ void Button::update()
 				game->setState(HELP);
 				break;
 
+			case HOME:
+				game->setState(MAIN_MENU);
+				break;
+
 			case EXIT:
 				stopMessageLoop();
 				break;
@@ -117,7 +113,7 @@ void Button::update()
 					{
 						dp.second->setSelected(true);
 						dp.second->setPlayersTurn(game->getCurPlayer() + 1);
-						dp.second->findStartTile();
+						dp.second->getStartTile()->setTaken(true);
 					}
 				if (game->getCurPlayer()) 
 					game->setState(PLAYING);
@@ -128,4 +124,15 @@ void Button::update()
 	}
 	else 
 		setHighlight(false);
+}
+
+
+/*____________________________________________
+
+  >>>>> CHECK IF BUTTON IS INSIDE BOUNDS <<<<<
+  ____________________________________________
+*/
+bool Button::contains(float x, float y)
+{
+	return (x > m_button_left && x < m_button_right && y > m_button_up && y < m_button_down);
 }
