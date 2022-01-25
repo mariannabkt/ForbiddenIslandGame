@@ -44,13 +44,13 @@ enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 
 // ASSETS
 #define ASSET_PATH ".\\assets\\"
-//#define BACKGROUNDS_FOLDER ".\\assets\\backgrounds\\"
-//#define BUTTON_FOLDER ".\\assets\\buttons\\"
-//#define HELP_PAGES_FOLDER ".\\assets\\help_pages\\"
-//#define PLAYERS_FOLDER ".\\assets\\players\\"
-//#define PLAYING_FOLDER ".\\assets\\playing\\"
-//#define TREASURES_FOLDER ".\\assets\\treasures\\"
-//#define TILES_FOLDER ".\\assets\\tiles\\"
+#define BACKGROUNDS_FOLDER ".\\assets\\backgrounds\\"
+#define BUTTON_FOLDER ".\\assets\\buttons\\"
+#define HELP_PAGES_FOLDER ".\\assets\\help_pages\\"
+#define PLAYERS_FOLDER ".\\assets\\players\\"
+#define PLAYING_FOLDER ".\\assets\\playing\\"
+#define TREASURES_FOLDER ".\\assets\\treasures\\"
+#define TILES_FOLDER ".\\assets\\tiles\\"
 
 
 // BACKGROUNDS
