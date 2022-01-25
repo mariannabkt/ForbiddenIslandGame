@@ -1,7 +1,7 @@
 #pragma once
 #include "defines.h"
 
-static int m_tiles_grid[6][4] = { {0,1,1,0}, {1,1,1,1}, {1,1,1,1}, {1,1,1,1}, {1,1,1,1}, {0,1,1,0} };
+static int m_tiles_grid[6][6] = { {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} };
 
 class Tile
 {
@@ -25,7 +25,7 @@ public:
 	void draw();
 	void update();
 
-	static int(&getTilesGrid())[6][4] { return m_tiles_grid; }
+	static int(&getTilesGrid())[6][6] { return m_tiles_grid; }
 	string getImage() { return m_tile_img; }
 	float getPosX() { return m_tile_posX; }
 	float getPosY() { return m_tile_posY; }

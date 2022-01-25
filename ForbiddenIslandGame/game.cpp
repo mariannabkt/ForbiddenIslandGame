@@ -33,12 +33,12 @@ Game::Game()
 	m_players[PILOT]    = new Player(PILOT);
 
 	// fill tile names(image paths) array
-	string tile_names[20] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
-		VRAXOS, GEFIRA, KIPOS_PSI, KIPOS_KRA, NAOS_ILIOY, NAOS_FEGGARIOY,PALATI_PAL,
-		PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO };
+	string tile_names[24] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
+		VRAXOS, GEFIRA, KIPOS_PSI, KIPOS_KRA, NAOS_ILIOY, NAOS_FEGGARIOY,PALATI_PAL, VRAXOI, PILI_APLISTIAS, 
+		PILI_AXARISTIAS, PILI_LITHIS, PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO };
 
 	// init grid tiles
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 24; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
 }
 
@@ -71,7 +71,7 @@ void Game::setState(game_state new_state)
 	case MAIN_MENU:
 
 		stopMusic(1);
-		playMusic(FALLING_WATER, 1.0f, true, 1000);
+		playMusic(NATURAL_AMBIENCE, 1.0f, true, 1000);
 
 		shuffleTileGrid();
 
@@ -200,7 +200,7 @@ void Game::draw()
 
 		int t = 0;
 		for (int i = 0; i < 6; ++i)
-			for (int j = 0; j < 4; ++j)
+			for (int j = 0; j < 6; ++j)
 				if (Tile::getTilesGrid()[i][j])
 					m_tiles[t++]->draw();
 
@@ -400,11 +400,11 @@ void Game::shuffleTileGrid()
 	// based on the playing grid
 	int t = 0;
 	for (int i = 0; i < 6; ++i)
-		for (int j = 0; j < 4; ++j)
+		for (int j = 0; j < 6; ++j)
 			if (Tile::getTilesGrid()[i][j])
 			{
 				// set cords for every grid tile
-				m_tiles[t]->setCords((i + 3.5f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
+				m_tiles[t]->setCords((i + 3.6f) * (TILE_SIZE + 0.2f), (j + 0.8f) * (TILE_SIZE + 0.2f));
 
 				// set player's pawn cords
 				for (auto p : m_players)

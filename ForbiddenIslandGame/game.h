@@ -22,7 +22,7 @@ class Game
 	map<player_role, Player*> m_players = map<player_role, Player*>();
 	map<button_func, Button*> m_buttons = map<button_func, Button*>();
 	list<Event*> m_events = list<Event*>();
-	Tile* m_tiles[20] = { 0 };
+	Tile* m_tiles[24] = { 0 };
 
 	Game();
 	void updateButtons();
@@ -59,5 +59,5 @@ public:
 	map<player_role, Player*>& getPlayers() { return m_players; }
 	map<button_func, Button*>& getButtons() { return m_buttons; }
 	list<Event*>& getEvents() { return m_events; }
-	Tile* (&getTiles())[20] { return m_tiles; }
+	Tile* (&getTiles())[24] { return m_tiles; }
 };
