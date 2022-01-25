@@ -55,7 +55,7 @@ Game::Game()
 				++t;
 			}
 	// preload assets
-	preloadBitmaps(ASSET_PATH);
+	//preloadBitmaps(ASSET_PATH);
 	/*preloadBitmaps(BACKGROUNDS_FOLDER);
 	preloadBitmaps(BUTTON_FOLDER);
 	preloadBitmaps(PLAYERS_FOLDER);
