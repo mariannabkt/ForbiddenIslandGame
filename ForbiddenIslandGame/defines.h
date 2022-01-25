@@ -42,8 +42,7 @@ enum player_role { DIVER, EXPLORER, PILOT };
 enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 
 
-// ASSETS
-#define ASSET_PATH ".\\assets\\"
+// ASSET FOLDERS
 #define BACKGROUNDS_FOLDER ".\\assets\\backgrounds\\"
 #define BUTTON_FOLDER ".\\assets\\buttons\\"
 #define HELP_PAGES_FOLDER ".\\assets\\help_pages\\"
@@ -113,6 +112,7 @@ enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 
 
 // MUSIC
+#define ELEVATOR_MUSIC ".\\assets\\sounds\\Elevator music.mp3"
 #define INTO_THE_WATER ".\\assets\\sounds\\Exploration Ambience.mp3"
 #define FALLING_WATER  ".\\assets\\sounds\\Water Temple.mp3"
 
@@ -120,7 +120,8 @@ enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 // SOUNDS
 #define FLIP_PAGE	   ".\\assets\\sounds\\page_flip.wav"
 #define NOTIFICATION   ".\\assets\\sounds\\unlock-game-notification.wav"
-#define JUMPING        ".\\assets\\sounds\\player-jumping-in-a-video-game.wav"
+#define BUTTON_CLICK   ".\\assets\\sounds\\player-jumping-in-a-video-game.wav"
+#define START_PLAYING  ".\\assets\\sounds\\horn-transition.wav"
 
 
 // TILES

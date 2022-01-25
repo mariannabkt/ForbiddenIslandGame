@@ -27,6 +27,7 @@ class Game
 	Game();
 	void updateButtons();
 	void processEvents();
+	void shuffleTileGrid();
 
 public:
 

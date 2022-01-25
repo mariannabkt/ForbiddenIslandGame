@@ -84,17 +84,17 @@ void Button::update()
 			switch (m_func)
 			{
 			case PLAY:
-				playSound(NOTIFICATION, 1, false);
+				playSound(BUTTON_CLICK, 1, false);
 				game->setState(CHOOSE_PLAYER);
 				break;
 
 			case HOW_TO:
-				playSound(NOTIFICATION, 1, false);
+				playSound(BUTTON_CLICK, 1, false);
 				game->setState(HELP);
 				break;
 
 			case HOME:
-				playSound(NOTIFICATION, 1, false);
+				playSound(BUTTON_CLICK, 1, false);
 				game->setState(MAIN_MENU);
 				break;
 
@@ -111,7 +111,7 @@ void Button::update()
 				break;
 
 			case OK:
-				playSound(NOTIFICATION, 1, false);
+				playSound(BUTTON_CLICK, 1, false);
 				for (auto dp : game->getPlayers())
 					if (dp.second == game->getActivePlayer())
 					{

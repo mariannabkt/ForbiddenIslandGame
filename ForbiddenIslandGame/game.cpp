@@ -3,6 +3,7 @@
 #include "button.h"
 #include "tile.h"
 #include <sgg/graphics.h>
+#include <random>
 
 using namespace graphics;
 using namespace std;
@@ -39,21 +40,6 @@ Game::Game()
 	// init grid tiles
 	for (int i = 0; i < 20; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
-
-	// based on the playing grid
-	int t = 0;
-	for (int i = 0; i < 6; ++i)
-		for (int j = 0; j < 4; ++j)
-			if (Tile::getTilesGrid()[i][j])
-			{
-				// set cords for every grid tile
-				m_tiles[t]->setCords((i + 3.5f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
-
-				// set player's pawn cords
-				for (auto p : m_players)
-					p.second->isStartTile(m_tiles[t]);
-				++t;
-			}
 }
 
 
@@ -69,6 +55,9 @@ void Game::setState(game_state new_state)
 	switch (m_state)
 	{
 	case LOADING:
+
+		playMusic(ELEVATOR_MUSIC, 1.0f, true, 2000);
+
 		// preload assets
 		preloadBitmaps(BACKGROUNDS_FOLDER);
 		preloadBitmaps(BUTTON_FOLDER);
@@ -84,9 +73,15 @@ void Game::setState(game_state new_state)
 		stopMusic(1);
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
+		shuffleTileGrid();
+
 		// init players for new play session
 		for (auto p : m_players)
 			p.second->init();
+
+		// init tiles for new play session
+		for (auto t : m_tiles)
+			t->init();
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -115,9 +110,7 @@ void Game::setState(game_state new_state)
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
 
-		// init tiles for new play session
-		for (auto t : m_tiles)
-			t->init();
+		
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -130,6 +123,7 @@ void Game::setState(game_state new_state)
 	case PLAYING:
 
 		stopMusic(1);
+		playSound(START_PLAYING, 1, false);
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
 		for (auto p : m_players)
@@ -154,6 +148,7 @@ void Game::setState(game_state new_state)
 void Game::draw()
 {
 	Brush text;
+	Brush object;
 	Brush background;
 	background.outline_opacity = 0.0f;
 	
@@ -162,8 +157,15 @@ void Game::draw()
 	case INIT:
 		setFont(SCRATCHED_FONT);
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
-		drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2 + 1.0f, 2.0f, "LOADING ASSETS", text);
-		drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2 + 2.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
+		drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
+		drawText(CANVAS_WIDTH / 2 - 4.5, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
+
+		object.outline_opacity = 1.0f;
+		SETCOLOR(object.outline_color, 0.7f, 0.1f, 0.1f);
+		SETCOLOR(object.outline_color, 0.5f, 0.1f, 0.1f);
+		//float s = getGlobalTime() / 40;
+		//object.fill_opacity = 1.0f - s;
+		drawRect(CANVAS_WIDTH / 2 - 5.0f, CANVAS_HEIGHT / 2 + 2.0f, 4.0f, 2.0f, object);
 		break;
 		
 	case MAIN_MENU:
@@ -192,10 +194,9 @@ void Game::draw()
 		background.texture = PLAYING_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 
-		Brush wl;
-		wl.outline_opacity = 0.0f;
-		wl.texture = WATER_LEVEL;
-		drawRect(CANVAS_WIDTH / 2 + 11.5f, CANVAS_HEIGHT / 2 + 4.7f, 4.5f, 5.5f, wl);
+		object.outline_opacity = 0.0f;
+		object.texture = WATER_LEVEL;
+		drawRect(CANVAS_WIDTH / 2 + 11.5f, CANVAS_HEIGHT / 2 + 4.7f, 4.5f, 5.5f, object);
 
 		int t = 0;
 		for (int i = 0; i < 6; ++i)
@@ -386,6 +387,30 @@ void Game::processEvents()
 	for (auto event : m_events)
 		event->update();
 	m_events.remove_if([](Event* e) { return !e->isActive(); });
+}
+
+void Game::shuffleTileGrid()
+{
+	// To obtain a time-based seed
+	unsigned seed = 0;
+
+	// Shuffling our array
+	shuffle(m_tiles, m_tiles + 20, default_random_engine(seed));
+
+	// based on the playing grid
+	int t = 0;
+	for (int i = 0; i < 6; ++i)
+		for (int j = 0; j < 4; ++j)
+			if (Tile::getTilesGrid()[i][j])
+			{
+				// set cords for every grid tile
+				m_tiles[t]->setCords((i + 3.5f) * (TILE_SIZE + 0.2f), (j + 1.0f) * (TILE_SIZE + 0.8f));
+
+				// set player's pawn cords
+				for (auto p : m_players)
+					p.second->isStartTile(m_tiles[t]);
+				++t;
+			}
 }
 
 
