@@ -68,3 +68,24 @@ PlayerMotionEvent::PlayerMotionEvent(float start_x, float start_y, float end_x, 
 {
 
 }
+
+void SmokeEvent::draw() {
+	Brush br;
+	float s = m_elapsed_time / m_duration;
+	//br.texture = ASSET_PATH + string();
+	br.outline_opacity = 0.0f;
+	br.fill_opacity = 1.0f - s;
+	setScale(m_scale + s, m_scale + s);
+	setOrientation(m_orientation + s * 20.0f);
+	//drawRect(m_pos_x, m_pos_y, PLAYER_SIZE, PLAYER_SIZE, br);
+	resetPose();
+}
+
+
+
+SmokeEvent::SmokeEvent(float x, float y)
+	:Event(x, y, 2.0f, 0.0f)
+{
+	m_orientation = RAND0TO1() * 180.0f - 90.0f;
+	m_scale = 0.8f + RAND0TO1() * 4.0f;
+}

@@ -47,3 +47,10 @@ public:
 	PlayerMotionEvent(float start_x, float start_y, float end_x, float end_y, class Player* p);
 };
 
+class SmokeEvent : public Event {
+	float m_orientation;
+	float m_scale;
+public:
+	void draw() override;
+	SmokeEvent(float x, float y);
+};

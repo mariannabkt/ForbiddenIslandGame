@@ -20,7 +20,7 @@ class Player
 	player_role m_role;
 	string m_icon_path;
 	string m_pawn_path;
-	Tile* m_start_tile;
+	Tile* m_standing_tile;
 
 	void drawPawn();
 	void drawIcon(float width, float height);
@@ -36,7 +36,7 @@ public:
 	void isStartTile(Tile* t);
 	bool contains(float x, float y);
 
-	Tile* getStartTile() { return m_start_tile; }
+	Tile* getStandingTile() { return m_standing_tile; }
 	player_role getPlayerRole() { return m_role; }
 
 	float getPosX() { return m_pawn_posX; }

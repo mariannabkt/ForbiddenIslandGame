@@ -75,13 +75,13 @@ void Game::setState(game_state new_state)
 
 		shuffleTileGrid();
 
-		// init players for new play session
-		for (auto p : m_players)
-			p.second->init();
-
 		// init tiles for new play session
 		for (auto t : m_tiles)
 			t->init();
+
+		// init players for new play session
+		for (auto p : m_players)
+			p.second->init();
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -110,8 +110,6 @@ void Game::setState(game_state new_state)
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
 
-		
-
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
@@ -127,7 +125,12 @@ void Game::setState(game_state new_state)
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
 		for (auto p : m_players)
-			(p.second->getPlayersTurn() == 1) ? p.second->setActive(true) : p.second->setActive(false);
+			if (p.second->getPlayersTurn() == 1)
+			{
+				p.second->setActive(true);
+				setActivePlayer(p.second);
+			}
+			else p.second->setActive(false);
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -159,13 +162,6 @@ void Game::draw()
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
 		drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
 		drawText(CANVAS_WIDTH / 2 - 4.5, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
-
-		object.outline_opacity = 1.0f;
-		SETCOLOR(object.outline_color, 0.7f, 0.1f, 0.1f);
-		SETCOLOR(object.outline_color, 0.5f, 0.1f, 0.1f);
-		//float s = getGlobalTime() / 40;
-		//object.fill_opacity = 1.0f - s;
-		drawRect(CANVAS_WIDTH / 2 - 5.0f, CANVAS_HEIGHT / 2 + 2.0f, 4.0f, 2.0f, object);
 		break;
 		
 	case MAIN_MENU:
@@ -280,34 +276,48 @@ void Game::updateButtons()
 			button.second->update();
 }
 
-/*_________________________________
- |								   |
- |  >>>>> GET GAME INSTANCE <<<<<  |
- |---------------------------------|
- | If there's not a game instance, |
- | create one and return it and if |
- | a game already exists then just |
- | return the existing instance.   |
- |_________________________________|
+
+/*____________________________________________________________________
+
+  >>>>> UPDATE EVENTS FROM THE LIST AND REMOVE THE INACTIVE ONES <<<<<
+  ____________________________________________________________________
 */
-Game* Game::getInstance() 
+void Game::processEvents()
 {
-	if (!m_instance) 
-		m_instance = new Game();
-	return m_instance;
+	for (auto event : m_events)
+		event->update();
+	m_events.remove_if([](Event* e) { return !e->isActive(); });
 }
 
 
-/*__________________________________
+/*___________________________________________
 
-  >>>>> RELEASE GAME INSTANCE <<<<<
-  __________________________________
+  >>>>> SHUFFLE TILE GRID AND SET CORDS <<<<<
+  ___________________________________________
 */
-void Game::releaseInstance()
+void Game::shuffleTileGrid()
 {
-	if (m_instance) 
-		delete m_instance;
-	m_instance = nullptr;
+	// To obtain a time-based seed
+	unsigned seed = 0;
+
+	// Shuffling our array
+	shuffle(m_tiles, m_tiles + 24, default_random_engine(seed));
+
+	// based on the playing grid
+	int t = 0;
+	for (int i = 0; i < 6; ++i)
+		for (int j = 0; j < 6; ++j)
+			if (Tile::getTilesGrid()[i][j])
+			{
+				// set cords for every grid tile
+				m_tiles[t]->setCords((i + 3.6f) * (TILE_SIZE + 0.2f), (j + 0.7f) * (TILE_SIZE + 0.2f));
+				m_tiles[t]->setGridPos(i, j);
+
+				// set player's pawn cords
+				for (auto p : m_players)
+					p.second->isStartTile(m_tiles[t]);
+				++t;
+			}
 }
 
 
@@ -377,40 +387,34 @@ void Game::flipPrevPage()
 }
 
 
-/*____________________________________________________________________
-
-  >>>>> UPDATE EVENTS FROM THE LIST AND REMOVE THE INACTIVE ONES <<<<<
-  ____________________________________________________________________
+/*_________________________________
+ |								   |
+ |  >>>>> GET GAME INSTANCE <<<<<  |
+ |---------------------------------|
+ | If there's not a game instance, |
+ | create one and return it and if |
+ | a game already exists then just |
+ | return the existing instance.   |
+ |_________________________________|
 */
-void Game::processEvents()
+Game* Game::getInstance()
 {
-	for (auto event : m_events)
-		event->update();
-	m_events.remove_if([](Event* e) { return !e->isActive(); });
+	if (!m_instance)
+		m_instance = new Game();
+	return m_instance;
 }
 
-void Game::shuffleTileGrid()
+
+/*__________________________________
+
+  >>>>> RELEASE GAME INSTANCE <<<<<
+  __________________________________
+*/
+void Game::releaseInstance()
 {
-	// To obtain a time-based seed
-	unsigned seed = 0;
-
-	// Shuffling our array
-	shuffle(m_tiles, m_tiles + 20, default_random_engine(seed));
-
-	// based on the playing grid
-	int t = 0;
-	for (int i = 0; i < 6; ++i)
-		for (int j = 0; j < 6; ++j)
-			if (Tile::getTilesGrid()[i][j])
-			{
-				// set cords for every grid tile
-				m_tiles[t]->setCords((i + 3.6f) * (TILE_SIZE + 0.2f), (j + 0.8f) * (TILE_SIZE + 0.2f));
-
-				// set player's pawn cords
-				for (auto p : m_players)
-					p.second->isStartTile(m_tiles[t]);
-				++t;
-			}
+	if (m_instance)
+		delete m_instance;
+	m_instance = nullptr;
 }
 
 

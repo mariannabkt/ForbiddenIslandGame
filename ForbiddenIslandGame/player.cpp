@@ -57,7 +57,7 @@ void Player::init()
 	m_active = false;
 	m_selected = false;
 	m_highlighted = false;
-	setPawnCords(m_start_tile->getPosX(), m_start_tile->getPosY());
+	setPawnCords(m_standing_tile->getPosX(), m_standing_tile->getPosY());
 
 	switch (m_role) {
 	case EXPLORER:
@@ -243,8 +243,8 @@ void Player::isStartTile(Tile* t)
 		(t->getImage() == PILI_PROSMONIS && m_role == DIVER) ||
 		(t->getImage() == XEFWTO && m_role == PILOT))
 	{
-		m_start_tile = t;
-		setPawnCords(m_start_tile->getPosX(), m_start_tile->getPosY());
+		m_standing_tile = t;
+		setPawnCords(m_standing_tile->getPosX(), m_standing_tile->getPosY());
 	}
 }
 
