@@ -56,6 +56,13 @@ Game::Game()
 			}
 	// preload assets
 	preloadBitmaps(ASSET_PATH);
+	preloadBitmaps(BACKGROUNDS_FOLDER);
+	preloadBitmaps(BUTTON_FOLDER);
+	preloadBitmaps(PLAYERS_FOLDER);
+	preloadBitmaps(PLAYING_FOLDER);
+	preloadBitmaps(HELP_PAGES_FOLDER);
+	preloadBitmaps(TREASURES_FOLDER);
+	preloadBitmaps(TILES_FOLDER);
 }
 
 
