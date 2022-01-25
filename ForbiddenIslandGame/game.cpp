@@ -54,15 +54,6 @@ Game::Game()
 					p.second->isStartTile(m_tiles[t]);
 				++t;
 			}
-	// preload assets
-	//preloadBitmaps(ASSET_PATH);
-	/*preloadBitmaps(BACKGROUNDS_FOLDER);
-	preloadBitmaps(BUTTON_FOLDER);
-	preloadBitmaps(PLAYERS_FOLDER);
-	preloadBitmaps(PLAYING_FOLDER);
-	preloadBitmaps(HELP_PAGES_FOLDER);
-	preloadBitmaps(TREASURES_FOLDER);
-	preloadBitmaps(TILES_FOLDER);*/
 }
 
 
@@ -77,6 +68,17 @@ void Game::setState(game_state new_state)
 
 	switch (m_state)
 	{
+	case LOADING:
+		// preload assets
+		preloadBitmaps(BACKGROUNDS_FOLDER);
+		preloadBitmaps(BUTTON_FOLDER);
+		preloadBitmaps(PLAYERS_FOLDER);
+		preloadBitmaps(PLAYING_FOLDER);
+		preloadBitmaps(HELP_PAGES_FOLDER);
+		preloadBitmaps(TREASURES_FOLDER);
+		preloadBitmaps(TILES_FOLDER);
+		break;
+
 	case MAIN_MENU:
 
 		stopMusic(1);
@@ -161,6 +163,7 @@ void Game::draw()
 		setFont(SCRATCHED_FONT);
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
 		drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2 + 1.0f, 2.0f, "LOADING ASSETS", text);
+		drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2 + 2.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
 		break;
 		
 	case MAIN_MENU:
@@ -179,7 +182,7 @@ void Game::draw()
 
 		setFont(IMMORTAL_FONT);
 		SETCOLOR(text.fill_color, 0.5f, 0.2f, 0.2f);
-		drawText(CANVAS_WIDTH / 2 - 2.2f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER " + to_string(getCurPlayer() + 1), text);
+		drawText(CANVAS_WIDTH / 2 - 2.3f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER  " + to_string(getCurPlayer() + 1), text);
 
 		for (auto p : m_players)
 			p.second->draw();
@@ -226,6 +229,10 @@ void Game::update()
 	switch (m_state)
 	{
 	case INIT:
+		setState(LOADING);
+		break;
+
+	case LOADING:
 		setState(MAIN_MENU);
 		break;
 	
@@ -310,6 +317,7 @@ void Game::releaseInstance()
 */
 void Game::flipNextPage()
 {
+	playSound(FLIP_PAGE, 1, false);
 	switch (getPage())
 	{
 	case ONE:
@@ -343,6 +351,7 @@ void Game::flipNextPage()
 */
 void Game::flipPrevPage()
 {
+	playSound(FLIP_PAGE, 1, false);
 	switch (getPage())
 	{
 	case ONE:

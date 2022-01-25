@@ -28,6 +28,7 @@ int  main(int argc, char** argv)
 	setUpdateFunction(update);
 
 	Game* game = Game::getInstance();
+	game->setState(INIT);
 
 	startMessageLoop();
 

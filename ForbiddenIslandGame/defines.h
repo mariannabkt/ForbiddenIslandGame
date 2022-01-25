@@ -35,7 +35,7 @@ inline float distance(float x1, float y1, float x2, float y2)
 }
 
 
-enum game_state  { INIT, MAIN_MENU, HELP, CHOOSE_PLAYER, PLAYING };
+enum game_state  { INIT, LOADING, MAIN_MENU, HELP, CHOOSE_PLAYER, PLAYING };
 enum help_page   { ONE, TWO, THREE, FOUR };
 enum button_func { PLAY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
 enum player_role { DIVER, EXPLORER, PILOT };
@@ -118,6 +118,7 @@ enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
 
 
 // SOUNDS
+#define FLIP_PAGE	   ".\\assets\\sounds\\page_flip.wav"
 #define NOTIFICATION   ".\\assets\\sounds\\unlock-game-notification.wav"
 #define JUMPING        ".\\assets\\sounds\\player-jumping-in-a-video-game.wav"
 
