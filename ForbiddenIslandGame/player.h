@@ -1,6 +1,8 @@
 #pragma once
 #include "defines.h"
+#include "treasure.h"
 #include "tile.h"
+#include <map>
 
 class Player 
 {
@@ -20,6 +22,7 @@ class Player
 	string m_pawn_img;
 	player_role m_role;
 	Tile* m_standing_tile;
+	map<treasure_type, Treasure*> m_treasures = map<treasure_type, Treasure*>();
 
 	void drawPawn();
 	void drawIcon(float width, float height);
@@ -38,12 +41,12 @@ public:
 	player_role getPlayerRole() { return m_role; }
 
 	Tile* getStandingTile() { return m_standing_tile; }
-	void setStandingTile(Tile* t) { m_standing_tile = t; }
+	void setStandingTile(Tile* t) { m_standing_tile = t; m_standing_tile->setTaken(true); }
 	
 	float getPosX() { return m_pawn_posX; }
 	float getPosY() { return m_pawn_posY; }
 
-	void setPawnCords(float x, float y) { m_pawn_posX = x; m_pawn_posY = y; }
+	void setCords(float x, float y) { m_pawn_posX = x; m_pawn_posY = y; }
 	void setIconCords(float x, float y) { m_icon_posX = x; m_icon_posY = y; }
 
 	bool isActive() { return m_active; }

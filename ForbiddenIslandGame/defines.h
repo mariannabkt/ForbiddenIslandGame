@@ -39,7 +39,8 @@ enum game_state  { INIT, LOADING, MAIN_MENU, HELP, CHOOSE_PLAYER, PLAYING };
 enum help_page   { ONE, TWO, THREE, FOUR };
 enum button_func { PLAY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
 enum player_role { DIVER, EXPLORER, PILOT };
-enum tile_type   { BASIC, FIRE, WATER, AIR, EARTH, LANDING };
+enum tile_type   { BASIC,TREASURE, LANDING };
+enum treasure_type { FIRE, WATER, AIR, EARTH };
 
 
 // ASSET FOLDERS

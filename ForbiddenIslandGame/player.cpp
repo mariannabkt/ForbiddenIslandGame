@@ -43,6 +43,10 @@ Player::Player(player_role r) : m_role(r)
 		setIconCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
 	}
+	m_treasures[AIR] = new Treasure(AIR);
+	m_treasures[FIRE] = new Treasure(FIRE);
+	m_treasures[EARTH] = new Treasure(EARTH);
+	m_treasures[WATER] = new Treasure(WATER);
 }
 
 
@@ -69,6 +73,8 @@ void Player::init()
 		setIconCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
 	}
+	for (auto t : m_treasures) 
+		t.second->setCollected(false);
 }
 
 
@@ -138,12 +144,12 @@ void Player::drawActions(float x, float y)
 	Brush act2;
 	act2.texture = ACTION_TWO;
 	act2.outline_opacity = 0.0f;
-	drawRect(x, y + 1.2f, 1.0f, 1.0f, act2);
+	drawRect(x + 1.2f, y, 1.0f, 1.0f, act2);
 
 	Brush act3;
 	act3.texture = ACTION_THREE;
 	act3.outline_opacity = 0.0f;
-	drawRect(x, y + 2.4f, 1.0f, 1.0f, act3);
+	drawRect(x + 2.4f, y, 1.0f, 1.0f, act3);
 }
 
 
@@ -165,6 +171,10 @@ void Player::draw()
 
 		if (m_turn == 1)
 		{
+			m_treasures[AIR]->setCords(-7.0f, -3.0f);
+			m_treasures[FIRE]->setCords(-5.0f, -3.0f);
+			m_treasures[EARTH]->setCords(-7.0f, -5.0f);
+			m_treasures[WATER]->setCords(-5.0f, -3.0f);
 			setIconCords(1.5f, 1.5f);
 			drawActions(1.5f, 3.2f);
 
@@ -173,6 +183,10 @@ void Player::draw()
 		}
 		else if (m_turn == 2)
 		{
+			m_treasures[AIR]->setCords(-7.0f, 5.0f);
+			m_treasures[FIRE]->setCords(-5.0f, 5.0f);
+			m_treasures[EARTH]->setCords(-7.0f, -7.0f);
+			m_treasures[WATER]->setCords(-5.0f, -7.0f);
 			setIconCords(1.5f, 14.5f);
 			drawActions(1.5f, 10.5f);
 
@@ -181,6 +195,8 @@ void Player::draw()
 		}
 		drawPawn();
 		drawIcon(3.5f, 2.0f);
+		for (auto t : m_treasures)
+			t.second->draw();
 	}
 }
 
@@ -239,7 +255,7 @@ void Player::isStartTile(Tile* t)
 		(t->getImage() == XEFWTO && m_role == PILOT))
 	{
 		setStandingTile(t);
-		setPawnCords(m_standing_tile->getPosX(), m_standing_tile->getPosY());
+		setCords(m_standing_tile->getPosX(), m_standing_tile->getPosY());
 	}
 }
 

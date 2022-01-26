@@ -117,7 +117,6 @@ void Button::update()
 					{
 						dp.second->setSelected(true);
 						dp.second->setPlayerTurn(game->getCurPlayer() + 1);
-						dp.second->getStandingTile()->setTaken(true);
 					}
 				if (game->getCurPlayer()) 
 					game->setState(PLAYING);

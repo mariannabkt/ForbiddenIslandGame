@@ -1,5 +1,6 @@
 #include "tile.h"
 #include "game.h"
+#include "event.h"
 #include "defines.h"
 
 using namespace graphics;
@@ -16,22 +17,26 @@ Tile::Tile(string tile_name) : m_tile_img(tile_name)
 	}
 	else if (m_tile_img == KIPOS_KRA || m_tile_img == KIPOS_PSI)
 	{
-		m_type = AIR;
+		m_treasure = AIR;
+		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
 	else if (m_tile_img == NAOS_FEGGARIOY || m_tile_img == NAOS_ILIOY)
 	{
-		m_type = EARTH;
+		m_treasure = EARTH;
+		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
 	else if (m_tile_img == PALATI_KOR || m_tile_img == PALATI_PAL)
 	{
-		m_type = WATER;
+		m_treasure = WATER;
+		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
 	else if (m_tile_img == SPILIA_LAVAS || m_tile_img == SPILIA_SKIWN)
 	{
-		m_type = FIRE;
+		m_treasure = FIRE;
+		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
 	else 
@@ -104,6 +109,8 @@ void Tile::update()
 
 			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
+		else 
+			setCanPerformAction(false);
 		break;
 
 	case DIVER:
@@ -119,6 +126,8 @@ void Tile::update()
 
 			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
+		else
+			setCanPerformAction(false);
 		break;
 
 	case PILOT:
@@ -142,6 +151,8 @@ void Tile::update()
 
 			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
+		else
+			setCanPerformAction(false);
 		break;
 	}
 
@@ -157,8 +168,16 @@ void Tile::update()
 	{
 		if (ms.button_left_released)
 		{
-			game->addEvent(new PlayerMotionEvent(p->getPosX(), p->getPosY(), m_tile_posX, m_tile_posY, p));
-			p->setStandingTile(this);
+			if (m_flooded)
+			{
+				m_flooded = false;
+			}
+			else
+			{
+				game->addEvent(new PlayerMotionEvent<Player*, Tile*>(p, this));
+				p->setStandingTile(this);
+				t->setTaken(false);
+			}
 		}
 	}
 	
@@ -172,5 +191,16 @@ void Tile::update()
 */
 bool Tile::contains(float x, float y)
 {
-	return (distance(x, y, m_tile_posX, m_tile_posY) < TILE_SIZE);
+	return (x > m_tile_left && x < m_tile_right && y > m_tile_up && y < m_tile_down);
+}
+
+void Tile::setCords(float x, float y)
+{
+	m_tile_posX = x; 
+	m_tile_posY = y; 
+
+	m_tile_left = m_tile_posX - TILE_SIZE / 2;
+	m_tile_right = m_tile_posX + TILE_SIZE / 2;
+	m_tile_up = m_tile_posY - TILE_SIZE / 2;
+	m_tile_down = m_tile_posY + TILE_SIZE / 2;
 }

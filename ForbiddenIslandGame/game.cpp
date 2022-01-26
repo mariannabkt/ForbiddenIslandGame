@@ -111,6 +111,8 @@ void Game::setState(game_state new_state)
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
 
+		m_cur_player = 0;
+
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
@@ -311,12 +313,13 @@ void Game::shuffleTileGrid()
 			if (Tile::getTilesGrid()[i][j])
 			{
 				// set cords for every grid tile
-				m_tiles[t]->setCords((i + 3.6f) * (TILE_SIZE + 0.2f), (j + 0.7f) * (TILE_SIZE + 0.2f));
 				m_tiles[t]->setGridPos(i, j);
-
+				m_tiles[t]->setCords((i + 3.6f) * (TILE_SIZE + 0.2f), (j + 0.7f) * (TILE_SIZE + 0.2f));
+				
 				// set player's pawn cords
 				for (auto p : m_players)
 					p.second->isStartTile(m_tiles[t]);
+
 				++t;
 			}
 }

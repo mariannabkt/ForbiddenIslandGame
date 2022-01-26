@@ -7,9 +7,15 @@ class Tile
 {
 	string m_tile_img;
 	tile_type m_type;
+	treasure_type m_treasure;
 
 	float m_tile_posX = 0.0f;
 	float m_tile_posY = 0.0f;
+
+	float m_tile_left;
+	float m_tile_right;
+	float m_tile_up;
+	float m_tile_down;
 
 	int m_grid_i = 0;
 	int m_grid_j = 0;
@@ -42,7 +48,7 @@ public:
 	int getPosI() { return m_grid_i; }
 	int getPosJ() { return m_grid_j; }
 
-	void setCords(float x, float y) { m_tile_posX = x; m_tile_posY = y; }
+	void setCords(float x, float y);
 	void setGridPos(float x, float y) { m_grid_i = x; m_grid_j = y; }
 
 	void setTaken(bool a) { m_hasPlayer = a; }

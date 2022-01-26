@@ -25,26 +25,13 @@ void StateTransitionEvent::draw()
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 }
 
-void PlayerMotionEvent::update() {
-	Event::update();
-	if (!m_player) {
-		m_active = false;
-		return;
-	}
-
-	float s = m_elapsed_time / m_duration;
-	float x = m_start_x * (1.0f - s) + m_stop_x * s;
-	float y = m_start_y * (1.0f - s) + m_stop_y * s;
-	m_player->setPawnCords(x, y);
-}
 
 
-
-PlayerMotionEvent::PlayerMotionEvent(float start_x, float start_y, float end_x, float end_y, Player* p)
-	: Event(0.0f, 0.0f, 1.0f), m_start_x(start_x), m_stop_x(end_x), m_start_y(start_y), m_stop_y(end_y),
-	m_player(p)
+SmokeEvent::SmokeEvent(float x, float y)
+	:Event(x, y, 2.0f)
 {
-
+	m_orientation = RAND0TO1() * 180.0f - 90.0f;
+	m_scale = 0.8f + RAND0TO1() * 4.0f;
 }
 
 void SmokeEvent::draw() {
@@ -57,13 +44,4 @@ void SmokeEvent::draw() {
 	setOrientation(m_orientation + s * 20.0f);
 	//drawRect(m_pos_x, m_pos_y, PLAYER_SIZE, PLAYER_SIZE, br);
 	resetPose();
-}
-
-
-
-SmokeEvent::SmokeEvent(float x, float y)
-	:Event(x, y, 2.0f)
-{
-	m_orientation = RAND0TO1() * 180.0f - 90.0f;
-	m_scale = 0.8f + RAND0TO1() * 4.0f;
 }
