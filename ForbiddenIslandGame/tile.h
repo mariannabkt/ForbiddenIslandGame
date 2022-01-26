@@ -16,8 +16,10 @@ class Tile
 	
 	bool m_sunken = false;
 	bool m_flooded = false;
+
 	bool m_hasTreasure = false;
 	bool m_treasureTaken = false;
+
 	bool m_hasPlayer = false;
 	bool m_canPerformAction = false;
 
@@ -32,15 +34,17 @@ public:
 
 	static int(&getTilesGrid())[6][6] { return m_tiles_grid; }
 	string getImage() { return m_tile_img; }
-	bool isTaken() { return m_hasPlayer; }
+	bool hasPlayer() { return m_hasPlayer; }
+
 	float getPosX() { return m_tile_posX; }
 	float getPosY() { return m_tile_posY; }
+
 	int getPosI() { return m_grid_i; }
 	int getPosJ() { return m_grid_j; }
 
-	bool hasPlayer() { return m_hasPlayer; }
 	void setCords(float x, float y) { m_tile_posX = x; m_tile_posY = y; }
 	void setGridPos(float x, float y) { m_grid_i = x; m_grid_j = y; }
+
 	void setTaken(bool a) { m_hasPlayer = a; }
 	void setCanPerformAction(bool b) { m_canPerformAction = b; }
 };

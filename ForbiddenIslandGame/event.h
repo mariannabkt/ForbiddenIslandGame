@@ -9,16 +9,13 @@ protected:
 	float m_event_posY;
 
 	float m_duration;
-	float m_delay;
-
 	float m_elapsed_time;
-	float m_elapsed_delay;
 
 	bool m_active = true;
 
 public:
 
-	Event(float x = 0.0f, float y = 0.0f, float dur = 2.0f, float del = 0.0f);
+	Event(float x = 0.0f, float y = 0.0f, float dur = 2.0f) : m_event_posX(x), m_event_posY(y), m_duration(dur){}
 	virtual ~Event() {};
 
 	virtual void draw() {};
@@ -26,12 +23,11 @@ public:
 
 	bool isActive() { return m_active; }
 	void disable() { m_active = false; }
-	bool waiting();
 
 };
 
 
-class FadeFromBlackEvent : public Event {
+class StateTransitionEvent : public Event {
 public:
 	void draw() override;
 };

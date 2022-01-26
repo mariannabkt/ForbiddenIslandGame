@@ -73,11 +73,12 @@ void Game::setState(game_state new_state)
 		stopMusic(1);
 		playMusic(NATURAL_AMBIENCE, 1.0f, true, 1000);
 
-		shuffleTileGrid();
-
 		// init tiles for new play session
 		for (auto t : m_tiles)
 			t->init();
+
+		// shuffle tiles for new play session
+		shuffleTileGrid();
 
 		// init players for new play session
 		for (auto p : m_players)
@@ -124,13 +125,9 @@ void Game::setState(game_state new_state)
 		playSound(START_PLAYING, 1, false);
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
+		// player 1 plays first
 		for (auto p : m_players)
-			if (p.second->getPlayersTurn() == 1)
-			{
-				p.second->setActive(true);
-				setActivePlayer(p.second);
-			}
-			else p.second->setActive(false);
+			(p.second->getPlayerTurn() == 1) ? setActivePlayer(p.second) : p.second->setActive(false);
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -139,7 +136,8 @@ void Game::setState(game_state new_state)
 		m_buttons[EXIT]->enable();
 		break;
 	}
-	addEvent(new FadeFromBlackEvent());
+	// smooth transition event between states
+	addEvent(new StateTransitionEvent());
 }
 
 
@@ -160,8 +158,16 @@ void Game::draw()
 	case INIT:
 		setFont(SCRATCHED_FONT);
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
-		drawText(CANVAS_WIDTH / 2 - 6.5, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
-		drawText(CANVAS_WIDTH / 2 - 4.5, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
+		drawText(CANVAS_WIDTH / 2 - 6.5f, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
+		drawText(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
+
+		SETCOLOR(object.outline_color, 1.0f, 1.0f, 1.0f);
+		SETCOLOR(object.fill_color, 0.7f, 0.1f, 0.1f);
+		object.gradient = true;
+		object.gradient_dir_u = 4.0f;
+		object.gradient_dir_v = 0.0f;
+		SETCOLOR(object.fill_secondary_color, 0.0f, 0.0f, 0.0f);
+		drawRect(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 3.0f, 5.0f, 2.0f, object);
 		break;
 		
 	case MAIN_MENU:
@@ -179,7 +185,7 @@ void Game::draw()
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 
 		setFont(IMMORTAL_FONT);
-		SETCOLOR(text.fill_color, 0.5f, 0.2f, 0.2f);
+		SETCOLOR(text.fill_color, 0.5f, 0.2f, 0.0f);
 		drawText(CANVAS_WIDTH / 2 - 2.3f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER  " + to_string(getCurPlayer() + 1), text);
 
 		for (auto p : m_players)
@@ -231,17 +237,7 @@ void Game::update()
 
 	case LOADING:
 		setState(MAIN_MENU);
-		break;
-	
-	case MAIN_MENU:
-		updateButtons();
-		processEvents();
-		break;
-
-	case HELP:
-		updateButtons();
-		processEvents();
-		break;
+		break;;
 
 	case CHOOSE_PLAYER:
 		updateButtons();
@@ -259,6 +255,11 @@ void Game::update()
 
 		for (auto t : m_tiles)
 			t->update();
+		break;
+
+	default:
+		updateButtons();
+		processEvents();
 		break;
 	}
 }
@@ -303,7 +304,7 @@ void Game::shuffleTileGrid()
 	// Shuffling our array
 	shuffle(m_tiles, m_tiles + 24, default_random_engine(seed));
 
-	// based on the playing grid
+	// based on the tile grid
 	int t = 0;
 	for (int i = 0; i < 6; ++i)
 		for (int j = 0; j < 6; ++j)
@@ -425,14 +426,6 @@ void Game::releaseInstance()
 */
 Game::~Game() 
 {
-	while (!m_events.empty()) {
-		delete m_events.back();
-		m_events.pop_back();
-	}
-
-	for (int i = 0; i < 20; ++i)
-		delete m_tiles[i];
-
 	for (auto demo : m_players)
 		delete demo.second;
 	m_players.clear();
@@ -440,6 +433,13 @@ Game::~Game()
 	for (auto button : m_buttons)
 		delete button.second;
 	m_buttons.clear();	
+
+	for (auto event : m_events)
+		delete event;
+	m_events.clear();
+
+	for (int i = 0; i < 24; ++i)
+		delete m_tiles[i];
 }
 
 
@@ -465,39 +465,3 @@ Game::~Game()
 		}
 	}
 */
-
-/*m_players.clear();
-	delete & m_players;
-
-	m_demo_players.clear();
-	delete & m_demo_players;
-
-	m_buttons.clear();
-	delete& m_buttons;
-
-	m_events.clear();
-	delete & m_events;*/
-
-
-	/*for_each(m_players.begin(), m_players.end(), [](auto item)->void { delete item; });
-	m_demo_players.clear();
-
-	for_each(m_events.begin(), m_events.end(), [](auto item)->void{ delete item; });
-	m_events.clear();
-
-	for_each(m_demo_players.begin(), m_demo_players.end(), [](auto item)->void { delete item.second; });
-	m_demo_players.clear();
-
-	for_each(m_buttons.begin(), m_buttons.end(), [](auto item)->void { delete item.second; });
-	m_buttons.clear();*/
-
-
-	/*std::map<player_role, DemoPlayer*>::iterator itr = m_demo_players.begin();
-	while (itr != m_demo_players.end()) {
-		m_demo_players.erase(itr++);
-	}
-
-	std::map<button_func, Button*>::iterator it = m_buttons.begin();
-	while (it != m_buttons.end()) {
-		m_buttons.erase(it++);
-	}*/

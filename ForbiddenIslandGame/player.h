@@ -16,10 +16,9 @@ class Player
 
 	int m_turn = 0;
 	string m_name;
-
+	string m_icon_img;
+	string m_pawn_img;
 	player_role m_role;
-	string m_icon_path;
-	string m_pawn_path;
 	Tile* m_standing_tile;
 
 	void drawPawn();
@@ -36,9 +35,11 @@ public:
 	void isStartTile(Tile* t);
 	bool contains(float x, float y);
 
-	Tile* getStandingTile() { return m_standing_tile; }
 	player_role getPlayerRole() { return m_role; }
 
+	Tile* getStandingTile() { return m_standing_tile; }
+	void setStandingTile(Tile* t) { m_standing_tile = t; }
+	
 	float getPosX() { return m_pawn_posX; }
 	float getPosY() { return m_pawn_posY; }
 
@@ -54,6 +55,6 @@ public:
 	bool isHighlighted() { return m_highlighted; }
 	void setHighlight(bool h) { m_highlighted = h; }
 
-	int getPlayersTurn() { return m_turn; }
-	void setPlayersTurn(int t) { m_turn = t; }
+	int getPlayerTurn() { return m_turn; }
+	void setPlayerTurn(int t) { m_turn = t; }
 };

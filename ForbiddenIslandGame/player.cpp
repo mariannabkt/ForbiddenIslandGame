@@ -12,7 +12,7 @@ Game* game = Game::getInstance();
 
 /*___________________________________________________________________________
 
-  >>>>> CREATE NEW PLAYER AND INITIALIZE IT'S FIELDS BASED ON IT'S ROLE <<<<<
+  >>>>> CREATE NEW PLAYER AND INITIALIZE IT'S MEMBERS BASED ON IT'S ROLE <<<<<
   ___________________________________________________________________________
 */
 Player::Player(player_role r) : m_role(r)
@@ -21,24 +21,24 @@ Player::Player(player_role r) : m_role(r)
 	{
 	case EXPLORER:
 		m_name = "Explorer";
-		m_icon_path = EXPLORER_ROLE;
-		m_pawn_path = EXPLORER_PAWN;
+		m_icon_img = EXPLORER_ROLE;
+		m_pawn_img = EXPLORER_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.3f, 0.0f);
 		setIconCords(CANVAS_WIDTH / 2 - 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
 
 	case DIVER:
 		m_name = "Diver";
-		m_icon_path = DIVER_ROLE;
-		m_pawn_path = DIVER_PAWN;
+		m_icon_img = DIVER_ROLE;
+		m_pawn_img = DIVER_PAWN;
 		SETCOLOR(m_color, 0.1f, 0.1f, 0.1f);
 		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
 
 	case PILOT:
 		m_name = "Pilot";
-		m_icon_path = PILOT_ROLE;
-		m_pawn_path = PILOT_PAWN;
+		m_icon_img = PILOT_ROLE;
+		m_pawn_img = PILOT_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.0f, 0.3f);
 		setIconCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		break;
@@ -46,10 +46,10 @@ Player::Player(player_role r) : m_role(r)
 }
 
 
-/*________________________________________________________
+/*_________________________________________________________
 
-  >>>>> INIT NECESSARY FIELDS FOR EVERY PLAY SESSION <<<<<
-  ________________________________________________________
+  >>>>> INIT NECESSARY MEMBERS FOR EVERY PLAY SESSION <<<<<
+  _________________________________________________________
 */
 void Player::init()
 {
@@ -57,7 +57,6 @@ void Player::init()
 	m_active = false;
 	m_selected = false;
 	m_highlighted = false;
-	setPawnCords(m_standing_tile->getPosX(), m_standing_tile->getPosY());
 
 	switch (m_role) {
 	case EXPLORER:
@@ -84,11 +83,8 @@ void Player::drawIcon(float width, float height)
 	Brush back;
 	back.outline_opacity = 0.0f;
 
-	if ((!isActive() && game->getState() == CHOOSE_PLAYER && isHighlighted()) ||
-		( isActive() && game->getState() == PLAYING))
-		back.fill_opacity = 0.8f;
-	else
-		back.fill_opacity = 0.0f;
+	back.fill_opacity = (!isActive() && game->getState() == CHOOSE_PLAYER && isHighlighted()) || 
+						( isActive() && game->getState() == PLAYING) ? 0.8f : 0.0f;
 
 	if ((isActive() || isSelected()) && game->getState() == CHOOSE_PLAYER)
 	{
@@ -99,7 +95,7 @@ void Player::drawIcon(float width, float height)
 
 	//--- DRAW PLAYER'S ICON ---
 	Brush icon;
-	icon.texture = m_icon_path;
+	icon.texture = m_icon_img;
 	icon.outline_opacity = 0.0f;
 	drawRect(m_icon_posX, m_icon_posY, width, height, icon);
 }
@@ -117,11 +113,11 @@ void Player::drawPawn()
 	back.fill_opacity = 1.0f * isActive();
 	back.outline_opacity = 0.0f;
 	back.texture = WHITE_PAWN;
-	drawRect(m_pawn_posX, m_pawn_posY, PLAYER_SIZE + 0.15f, PLAYER_SIZE + 0.20f, back);
+	drawRect(m_pawn_posX, m_pawn_posY, PLAYER_SIZE + 0.3f, PLAYER_SIZE + 0.3f, back);
 
 	//--- DRAW PLAYER'S PAWN ---
 	Brush pawn;
-	pawn.texture = m_pawn_path;
+	pawn.texture = m_pawn_img;
 	pawn.outline_opacity = 0.0f;
 	drawRect(m_pawn_posX, m_pawn_posY, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
 }
@@ -213,7 +209,6 @@ void Player::update()
 			// activate player
 			if (ms.button_left_released)
 			{
-				setActive(true);
 				game->setActivePlayer(this);
 
 				// disable other players
@@ -243,7 +238,7 @@ void Player::isStartTile(Tile* t)
 		(t->getImage() == PILI_PROSMONIS && m_role == DIVER) ||
 		(t->getImage() == XEFWTO && m_role == PILOT))
 	{
-		m_standing_tile = t;
+		setStandingTile(t);
 		setPawnCords(m_standing_tile->getPosX(), m_standing_tile->getPosY());
 	}
 }

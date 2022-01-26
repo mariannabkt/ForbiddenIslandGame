@@ -6,7 +6,7 @@ using namespace graphics;
 
 /*_______________________________________________________________________________
 
-  >>>>> CREATE NEW BUTTON AND INITIALIZE IT'S FIELDS BASED ON IT'S FUNCTION <<<<<
+  >>>>> CREATE NEW BUTTON AND INITIALIZE IT'S MEMBERS BASED ON IT'S FUNCTION <<<<<
   _______________________________________________________________________________
 */
 Button::Button(button_func b, float center_width_offset, float center_height_offset, float width, float height) 
@@ -77,7 +77,7 @@ void Button::update()
 	if (contains(mx, my))
 	{
 		// highlight button
-		setHighlight(true);
+		m_highlighted = true;
 
 		if (ms.button_left_released)
 		{
@@ -116,7 +116,7 @@ void Button::update()
 					if (dp.second == game->getActivePlayer())
 					{
 						dp.second->setSelected(true);
-						dp.second->setPlayersTurn(game->getCurPlayer() + 1);
+						dp.second->setPlayerTurn(game->getCurPlayer() + 1);
 						dp.second->getStandingTile()->setTaken(true);
 					}
 				if (game->getCurPlayer()) 
@@ -127,7 +127,7 @@ void Button::update()
 		}
 	}
 	else 
-		setHighlight(false);
+		m_highlighted = false;
 }
 
 

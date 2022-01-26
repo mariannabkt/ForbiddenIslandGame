@@ -34,7 +34,5 @@ public:
 	void disable() { m_active = false; }
 	bool isActive() { return m_active; }
 
-	void setHighlight(bool h) { m_highlighted = h; }
-
 	bool contains(float x, float y);
 };

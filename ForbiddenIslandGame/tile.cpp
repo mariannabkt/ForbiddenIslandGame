@@ -4,15 +4,16 @@
 
 using namespace graphics;
 
-/*_________________________________________________________________________
+/*__________________________________________________________________________
 
-  >>>>> CREATE NEW TILE AND INITIALIZE IT'S FIELDS BASED ON IT'S TYPE <<<<<
-  _________________________________________________________________________
+  >>>>> CREATE NEW TILE AND INITIALIZE IT'S MEMBERS BASED ON IT'S TYPE <<<<<
+  __________________________________________________________________________
 */
 Tile::Tile(string tile_name) : m_tile_img(tile_name) 
 {
-	if (m_tile_img == XEFWTO)
+	if (m_tile_img == XEFWTO) {
 		m_type = LANDING;
+	}
 	else if (m_tile_img == KIPOS_KRA || m_tile_img == KIPOS_PSI)
 	{
 		m_type = AIR;
@@ -38,10 +39,10 @@ Tile::Tile(string tile_name) : m_tile_img(tile_name)
 }
 
 
-/*________________________________________________________
+/*_________________________________________________________
 
-  >>>>> INIT NECESSARY FIELDS FOR EVERY PLAY SESSION <<<<<
-  ________________________________________________________
+  >>>>> INIT NECESSARY MEMBERS FOR EVERY PLAY SESSION <<<<<
+  _________________________________________________________
 */
 void Tile::init()
 {
@@ -60,17 +61,12 @@ void Tile::init()
 void Tile::draw()
 {
 	Brush tile;
-	tile.fill_opacity = 1.0f * !m_sunken;
+	tile.outline_width = 3.0f;
+	//tile.fill_opacity = 0.3f * !m_flooded;
+	//SETCOLOR(tile.fill_color, 0.0f, 0.0f, 0.5f);
 	tile.outline_opacity = 1.0f * m_canPerformAction;
 	tile.texture = m_tile_img;
 	drawRect(m_tile_posX, m_tile_posY, TILE_SIZE, TILE_SIZE, tile);
-
-	Brush water;
-	if (m_flooded)
-	{
-		SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.5f);
-		drawRect(m_tile_posX, m_tile_posY, TILE_SIZE, TILE_SIZE, water);
-	}
 }
 
 
@@ -88,15 +84,15 @@ void Tile::update()
 	switch (p->getPlayerRole())
 	{
 	case EXPLORER:
-		if (((!m_hasPlayer && this != t) &&
+		if ((!m_hasPlayer &&
 
 			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
 
 			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
 
-			(m_grid_i == t->getPosI() && m_grid_j == t->getPosJ() - 1) ||
+			(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
 
-			(m_grid_i == t->getPosI() && m_grid_j == t->getPosJ() + 1) ||
+			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI()) ||
 
 			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ() - 1) ||
 
@@ -106,60 +102,45 @@ void Tile::update()
 
 			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() + 1)) ||
 
-			(m_grid_i == t->getPosI() && m_grid_j == t->getPosJ() 
-				&& (m_flooded || (m_hasTreasure && !m_treasureTaken))))
+			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
 		break;
 
 	case DIVER:
-		if (((!m_hasPlayer && this != t) &&
+		if ((!m_hasPlayer &&
 									  
-			             (m_grid_i == t->getPosI() - 1
-				       && m_grid_j == t->getPosJ()) ||
-									  
-			             (m_grid_i == t->getPosI() + 1
-				       && m_grid_j == t->getPosJ()) ||
-									  
-			             (m_grid_i == t->getPosI()
-				       && m_grid_j == t->getPosJ() - 1) ||
-									  
-			             (m_grid_i == t->getPosI()
-				       && m_grid_j == t->getPosJ() + 1)) ||
+			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
 
-			(m_grid_i == t->getPosI() && m_grid_j == t->getPosJ()
-				&& (m_flooded || (m_hasTreasure && !m_treasureTaken))))
+			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
+
+			(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
+
+			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI())) ||
+
+			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
 		break;
 
 	case PILOT:
-		if (((!m_hasPlayer && this != t) &&
+		if ((!m_hasPlayer &&
 									  
-			             (m_grid_i == t->getPosI() - 1
-				       && m_grid_j == t->getPosJ()) ||
-									  
-			             (m_grid_i == t->getPosI() + 1
-			       	   && m_grid_j == t->getPosJ()) ||
-									  
-			             (m_grid_i == t->getPosI()
-				       && m_grid_j == t->getPosJ() - 1) ||
-									  
-			             (m_grid_i == t->getPosI()
-				       && m_grid_j == t->getPosJ() + 1) ||
-									  
-			             (m_grid_i == t->getPosI() - 2
-				       && m_grid_j == t->getPosJ()) ||
-									  
-			             (m_grid_i == t->getPosI() + 2
-				       && m_grid_j == t->getPosJ()) ||
-									  
-			             (m_grid_i == t->getPosI()
-				       && m_grid_j == t->getPosJ() - 2) ||
-									  
-			             (m_grid_i == t->getPosI()
-				       && m_grid_j == t->getPosJ() + 2)) ||
+			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
 
-			(m_grid_i == t->getPosI() && m_grid_j == t->getPosJ()
-				&& (m_flooded || (m_hasTreasure && !m_treasureTaken))))
+			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
+
+			(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
+
+			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI()) ||
+									  
+			(m_grid_i == t->getPosI() - 2 && m_grid_j == t->getPosJ()) ||
+
+			(m_grid_i == t->getPosI() + 2 && m_grid_j == t->getPosJ()) ||
+
+			(m_grid_j == t->getPosJ() - 2 && m_grid_i == t->getPosI()) ||
+
+			(m_grid_j == t->getPosJ() + 2 && m_grid_i == t->getPosI())) ||
+
+			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
 		break;
 	}
@@ -172,11 +153,12 @@ void Tile::update()
 	float my = windowToCanvasY(ms.cur_pos_y);
 
 	// highlight demo player
-	if (contains(mx, my))
+	if (contains(mx, my) && m_canPerformAction)
 	{
 		if (ms.button_left_released)
 		{
-
+			game->addEvent(new PlayerMotionEvent(p->getPosX(), p->getPosY(), m_tile_posX, m_tile_posY, p));
+			p->setStandingTile(this);
 		}
 	}
 	

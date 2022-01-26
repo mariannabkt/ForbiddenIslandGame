@@ -36,6 +36,9 @@ public:
 	void draw();
 	void update();
 
+	void flipNextPage();
+	void flipPrevPage();
+
 	static Game* getInstance();
 	static void releaseInstance();
 
@@ -47,15 +50,13 @@ public:
 	void setPageImage(string new_page_img) { m_cur_page_img = new_page_img; }
 
 	int getCurPlayer() { return m_cur_player; }
-	Player* getActivePlayer() { return m_active_player; }
-	void setActivePlayer(Player* pl) { m_active_player = pl; }
-
-	void flipNextPage();
-	void flipPrevPage();
-
-	void addEvent(Event* event) { m_events.push_back(event); }
 	void changePlayer() { m_cur_player == 0 ? ++m_cur_player : --m_cur_player; }
 
+	Player* getActivePlayer() { return m_active_player; }
+	void setActivePlayer(Player* pl) { m_active_player = pl; pl->setActive(true); }
+
+	void addEvent(Event* event) { m_events.push_back(event); }
+	
 	map<player_role, Player*>& getPlayers() { return m_players; }
 	map<button_func, Button*>& getButtons() { return m_buttons; }
 	list<Event*>& getEvents() { return m_events; }
