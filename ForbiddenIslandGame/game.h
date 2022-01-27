@@ -11,6 +11,7 @@ class Game
 {
 	static Game* m_instance;
 	
+	int m_difficulty = 0;
 	game_state m_state = INIT;
 
 	help_page m_cur_page = ONE;
@@ -41,6 +42,9 @@ public:
 
 	static Game* getInstance();
 	static void releaseInstance();
+
+	int getDifficulty() { return m_difficulty; }
+	void setDifficulty(int d) { m_difficulty = d; }
 
 	game_state getState() { return m_state; }
 	void setState(game_state new_state);

@@ -7,9 +7,6 @@ class Event
 {
 protected:
 
-	float m_event_posX;
-	float m_event_posY;
-
 	float m_duration;
 	float m_elapsed_time;
 
@@ -17,7 +14,7 @@ protected:
 
 public:
 
-	Event(float x = 0.0f, float y = 0.0f, float dur = 2.0f) : m_event_posX(x), m_event_posY(y), m_duration(dur){}
+	Event(float dur = 2.0f) : m_duration(dur){}
 	virtual ~Event() {};
 
 	virtual void draw() {};
@@ -36,19 +33,19 @@ public:
 };
 
 template <class T1, class T2>
-class PlayerMotionEvent : public Event 
+class MotionEvent : public Event 
 {
 	T1 m_start;
 	T2 m_stop;
 
 public:
-	PlayerMotionEvent(Player* p, Tile* t) : Event(0.0f, 0.0f, 1.0f), m_start(p), m_stop(t) {}
-	PlayerMotionEvent(Treasure* a, Treasure* b) : Event(0.0f, 0.0f, 1.0f), m_start(a), m_stop(b) {}
+	MotionEvent(Player* p, Tile* t) : Event(1.0f), m_start(p), m_stop(t) {}
+	MotionEvent(Tile* a, Treasure* b) : Event(1.0f), m_start(a), m_stop(b) {}
 	void update();
 };
 
-template<typename T1, typename T2>
-inline void PlayerMotionEvent<T1, T2>::update()
+template<class T1, class T2>
+inline void MotionEvent<T1, T2>::update()
 {
 	Event::update();
 
@@ -61,11 +58,14 @@ inline void PlayerMotionEvent<T1, T2>::update()
 
 class SmokeEvent : public Event 
 {
+	float m_event_posX;
+	float m_event_posY;
 	float m_orientation;
 	float m_scale;
 public:
-	void draw() override;
+	
 	SmokeEvent(float x, float y);
+	void draw() override;
 };
 
 

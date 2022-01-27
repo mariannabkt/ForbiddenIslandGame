@@ -174,7 +174,7 @@ void Tile::update()
 			}
 			else
 			{
-				game->addEvent(new PlayerMotionEvent<Player*, Tile*>(p, this));
+				game->addEvent(new MotionEvent<Player*, Tile*>(p, this));
 				p->setStandingTile(this);
 				t->setTaken(false);
 			}

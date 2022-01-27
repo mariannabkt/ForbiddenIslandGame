@@ -1,8 +1,6 @@
 #pragma once
 #include <random>
 #include <stdlib.h>
-#include <chrono>
-#include <thread>
 
 using namespace std;
 
@@ -14,49 +12,35 @@ using namespace std;
 
 #define DEMO_PLAYER_SIZE 1.8f
 #define PLAYER_SIZE 0.8f
-#define PLAYER_MOTION_RANGE 2.5f
 #define TILE_SIZE 2.2f
 
 #define SETCOLOR(c,r,g,b) { c[0]=r; c[1]=g; c[2]=b; }
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
 
 
-inline void sleep(int ms)
-{
-	this_thread::sleep_for(chrono::milliseconds(ms));
-}
-
-
-inline float distance(float x1, float y1, float x2, float y2)
-{
-	float dx = x1 - x2;
-	float dy = y1 - y2;
-	return sqrt(dx * dx + dy * dy);
-}
-
-
-enum game_state  { INIT, LOADING, MAIN_MENU, HELP, CHOOSE_PLAYER, PLAYING };
-enum help_page   { ONE, TWO, THREE, FOUR };
-enum button_func { PLAY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
-enum player_role { DIVER, EXPLORER, PILOT };
-enum tile_type   { BASIC,TREASURE, LANDING };
-enum treasure_type { FIRE, WATER, AIR, EARTH };
+enum game_state			{ INIT, LOADING, MAIN_MENU, HELP, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
+enum help_page			{ ONE, TWO, THREE, FOUR };
+enum button_func		{ PLAY, EASY, MEDIUM, HARD, LEGENDARY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
+enum player_role		{ DIVER, EXPLORER, PILOT };
+enum tile_type			{ BASIC,TREASURE, LANDING };
+enum treasure_type		{ FIRE, WATER, AIR, EARTH };
 
 
 // ASSET FOLDERS
-#define BACKGROUNDS_FOLDER ".\\assets\\backgrounds\\"
-#define BUTTON_FOLDER ".\\assets\\buttons\\"
-#define HELP_PAGES_FOLDER ".\\assets\\help_pages\\"
-#define PLAYERS_FOLDER ".\\assets\\players\\"
-#define PLAYING_FOLDER ".\\assets\\playing\\"
-#define TREASURES_FOLDER ".\\assets\\treasures\\"
-#define TILES_FOLDER ".\\assets\\tiles\\"
+#define BACKGROUNDS_FOLDER	".\\assets\\backgrounds\\"
+#define BUTTON_FOLDER		".\\assets\\buttons\\"
+#define HELP_PAGES_FOLDER	".\\assets\\help_pages\\"
+#define PLAYERS_FOLDER		".\\assets\\players\\"
+#define PLAYING_FOLDER		".\\assets\\playing\\"
+#define TREASURES_FOLDER	".\\assets\\treasures\\"
+#define TILES_FOLDER		".\\assets\\tiles\\"
 
 
 // BACKGROUNDS
-#define MAIN_BACKGROUND          ".\\assets\\backgrounds\\main_background.png"
-#define CHOOSE_PLAYER_BACKGROUND ".\\assets\\backgrounds\\choose_player_background.png"
-#define PLAYING_BACKGROUND       ".\\assets\\backgrounds\\playing_background.png"
+#define MAIN_BACKGROUND					".\\assets\\backgrounds\\main_background.png"
+#define CHOOSE_PLAYER_BACKGROUND		".\\assets\\backgrounds\\choose_player.png"
+#define CHOOSE_DIFFICULTY_BACKGROUND	".\\assets\\backgrounds\\choose_difficulty.png"
+#define PLAYING_BACKGROUND				".\\assets\\backgrounds\\playing_background.png"
 
 
 // BUTTONS
@@ -66,6 +50,10 @@ enum treasure_type { FIRE, WATER, AIR, EARTH };
 #define HOME_BUTTON		   ".\\assets\\buttons\\home button.png"
 #define NEXT_BUTTON        ".\\assets\\buttons\\next button.png"
 #define PREV_BUTTON        ".\\assets\\buttons\\previous button.png"
+#define EASY_BUTTON        ".\\assets\\buttons\\easy button.png"
+#define MEDIUM_BUTTON      ".\\assets\\buttons\\medium button.png"
+#define HARD_BUTTON        ".\\assets\\buttons\\hard button.png"
+#define LEGENDARY_BUTTON   ".\\assets\\buttons\\legendary button.png"
 #define HOW_TO_PLAY_BUTTON ".\\assets\\buttons\\how to play button.png"
 
 
@@ -93,22 +81,23 @@ enum treasure_type { FIRE, WATER, AIR, EARTH };
 
 
 // PLAYER ICONS
-#define EXPLORER_ROLE ".\\assets\\players\\explorer.png"
-#define DIVER_ROLE    ".\\assets\\players\\diver.png"
-#define PILOT_ROLE    ".\\assets\\players\\pilot.png"
+#define EXPLORER_ICON ".\\assets\\players\\explorer.png"
+#define DIVER_ICON    ".\\assets\\players\\diver.png"
+#define PILOT_ICON    ".\\assets\\players\\pilot.png"
 
 
 // PLAYING STATE BITMAPS
-#define WATER_LEVEL  ".\\assets\\playing\\water-level.png"
-#define ACTION_ONE   ".\\assets\\playing\\action_one.png"
-#define ACTION_TWO   ".\\assets\\playing\\action_two.png"
-#define ACTION_THREE ".\\assets\\playing\\action_three.png"
+#define PLAYER_CARD		".\\assets\\playing\\old paper card.png"
+#define WATER_LEVEL		".\\assets\\playing\\water-level.png"
+#define ACTION_ONE		".\\assets\\playing\\action_one.png"
+#define ACTION_TWO		".\\assets\\playing\\action_two.png"
+#define ACTION_THREE	".\\assets\\playing\\action_three.png"
 
 
 // TREASURE ICONS
 #define AIR_TREASURE   ".\\assets\\treasures\\agalma_tou_anemou_nbg.PNG"
-#define WATER_TREASURE ".\\assets\\treasures\\diskopotiro_tou_wkeanou_nbg.PNG"
 #define FIRE_TREASURE  ".\\assets\\treasures\\krystallos_tis_fotias_nbg.PNG"
+#define WATER_TREASURE ".\\assets\\treasures\\diskopotiro_tou_wkeanou_nbg.PNG"
 #define EARTH_TREASURE ".\\assets\\treasures\\lithos_tis_gis_nbg.PNG"
 
 
@@ -121,7 +110,6 @@ enum treasure_type { FIRE, WATER, AIR, EARTH };
 
 // SOUNDS
 #define FLIP_PAGE	   ".\\assets\\sounds\\page_flip.wav"
-#define NOTIFICATION   ".\\assets\\sounds\\unlock-game-notification.wav"
 #define BUTTON_CLICK   ".\\assets\\sounds\\player-jumping-in-a-video-game.wav"
 #define START_PLAYING  ".\\assets\\sounds\\horn-transition.wav"
 

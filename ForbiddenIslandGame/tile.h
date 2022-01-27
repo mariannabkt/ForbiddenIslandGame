@@ -12,10 +12,10 @@ class Tile
 	float m_tile_posX = 0.0f;
 	float m_tile_posY = 0.0f;
 
-	float m_tile_left;
-	float m_tile_right;
-	float m_tile_up;
-	float m_tile_down;
+	float m_tile_left = 0.0f;
+	float m_tile_right = 0.0f;
+	float m_tile_up = 0.0f;
+	float m_tile_down = 0.0f;
 
 	int m_grid_i = 0;
 	int m_grid_j = 0;

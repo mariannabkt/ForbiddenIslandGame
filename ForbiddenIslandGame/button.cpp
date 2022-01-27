@@ -36,6 +36,18 @@ Button::Button(button_func b, float center_width_offset, float center_height_off
 	case OK:
 		m_button_img = OK_BUTTON;
 		break;
+	case EASY:
+		m_button_img = EASY_BUTTON;
+		break;
+	case MEDIUM:
+		m_button_img = MEDIUM_BUTTON;
+		break;
+	case HARD:
+		m_button_img = HARD_BUTTON;
+		break;
+	case LEGENDARY:
+		m_button_img = LEGENDARY_BUTTON;
+		break;
 	}
 	m_button_left  = CANVAS_WIDTH / 2 + center_width_offset - width / 2;
 	m_button_right = CANVAS_WIDTH / 2 + center_width_offset + width / 2;
@@ -85,7 +97,7 @@ void Button::update()
 			{
 			case PLAY:
 				playSound(BUTTON_CLICK, 1, false);
-				game->setState(CHOOSE_PLAYER);
+				game->setState(CHOOSE_DIF);
 				break;
 
 			case HOW_TO:
@@ -122,6 +134,11 @@ void Button::update()
 					game->setState(PLAYING);
 				game->changePlayer();
 				break;
+
+			default:
+				playSound(BUTTON_CLICK, 1, false);
+				game->setDifficulty(m_func);
+				game->setState(CHOOSE_PLAYER);
 			}
 		}
 	}

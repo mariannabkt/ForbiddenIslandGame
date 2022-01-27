@@ -26,6 +26,10 @@ Game::Game()
 	m_buttons[NEXT]   = new Button(NEXT, 12.5f, 0.0f, 1.5f, 1.5f);
 	m_buttons[PREV]   = new Button(PREV, -12.5f, 0.0f, 1.5f, 1.5f);
 	m_buttons[OK]     = new Button(OK, 11.0f, 6.0f, 1.0f, 1.0f);
+	m_buttons[EASY]   = new Button(EASY, -9.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[MEDIUM] = new Button(MEDIUM, -3.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[HARD]   = new Button(HARD, 3.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[LEGENDARY] = new Button(LEGENDARY, 9.0f, 2.0f, 4.0f, 2.0f);
 
 	// init player list
 	m_players[EXPLORER] = new Player(EXPLORER);
@@ -106,10 +110,23 @@ void Game::setState(game_state new_state)
 		m_buttons[PREV]->enable();
 		break;
 
-	case CHOOSE_PLAYER:
+	case CHOOSE_DIF:
 
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
+
+		// enable only necessary buttons for this state
+		for (auto b : m_buttons)
+			b.second->disable();
+		m_buttons[HOME]->enable();
+		m_buttons[EXIT]->enable();
+		m_buttons[EASY]->enable();
+		m_buttons[MEDIUM]->enable();
+		m_buttons[HARD]->enable();
+		m_buttons[LEGENDARY]->enable();
+		break;
+
+	case CHOOSE_PLAYER:
 
 		m_cur_player = 0;
 
@@ -128,8 +145,11 @@ void Game::setState(game_state new_state)
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
 		// player 1 plays first
-		for (auto p : m_players)
+		for (auto p : m_players) {
 			(p.second->getPlayerTurn() == 1) ? setActivePlayer(p.second) : p.second->setActive(false);
+			if (!p.second->isSelected())
+				p.second->getStandingTile()->setTaken(false);
+		}
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -181,6 +201,11 @@ void Game::draw()
 		background.texture = m_cur_page_img;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 		break;
+
+	case CHOOSE_DIF:
+		background.texture = CHOOSE_DIFFICULTY_BACKGROUND;
+		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+		break;
 		
 	case CHOOSE_PLAYER:
 		background.texture = CHOOSE_PLAYER_BACKGROUND;
@@ -197,10 +222,6 @@ void Game::draw()
 	case PLAYING:
 		background.texture = PLAYING_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
-
-		object.outline_opacity = 0.0f;
-		object.texture = WATER_LEVEL;
-		drawRect(CANVAS_WIDTH / 2 + 11.5f, CANVAS_HEIGHT / 2 + 4.7f, 4.5f, 5.5f, object);
 
 		int t = 0;
 		for (int i = 0; i < 6; ++i)

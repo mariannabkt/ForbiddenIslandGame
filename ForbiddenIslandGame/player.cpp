@@ -21,26 +21,26 @@ Player::Player(player_role r) : m_role(r)
 	{
 	case EXPLORER:
 		m_name = "Explorer";
-		m_icon_img = EXPLORER_ROLE;
+		m_icon_img = EXPLORER_ICON;
 		m_pawn_img = EXPLORER_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.3f, 0.0f);
-		setIconCords(CANVAS_WIDTH / 2 - 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2 - 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 
 	case DIVER:
 		m_name = "Diver";
-		m_icon_img = DIVER_ROLE;
+		m_icon_img = DIVER_ICON;
 		m_pawn_img = DIVER_PAWN;
 		SETCOLOR(m_color, 0.1f, 0.1f, 0.1f);
-		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 
 	case PILOT:
 		m_name = "Pilot";
-		m_icon_img = PILOT_ROLE;
+		m_icon_img = PILOT_ICON;
 		m_pawn_img = PILOT_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.0f, 0.3f);
-		setIconCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2 + 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 	}
 	m_treasures[AIR] = new Treasure(AIR);
@@ -64,13 +64,13 @@ void Player::init()
 
 	switch (m_role) {
 	case EXPLORER:
-		setIconCords(CANVAS_WIDTH / 2 - 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2 - 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 	case DIVER:
-		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 	case PILOT:
-		setIconCords(CANVAS_WIDTH / 2 + 7.0f, CANVAS_HEIGHT / 2 + 4.0f);
+		setIconCords(CANVAS_WIDTH / 2 + 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 	}
 	for (auto t : m_treasures) 
@@ -166,32 +166,35 @@ void Player::draw()
 	else if (game->getState() == PLAYING)
 	{
 		Brush br;
-		setFont(SCRATCHED_FONT);
-		SETCOLOR(br.fill_color, m_color[0], m_color[1], m_color[2]);
+		br.outline_opacity = 0.0f;
+		br.texture = PLAYER_CARD;
+		setFont(FREESANS_FONT);
 
 		if (m_turn == 1)
 		{
-			m_treasures[AIR]->setCords(-7.0f, -3.0f);
-			m_treasures[FIRE]->setCords(-5.0f, -3.0f);
-			m_treasures[EARTH]->setCords(-7.0f, -5.0f);
-			m_treasures[WATER]->setCords(-5.0f, -3.0f);
-			setIconCords(1.5f, 1.5f);
-			drawActions(1.5f, 3.2f);
+			m_treasures[AIR]->setCords(1.5f, 14.5f);
+			m_treasures[FIRE]->setCords(3.1f, 14.6f);
+			m_treasures[EARTH]->setCords(4.5f, 14.6f);
+			m_treasures[WATER]->setCords(5.7f, 14.5f);
+			setIconCords(1.5f, 12.5f);
 
-			drawText(3.0f, 1.5f, 0.7f, "PLAYER " + to_string(m_turn), br);
-			drawText(3.0f, 2.2f, 0.7f, m_name, br);
+			drawRect(3.5f, 13.5f, 6.5f, 4.5f, br);
+			drawActions(3.5f,13.0f);
+			SETCOLOR(br.fill_color, m_color[0], m_color[1], m_color[2]);
+			drawText(3.0f, 12.2f, 0.4f, "PLAYER " + to_string(m_turn) + " " + m_name, br);
 		}
 		else if (m_turn == 2)
 		{
-			m_treasures[AIR]->setCords(-7.0f, 5.0f);
-			m_treasures[FIRE]->setCords(-5.0f, 5.0f);
-			m_treasures[EARTH]->setCords(-7.0f, -7.0f);
-			m_treasures[WATER]->setCords(-5.0f, -7.0f);
-			setIconCords(1.5f, 14.5f);
-			drawActions(1.5f, 10.5f);
+			m_treasures[AIR]->setCords(22.4f, 14.5f);
+			m_treasures[FIRE]->setCords(24.0f, 14.6f);
+			m_treasures[EARTH]->setCords(25.4f, 14.6f);
+			m_treasures[WATER]->setCords(26.7f, 14.5f);
+			setIconCords(22.5f, 12.5f);
 
-			drawText(3.0f, 14.5f, 0.7f, "PLAYER " + to_string(m_turn), br);
-			drawText(3.0f, 15.2f, 0.7f, m_name, br);
+			drawRect(24.5f, 13.5f, 6.5f, 4.5f, br);
+			drawActions(24.5f, 13.0f);
+			SETCOLOR(br.fill_color, m_color[0], m_color[1], m_color[2]);
+			drawText(24.0f, 12.2f, 0.4f, "PLAYER " + to_string(m_turn) + " " + m_name, br);
 		}
 		drawPawn();
 		drawIcon(3.5f, 2.0f);
@@ -267,5 +270,5 @@ void Player::isStartTile(Tile* t)
 */
 bool Player::contains(float x, float y)
 {
-	return (distance(x, y, m_icon_posX, m_icon_posY) < DEMO_PLAYER_SIZE);
+	return (sqrt(pow(x - m_icon_posX, 2) + pow(y - m_icon_posY, 2))) < DEMO_PLAYER_SIZE;
 }

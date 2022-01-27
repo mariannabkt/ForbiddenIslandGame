@@ -4,8 +4,7 @@
 
 using namespace graphics;
 
-Treasure::Treasure(treasure_type t, float x, float y, bool c) : m_type(t), m_collected(c), 
-	m_treas_posX(CANVAS_WIDTH / 2 + x), m_treas_posY(CANVAS_HEIGHT / 2 + y)
+Treasure::Treasure(treasure_type t, float x, float y, bool c) : m_type(t), m_collected(c), m_treas_posX(x), m_treas_posY(y)
 {
 	switch (m_type) {
 	case FIRE:
@@ -27,7 +26,7 @@ void Treasure::draw()
 {
 	Brush br;
 	br.outline_opacity = 0.0f;
-	br.fill_opacity = 0.6f + 1 * m_collected;
+	br.fill_opacity = 0.85f + 1.0f * m_collected;
 	br.texture = m_treas_img;
 	drawRect(m_treas_posX, m_treas_posY, 2.0f, 2.5f, br);
 }
