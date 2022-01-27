@@ -4,17 +4,20 @@
 
 using namespace graphics;
 
+
 void update(float ms) 
 {
 	Game* game = Game::getInstance();
 	game->update();
 }
 
+
 void draw() 
 {
 	Game* game = Game::getInstance();
 	game->draw();
 }
+
 
 int  main(int argc, char** argv) 
 {

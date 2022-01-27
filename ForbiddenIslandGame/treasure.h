@@ -1,8 +1,7 @@
 #pragma once
-#include "gameObject.h"
 #include "defines.h"
 
-class Treasure : GameObject
+class Treasure 
 {
 	float m_treas_posX = 0.0f;
 	float m_treas_posY = 0.0f;
@@ -15,6 +14,7 @@ public:
 
 	Treasure(treasure_type t, float x = 0.0f, float y = 0.0f, bool c = false);
 	void draw();
+	void update();
 	
 	float getPosX() { return m_treas_posX; }
 	float getPosY() { return m_treas_posY; }

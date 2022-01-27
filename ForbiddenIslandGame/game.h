@@ -13,6 +13,7 @@ class Game
 	
 	int m_difficulty = 0;
 	game_state m_state = INIT;
+	game_state m_prev_state;
 
 	help_page m_cur_page = ONE;
 	string m_cur_page_img = PAGE_ONE;

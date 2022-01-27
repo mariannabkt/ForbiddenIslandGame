@@ -54,6 +54,7 @@ Game::Game()
 */
 void Game::setState(game_state new_state)
 {
+	m_prev_state = m_state;
 	m_state = new_state;
 
 	switch (m_state)
@@ -76,6 +77,8 @@ void Game::setState(game_state new_state)
 
 		stopMusic(1);
 		playMusic(NATURAL_AMBIENCE, 1.0f, true, 1000);
+
+		m_cur_player = 0;
 
 		// init tiles for new play session
 		for (auto t : m_tiles)
@@ -110,10 +113,34 @@ void Game::setState(game_state new_state)
 		m_buttons[PREV]->enable();
 		break;
 
-	case CHOOSE_DIF:
+	case CHOOSE_PLAYER:
 
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
+
+		// enable only necessary buttons for this state
+		for (auto b : m_buttons)
+			b.second->disable();
+		m_buttons[HOME]->enable();
+		m_buttons[EXIT]->enable();
+		m_buttons[OK]->enable();
+		break;
+
+	case CHOOSE_DIF:
+
+		// player 1 plays first
+		for (auto p : m_players) {
+			if (p.second->getPlayerTurn() == 1) {
+				setActivePlayer(p.second);
+				p.second->getActions()->setCords(3.5f, 13.0f);
+			} 
+			else if (p.second->getPlayerTurn() == 2) {
+				p.second->setActive(false);
+				p.second->getActions()->setCords(24.5f, 13.0f);
+			}
+			else
+				p.second->getStandingTile()->setTaken(false);
+		}
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -126,30 +153,11 @@ void Game::setState(game_state new_state)
 		m_buttons[LEGENDARY]->enable();
 		break;
 
-	case CHOOSE_PLAYER:
-
-		m_cur_player = 0;
-
-		// enable only necessary buttons for this state
-		for (auto b : m_buttons)
-			b.second->disable();
-		m_buttons[HOME]->enable();
-		m_buttons[EXIT]->enable();
-		m_buttons[OK]->enable();
-		break;
-
 	case PLAYING:
 
 		stopMusic(1);
 		playSound(START_PLAYING, 1, false);
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
-
-		// player 1 plays first
-		for (auto p : m_players) {
-			(p.second->getPlayerTurn() == 1) ? setActivePlayer(p.second) : p.second->setActive(false);
-			if (!p.second->isSelected())
-				p.second->getStandingTile()->setTaken(false);
-		}
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -374,7 +382,7 @@ void Game::flipNextPage()
 	case FOUR:
 		setPage(ONE);
 		setPageImage(PAGE_ONE);
-		setState(MAIN_MENU);
+		setState(m_prev_state);
 		break;
 	}
 }
@@ -391,7 +399,7 @@ void Game::flipPrevPage()
 	switch (getPage())
 	{
 	case ONE:
-		setState(MAIN_MENU);
+		setState(m_prev_state);
 		break;
 
 	case TWO:

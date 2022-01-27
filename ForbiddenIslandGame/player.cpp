@@ -7,13 +7,14 @@
 using namespace graphics;
 using namespace std;
 
+Game* game = Game::getInstance();
 
 /*___________________________________________________________________________
 
   >>>>> CREATE NEW PLAYER AND INITIALIZE IT'S MEMBERS BASED ON IT'S ROLE <<<<<
   ___________________________________________________________________________
 */
-Player::Player(player_role r) : m_role(r)
+Player::Player(player_role r) : m_role(r), m_actions(new Action(this))
 {
 	switch (m_role)
 	{
@@ -127,30 +128,6 @@ void Player::drawPawn()
 }
 
 
-/*___________________________________________
-
-  >>>>> DRAW REMAINING PLAYER'S ACTIONS <<<<<
-  ___________________________________________
-*/
-void Player::drawActions(float x, float y)
-{
-	Brush act1;
-	act1.texture = ACTION_ONE;
-	act1.outline_opacity = 0.0f;
-	drawRect(x, y, 1.0f, 1.0f, act1);
-
-	Brush act2;
-	act2.texture = ACTION_TWO;
-	act2.outline_opacity = 0.0f;
-	drawRect(x + 1.2f, y, 1.0f, 1.0f, act2);
-
-	Brush act3;
-	act3.texture = ACTION_THREE;
-	act3.outline_opacity = 0.0f;
-	drawRect(x + 2.4f, y, 1.0f, 1.0f, act3);
-}
-
-
 /*_______________________________________________________
 
   >>>>> DRAW PLAYER FOR CHOOSING AND PLAYING STATES <<<<<
@@ -170,32 +147,31 @@ void Player::draw()
 
 		if (m_turn == 1)
 		{
+			setIconCords(1.5f, 12.5f);
 			m_treasures[AIR]->setCords(1.5f, 14.5f);
 			m_treasures[FIRE]->setCords(3.1f, 14.6f);
 			m_treasures[EARTH]->setCords(4.5f, 14.6f);
 			m_treasures[WATER]->setCords(5.7f, 14.5f);
-			setIconCords(1.5f, 12.5f);
-
+			
 			drawRect(3.5f, 13.5f, 6.5f, 4.5f, br);
-			drawActions(3.5f,13.0f);
 			SETCOLOR(br.fill_color, m_color[0], m_color[1], m_color[2]);
 			drawText(3.0f, 12.2f, 0.4f, "PLAYER " + to_string(m_turn) + " " + m_name, br);
 		}
 		else if (m_turn == 2)
 		{
+			setIconCords(22.5f, 12.5f);
 			m_treasures[AIR]->setCords(22.4f, 14.5f);
 			m_treasures[FIRE]->setCords(24.0f, 14.6f);
 			m_treasures[EARTH]->setCords(25.4f, 14.6f);
 			m_treasures[WATER]->setCords(26.7f, 14.5f);
-			setIconCords(22.5f, 12.5f);
-
+			
 			drawRect(24.5f, 13.5f, 6.5f, 4.5f, br);
-			drawActions(24.5f, 13.0f);
 			SETCOLOR(br.fill_color, m_color[0], m_color[1], m_color[2]);
 			drawText(24.0f, 12.2f, 0.4f, "PLAYER " + to_string(m_turn) + " " + m_name, br);
 		}
 		drawPawn();
 		drawIcon(3.5f, 2.0f);
+		m_actions->draw();
 		for (auto t : m_treasures)
 			t.second->draw();
 	}
@@ -239,7 +215,7 @@ void Player::update()
 	}
 	else if (game->getState() == PLAYING)
 	{
-
+		m_actions->update();
 	}
 }
 

@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="action.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="game.cpp" />
@@ -157,11 +158,11 @@
     <ClCompile Include="treasure.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="action.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="gameObject.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="treasure.h" />

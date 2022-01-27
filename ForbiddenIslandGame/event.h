@@ -1,10 +1,9 @@
 #pragma once
-#include "gameObject.h"
 #include "defines.h"
 #include "player.h"
 #include "tile.h"
 
-class Event : GameObject
+class Event 
 {
 protected:
 

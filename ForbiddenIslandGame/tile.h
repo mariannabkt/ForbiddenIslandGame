@@ -1,10 +1,9 @@
 #pragma once
-#include "gameObject.h"
 #include "defines.h"
 
 static int m_tiles_grid[6][6] = { {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} };
 
-class Tile : GameObject
+class Tile 
 {
 	string m_tile_img;
 	tile_type m_type;
@@ -54,4 +53,5 @@ public:
 
 	void setTaken(bool a) { m_hasPlayer = a; }
 	void setCanPerformAction(bool b) { m_canPerformAction = b; }
+	void checkCanPerfomrAction();
 };

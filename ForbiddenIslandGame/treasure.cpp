@@ -1,8 +1,11 @@
+#include "game.h"
 #include "treasure.h"
 #include "defines.h"
 #include "sgg/graphics.h" 
 
 using namespace graphics;
+
+
 
 Treasure::Treasure(treasure_type t, float x, float y, bool c) : m_type(t), m_collected(c), m_treas_posX(x), m_treas_posY(y)
 {
@@ -29,5 +32,10 @@ void Treasure::draw()
 	br.fill_opacity = 0.85f + 1.0f * m_collected;
 	br.texture = m_treas_img;
 	drawRect(m_treas_posX, m_treas_posY, 2.0f, 2.5f, br);
+}
+
+void Treasure::update()
+{
+	Game* game = Game::getInstance();
 }
 

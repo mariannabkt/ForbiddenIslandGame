@@ -1,11 +1,10 @@
 #pragma once
-#include "gameObject.h"
 #include "defines.h"
 #include "sgg/graphics.h"
 
 using namespace graphics;
 
-class Button : GameObject
+class Button 
 {
 	Brush m_button_br;
 	string m_button_img;

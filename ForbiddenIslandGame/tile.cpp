@@ -5,12 +5,13 @@
 
 using namespace graphics;
 
+
 /*__________________________________________________________________________
 
   >>>>> CREATE NEW TILE AND INITIALIZE IT'S MEMBERS BASED ON IT'S TYPE <<<<<
   __________________________________________________________________________
 */
-Tile::Tile(string tile_name) : m_tile_img(tile_name) 
+Tile::Tile(string tile_name) : m_tile_img(tile_name)
 {
 	if (m_tile_img == XEFWTO) {
 		m_type = LANDING;
@@ -82,78 +83,11 @@ void Tile::draw()
 */
 void Tile::update()
 {
+	Game* game = Game::getInstance();
 	Player* p = game->getActivePlayer();
-	Tile* t = game->getActivePlayer()->getStandingTile();
+	Tile* t = p->getStandingTile();
 
-	switch (p->getPlayerRole())
-	{
-	case EXPLORER:
-		if ((!m_hasPlayer &&
-
-			((m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
-
-			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI()) ||
-
-			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ() - 1) ||
-
-			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ() + 1) ||
-
-			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() - 1) ||
-
-			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() + 1))) ||
-
-			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
-			setCanPerformAction(true);
-		else 
-			setCanPerformAction(false);
-		break;
-
-	case DIVER:
-		if ((!m_hasPlayer &&
-									  
-			((m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
-
-			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI()))) ||
-
-			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
-			setCanPerformAction(true);
-		else
-			setCanPerformAction(false);
-		break;
-
-	case PILOT:
-		if ((!m_hasPlayer &&
-									  
-			((m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
-
-			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI()) ||
-									  
-			(m_grid_i == t->getPosI() - 2 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_i == t->getPosI() + 2 && m_grid_j == t->getPosJ()) ||
-
-			(m_grid_j == t->getPosJ() - 2 && m_grid_i == t->getPosI()) ||
-
-			(m_grid_j == t->getPosJ() + 2 && m_grid_i == t->getPosI()))) ||
-
-			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
-			setCanPerformAction(true);
-		else
-			setCanPerformAction(false);
-		break;
-	}
+	checkCanPerfomrAction();
 
 	// obtain mouse state
 	MouseState ms;
@@ -193,6 +127,12 @@ bool Tile::contains(float x, float y)
 	return (x > m_tile_left && x < m_tile_right && y > m_tile_up && y < m_tile_down);
 }
 
+
+/*_______________________________________
+
+  >>>>> SET TILE'S CORDS AND BOUNDS <<<<<
+  _______________________________________
+*/
 void Tile::setCords(float x, float y)
 {
 	m_tile_posX = x; 
@@ -202,4 +142,60 @@ void Tile::setCords(float x, float y)
 	m_tile_right = m_tile_posX + TILE_SIZE / 2;
 	m_tile_up = m_tile_posY - TILE_SIZE / 2;
 	m_tile_down = m_tile_posY + TILE_SIZE / 2;
+}
+
+
+/*__________________________________________________________________
+
+  >>>>> CHECK IF ACTIVE PLAYER CAN PERFORM ACTION AT THIS TILE <<<<<
+  __________________________________________________________________
+*/
+void Tile::checkCanPerfomrAction()
+{
+	Game* game = Game::getInstance();
+	Player* p = game->getActivePlayer();
+	Tile* t = p->getStandingTile();
+
+	bool isAdjacent = 
+		// left tile
+		(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
+		// right tile
+		(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
+		// top tile
+		(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
+		// buttom tile
+		(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI());
+
+	bool isDiagonial = 
+		// left top tile
+		(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ() - 1) ||
+		// left buttom tile
+		(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ() + 1) ||
+		// right top tile
+		(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() - 1) ||
+		// right buttom tile
+		(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() + 1);
+
+	bool is2TilesAway = 
+		// left's left tile
+		(m_grid_i == t->getPosI() - 2 && m_grid_j == t->getPosJ()) ||
+		// right's right tile
+		(m_grid_i == t->getPosI() + 2 && m_grid_j == t->getPosJ()) ||
+		// top's top tile
+		(m_grid_j == t->getPosJ() - 2 && m_grid_i == t->getPosI()) ||
+		// buttom's buttom tile
+		(m_grid_j == t->getPosJ() + 2 && m_grid_i == t->getPosI());
+
+	// active player's standing tile
+	bool isOnTop = (m_flooded || (m_hasTreasure && !m_treasureTaken)) && this == t;
+
+	m_canPerformAction =
+		// explorer can move and/or shore up adjacent and diagonial tiles
+		(((!m_hasPlayer && (isAdjacent || isDiagonial)) || isOnTop && p->getPlayerRole() == EXPLORER) ||
+
+		// diver can move and/or shore up adjacent tiles
+		((!m_hasPlayer && isAdjacent) || isOnTop && p->getPlayerRole() == DIVER) ||
+
+		// pilot can move and/or shore up two tiles away
+		((!m_hasPlayer && (isAdjacent || is2TilesAway)) || isOnTop && p->getPlayerRole() == PILOT));
 }

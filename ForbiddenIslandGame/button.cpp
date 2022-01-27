@@ -3,14 +3,13 @@
 
 using namespace graphics;
 
-
 /*_______________________________________________________________________________
 
   >>>>> CREATE NEW BUTTON AND INITIALIZE IT'S MEMBERS BASED ON IT'S FUNCTION <<<<<
   _______________________________________________________________________________
 */
 Button::Button(button_func b, float center_width_offset, float center_height_offset, float width, float height) 
-	: m_func(b), m_button_posX(center_width_offset), m_button_posY(center_height_offset), 
+	: m_func(b), m_button_posX(center_width_offset), m_button_posY(center_height_offset),
 	  m_button_width(width), m_button_height(height)
 {
 	switch (m_func)
@@ -77,6 +76,8 @@ void Button::draw()
 */
 void Button::update()
 {
+	Game* game = Game::getInstance();
+
 	// obtain mouse state
 	MouseState ms;
 	getMouseState(ms);
@@ -95,7 +96,7 @@ void Button::update()
 			{
 			case PLAY:
 				playSound(BUTTON_CLICK, 1, false);
-				game->setState(CHOOSE_DIF);
+				game->setState(CHOOSE_PLAYER);
 				break;
 
 			case HOW_TO:
@@ -129,14 +130,14 @@ void Button::update()
 						dp.second->setPlayerTurn(game->getCurPlayer() + 1);
 					}
 				if (game->getCurPlayer()) 
-					game->setState(PLAYING);
+					game->setState(CHOOSE_DIF);
 				game->changePlayer();
 				break;
 
 			default:
 				playSound(BUTTON_CLICK, 1, false);
 				game->setDifficulty(m_func);
-				game->setState(CHOOSE_PLAYER);
+				game->setState(PLAYING);
 			}
 		}
 	}
