@@ -1,7 +1,6 @@
 #pragma once
 #include "defines.h"
 #include "treasure.h"
-#include "action.h"
 #include "tile.h"
 #include <map>
 
@@ -22,8 +21,8 @@ class Player
 	string m_icon_img;
 	string m_pawn_img;
 
+
 	player_role m_role;
-	Action* m_actions;
 	Tile* m_standing_tile;
 	map<treasure_type, Treasure*> m_treasures = map<treasure_type, Treasure*>();
 
@@ -63,6 +62,5 @@ public:
 	int getPlayerTurn() { return m_turn; }
 	void setPlayerTurn(int t) { m_turn = t; }
 
-	Action* getActions() { return m_actions; }
-	void setActions(Action* a) { m_actions = a; }
+
 };

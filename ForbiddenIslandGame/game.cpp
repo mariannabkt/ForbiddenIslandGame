@@ -39,7 +39,7 @@ Game::Game()
 	// fill tile names(image paths) array
 	string tile_names[24] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
 		VRAXOS, GEFIRA, KIPOS_PSI, KIPOS_KRA, NAOS_ILIOY, NAOS_FEGGARIOY,PALATI_PAL, VRAXOI, PILI_APLISTIAS, 
-		PILI_AXARISTIAS, PILI_LITHIS, PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO };
+		PILI_LITHIS, PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO, PILI_AXARISTIAS };
 
 	// init grid tiles
 	for (int i = 0; i < 24; ++i)
@@ -132,11 +132,11 @@ void Game::setState(game_state new_state)
 		for (auto p : m_players) {
 			if (p.second->getPlayerTurn() == 1) {
 				setActivePlayer(p.second);
-				p.second->getActions()->setCords(3.5f, 13.0f);
+
 			} 
 			else if (p.second->getPlayerTurn() == 2) {
 				p.second->setActive(false);
-				p.second->getActions()->setCords(24.5f, 13.0f);
+
 			}
 			else
 				p.second->getStandingTile()->setTaken(false);

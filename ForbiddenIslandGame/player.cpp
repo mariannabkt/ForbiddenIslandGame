@@ -14,7 +14,7 @@ Game* game = Game::getInstance();
   >>>>> CREATE NEW PLAYER AND INITIALIZE IT'S MEMBERS BASED ON IT'S ROLE <<<<<
   ___________________________________________________________________________
 */
-Player::Player(player_role r) : m_role(r), m_actions(new Action(this))
+Player::Player(player_role r) : m_role(r)
 {
 	switch (m_role)
 	{
@@ -171,7 +171,7 @@ void Player::draw()
 		}
 		drawPawn();
 		drawIcon(3.5f, 2.0f);
-		m_actions->draw();
+
 		for (auto t : m_treasures)
 			t.second->draw();
 	}
@@ -215,7 +215,7 @@ void Player::update()
 	}
 	else if (game->getState() == PLAYING)
 	{
-		m_actions->update();
+
 	}
 }
 

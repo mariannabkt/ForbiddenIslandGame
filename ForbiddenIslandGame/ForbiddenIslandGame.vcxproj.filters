@@ -36,9 +36,6 @@
     <ClCompile Include="treasure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="action.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="button.h">
@@ -60,9 +57,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="treasure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -191,11 +191,11 @@ void Tile::checkCanPerfomrAction()
 
 	m_canPerformAction =
 		// explorer can move and/or shore up adjacent and diagonial tiles
-		(((!m_hasPlayer && (isAdjacent || isDiagonial)) || isOnTop && p->getPlayerRole() == EXPLORER) ||
+		((((!m_hasPlayer && (isAdjacent || isDiagonial)) || isOnTop) && p->getPlayerRole() == EXPLORER) ||
 
 		// diver can move and/or shore up adjacent tiles
-		((!m_hasPlayer && isAdjacent) || isOnTop && p->getPlayerRole() == DIVER) ||
+		(((!m_hasPlayer && isAdjacent) || isOnTop) && p->getPlayerRole() == DIVER) ||
 
 		// pilot can move and/or shore up two tiles away
-		((!m_hasPlayer && (isAdjacent || is2TilesAway)) || isOnTop && p->getPlayerRole() == PILOT));
+		(((!m_hasPlayer && (isAdjacent || is2TilesAway)) || isOnTop) && p->getPlayerRole() == PILOT));
 }
