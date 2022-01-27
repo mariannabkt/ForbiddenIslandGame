@@ -1,7 +1,7 @@
 #pragma once
 #include "player.h"
 
-class Action 
+class Action
 {
 	float m_action_posX = 0.0f;
 	float m_action_posY = 0.0f;
