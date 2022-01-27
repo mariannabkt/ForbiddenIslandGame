@@ -7,8 +7,6 @@
 using namespace graphics;
 using namespace std;
 
-Game* game = Game::getInstance();
-
 
 /*___________________________________________________________________________
 

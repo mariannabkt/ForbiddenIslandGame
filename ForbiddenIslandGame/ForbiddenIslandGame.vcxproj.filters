@@ -59,5 +59,8 @@
     <ClInclude Include="treasure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

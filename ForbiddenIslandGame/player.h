@@ -1,10 +1,11 @@
 #pragma once
+#include "gameObject.h"
 #include "defines.h"
 #include "treasure.h"
 #include "tile.h"
 #include <map>
 
-class Player 
+class Player : GameObject
 {
 	float m_icon_posX;
 	float m_icon_posY;

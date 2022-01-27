@@ -82,7 +82,6 @@ void Tile::draw()
 */
 void Tile::update()
 {
-	Game* game = Game::getInstance();
 	Player* p = game->getActivePlayer();
 	Tile* t = game->getActivePlayer()->getStandingTile();
 
@@ -91,7 +90,7 @@ void Tile::update()
 	case EXPLORER:
 		if ((!m_hasPlayer &&
 
-			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
+			((m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
 
 			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
 
@@ -105,7 +104,7 @@ void Tile::update()
 
 			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() - 1) ||
 
-			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() + 1)) ||
+			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() + 1))) ||
 
 			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
@@ -116,13 +115,13 @@ void Tile::update()
 	case DIVER:
 		if ((!m_hasPlayer &&
 									  
-			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
+			((m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
 
 			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
 
 			(m_grid_j == t->getPosJ() - 1 && m_grid_i == t->getPosI()) ||
 
-			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI())) ||
+			(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI()))) ||
 
 			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);
@@ -133,7 +132,7 @@ void Tile::update()
 	case PILOT:
 		if ((!m_hasPlayer &&
 									  
-			(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
+			((m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
 
 			(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ()) ||
 
@@ -147,7 +146,7 @@ void Tile::update()
 
 			(m_grid_j == t->getPosJ() - 2 && m_grid_i == t->getPosI()) ||
 
-			(m_grid_j == t->getPosJ() + 2 && m_grid_i == t->getPosI())) ||
+			(m_grid_j == t->getPosJ() + 2 && m_grid_i == t->getPosI()))) ||
 
 			(this == t && (m_flooded || (m_hasTreasure && !m_treasureTaken))))
 			setCanPerformAction(true);

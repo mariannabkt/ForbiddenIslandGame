@@ -1,7 +1,8 @@
 #pragma once
+#include "gameObject.h"
 #include "defines.h"
 
-class Treasure
+class Treasure : GameObject
 {
 	float m_treas_posX = 0.0f;
 	float m_treas_posY = 0.0f;

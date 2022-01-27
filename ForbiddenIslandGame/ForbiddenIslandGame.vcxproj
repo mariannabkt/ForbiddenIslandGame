@@ -161,6 +161,7 @@
     <ClInclude Include="defines.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="gameObject.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="treasure.h" />

@@ -77,8 +77,6 @@ void Button::draw()
 */
 void Button::update()
 {
-	Game* game = Game::getInstance();
-
 	// obtain mouse state
 	MouseState ms;
 	getMouseState(ms);
