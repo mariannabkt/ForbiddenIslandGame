@@ -1,11 +1,13 @@
 #pragma once
 #include <map>
 #include <list>
+#include <vector>
 #include "defines.h"
 #include "player.h"
 #include "button.h"
 #include "event.h"
 #include "tile.h"
+#include "tilesLayout.h"
 
 class Game 
 {
@@ -24,7 +26,10 @@ class Game
 	map<player_role, Player*> m_players = map<player_role, Player*>();
 	map<button_func, Button*> m_buttons = map<button_func, Button*>();
 	list<Event*> m_events = list<Event*>();
+
 	Tile* m_tiles[24] = { 0 };
+	TilesLayout* m_selected_layout;
+	vector<TilesLayout*> m_layouts = vector<TilesLayout*>();
 
 	Game();
 	void updateButtons();
@@ -64,6 +69,10 @@ public:
 	
 	map<player_role, Player*>& getPlayers() { return m_players; }
 	map<button_func, Button*>& getButtons() { return m_buttons; }
+	vector<TilesLayout*>& getLayouts() { return m_layouts; }
 	list<Event*>& getEvents() { return m_events; }
-	Tile* (&getTiles())[24] { return m_tiles; }
+	
+	Tile** getTiles() { return m_tiles; }
+	TilesLayout* gatLayout() { return m_selected_layout; }
+	void setLayout(TilesLayout* l) { m_selected_layout = l; m_selected_layout->setSelected(true); }
 };

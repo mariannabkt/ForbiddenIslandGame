@@ -37,12 +37,12 @@ Game::Game()
 	m_players[PILOT]    = new Player(PILOT);
 
 	// fill tile names(image paths) array
-	string tile_names[24] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
+	string tile_names[TILES_COUNT] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
 		VRAXOS, GEFIRA, KIPOS_PSI, KIPOS_KRA, NAOS_ILIOY, NAOS_FEGGARIOY,PALATI_PAL, VRAXOI, PILI_APLISTIAS, 
 		PILI_LITHIS, PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO, PILI_AXARISTIAS };
 
 	// init grid tiles
-	for (int i = 0; i < 24; ++i)
+	for (int i = 0; i < TILES_COUNT; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
 }
 
@@ -81,8 +81,8 @@ void Game::setState(game_state new_state)
 		m_cur_player = 0;
 
 		// init tiles for new play session
-		for (auto t : m_tiles)
-			t->init();
+		for (int i = 0; i < TILES_COUNT; ++i)
+			m_tiles[i]->init();
 
 		// shuffle tiles for new play session
 		shuffleTileGrid();
@@ -132,11 +132,21 @@ void Game::setState(game_state new_state)
 		for (auto p : m_players) {
 			if (p.second->getPlayerTurn() == 1) {
 				setActivePlayer(p.second);
-
+				p.second->setIconCords(1.5f, 12.5f);
+				p.second->getActions()->setCords(3.4f, 13.0f);
+				p.second->getTreasures()[AIR]->setCords(1.5f, 14.5f);
+				p.second->getTreasures()[FIRE]->setCords(3.1f, 14.6f);
+				p.second->getTreasures()[EARTH]->setCords(4.5f, 14.6f);
+				p.second->getTreasures()[WATER]->setCords(5.7f, 14.5f);
 			} 
 			else if (p.second->getPlayerTurn() == 2) {
 				p.second->setActive(false);
-
+				p.second->setIconCords(22.5f, 12.5f);
+				p.second->getActions()->setCords(24.4f, 13.0f);
+				p.second->getTreasures()[AIR]->setCords(22.4f, 14.5f);
+				p.second->getTreasures()[FIRE]->setCords(24.0f, 14.6f);
+				p.second->getTreasures()[EARTH]->setCords(25.4f, 14.6f);
+				p.second->getTreasures()[WATER]->setCords(26.7f, 14.5f);
 			}
 			else
 				p.second->getStandingTile()->setTaken(false);
@@ -284,8 +294,8 @@ void Game::update()
 			if (p.second->isSelected())
 				p.second->update();
 
-		for (auto t : m_tiles)
-			t->update();
+		for (int i = 0; i < TILES_COUNT; ++i)
+			m_tiles[i]->update();
 		break;
 
 	default:
@@ -470,8 +480,11 @@ Game::~Game()
 		delete event;
 	m_events.clear();
 
-	for (int i = 0; i < 24; ++i)
+	for (int i = 0; i < TILES_COUNT; ++i)
 		delete m_tiles[i];
+
+	delete m_selected_layout;
+	m_selected_layout = nullptr;
 }
 
 

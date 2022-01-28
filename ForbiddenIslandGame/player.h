@@ -1,10 +1,15 @@
+#ifndef P_H
+#define P_H
+
 #pragma once
 #include "defines.h"
 #include "treasure.h"
 #include "tile.h"
-#include <map>
+#include <map> 
 
-class Player 
+#include "action.h"
+
+class Player
 {
 	float m_icon_posX;
 	float m_icon_posY;
@@ -21,7 +26,7 @@ class Player
 	string m_icon_img;
 	string m_pawn_img;
 
-
+	Action* m_actions;
 	player_role m_role;
 	Tile* m_standing_tile;
 	map<treasure_type, Treasure*> m_treasures = map<treasure_type, Treasure*>();
@@ -30,7 +35,7 @@ class Player
 	void drawIcon(float width, float height);
 
 public:
-	
+
 	Player(player_role r);
 
 	void init();
@@ -43,7 +48,7 @@ public:
 
 	Tile* getStandingTile() { return m_standing_tile; }
 	void setStandingTile(Tile* t) { m_standing_tile = t; m_standing_tile->setTaken(true); }
-	
+
 	float getPosX() { return m_pawn_posX; }
 	float getPosY() { return m_pawn_posY; }
 
@@ -52,7 +57,7 @@ public:
 
 	bool isActive() { return m_active; }
 	void setActive(bool a) { m_active = a; }
-	
+
 	bool isSelected() { return m_selected; }
 	void setSelected(bool s) { m_selected = s; }
 
@@ -62,5 +67,9 @@ public:
 	int getPlayerTurn() { return m_turn; }
 	void setPlayerTurn(int t) { m_turn = t; }
 
+	map<treasure_type, Treasure*>& getTreasures() { return m_treasures; }
 
+	Action* getActions() { return m_actions; }
+	void setActions(Action* act) { m_actions = act; }
 };
+#endif

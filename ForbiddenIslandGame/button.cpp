@@ -9,7 +9,8 @@ using namespace graphics;
   _______________________________________________________________________________
 */
 Button::Button(button_func b, float center_width_offset, float center_height_offset, float width, float height) 
-	: m_func(b), m_button_posX(center_width_offset), m_button_posY(center_height_offset),
+	: m_func(b), 
+	  m_button_posX(CANVAS_WIDTH / 2 + center_width_offset), m_button_posY(CANVAS_HEIGHT / 2 + center_height_offset),
 	  m_button_width(width), m_button_height(height)
 {
 	switch (m_func)
@@ -48,7 +49,7 @@ Button::Button(button_func b, float center_width_offset, float center_height_off
 		m_button_img = LEGENDARY_BUTTON;
 		break;
 	}
-	m_button_left  = CANVAS_WIDTH / 2 + center_width_offset - width / 2;
+	m_button_left  = m_button_posX - width / 2;
 	m_button_right = CANVAS_WIDTH / 2 + center_width_offset + width / 2;
 	m_button_up    = CANVAS_HEIGHT / 2 + center_height_offset - height / 2;
 	m_button_down  = CANVAS_HEIGHT / 2 + center_height_offset + height / 2;
@@ -65,7 +66,7 @@ void Button::draw()
 	m_button_br.outline_opacity = 0.0f;
 	m_button_br.fill_opacity = 1.0f * m_highlighted + 0.88f;
 	m_button_br.texture = m_button_img;
-	drawRect(CANVAS_WIDTH / 2 + m_button_posX, CANVAS_HEIGHT / 2 + m_button_posY, m_button_width, m_button_height, m_button_br);
+	drawRect(m_button_posX, m_button_posY, m_button_width, m_button_height, m_button_br);
 }
 
 

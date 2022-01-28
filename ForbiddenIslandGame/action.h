@@ -1,5 +1,7 @@
-#pragma once
-#include "player.h"
+#ifndef A_H
+#define A_H
+
+class Player;
 
 class Action
 {
@@ -20,3 +22,4 @@ public:
 
 	void setCords(float x, float y) { m_action_posX = x; m_action_posY = y; }
 };
+#endif

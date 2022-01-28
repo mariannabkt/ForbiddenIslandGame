@@ -10,20 +10,36 @@ using namespace std;
 #define CANVAS_WIDTH 28.0f
 #define CANVAS_HEIGHT 16.0f
 
-#define DEMO_PLAYER_SIZE 1.8f
+#define DEMO_PLAYER_SIZE 1.8f 
 #define PLAYER_SIZE 0.8f
+
 #define TILE_SIZE 2.2f
+#define TILES_COUNT 24
+
+#define LAYOUT_IMG_SIZE 2.0f
 
 #define SETCOLOR(c,r,g,b) { c[0]=r; c[1]=g; c[2]=b; }
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
 
 
-enum game_state			{ INIT, LOADING, MAIN_MENU, HELP, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
-enum help_page			{ ONE, TWO, THREE, FOUR };
-enum button_func		{ PLAY, EASY, MEDIUM, HARD, LEGENDARY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
-enum player_role		{ DIVER, EXPLORER, PILOT };
-enum tile_type			{ BASIC,TREASURE, LANDING };
-enum treasure_type		{ FIRE, WATER, AIR, EARTH };
+enum game_state		{ INIT, LOADING, MAIN_MENU, HELP, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
+enum help_page		{ ONE, TWO, THREE, FOUR };
+enum button_func	{ PLAY, EASY, MEDIUM, HARD, LEGENDARY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
+enum player_role	{ DIVER, EXPLORER, PILOT };
+enum tile_type		{ BASIC,TREASURE, LANDING };
+enum treasure_type	{ FIRE, WATER, AIR, EARTH };
+
+
+// ISLAND TILE LAYOUTS
+#define CLASSIC_ISLAND		{ {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} }
+#define SKULL_ISLAND		{ {1,1,1,1,1,1}, {1,0,1,1,0,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,1,1,1,1,0} }
+#define TREASURE_ISLAND		{ {1,1,0,0,0,1,1}, {0,1,1,1,1,1,0}, {0,0,1,1,1,0,0}, {0,0,1,1,1,0,0}, {1,1,0,0,0,1,1}, {0,1,1,1,1,1,0} }
+#define ROASTED_REFUGE		{ {0,1,0,0,0,1,0}, {1,1,1,1,1,1,1}, {0,0,1,1,1,0,0}, {0,0,1,1,1,0,0}, {0,1,0,0,0,1,0}, {1,1,1,1,1,1,1} }
+#define HARPOON_HIDEOUT		{ {1,1,1,1,0,0}, {1,1,1,0,0,0}, {1,1,1,1,0,1}, {1,0,1,1,1,1}, {0,0,0,1,1,1}, {0,0,1,1,1,1} }
+#define ATOLL_OF_DECISIONS	{ {0,0,1,1,1,0,0}, {0,1,1,0,1,1,0}, {1,1,0,0,0,1,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {0,1,1,0,1,1,0}, {0,0,1,1,1,0,0} }
+#define BAY_OF_GULLS		{ {0,0,0,1,1,0,0,0}, {0,0,0,1,1,0,0,0}, {1,0,0,1,1,0,0,1}, {1,1,1,1,1,1,1}, {0,1,1,1,1,1,0}, {0,0,0,1,1,0,0,0} }
+#define SHIPWRECK_BAY		{ {1,1,1,1,1,1,1,1}, {1,1,0,1,1,0,1,1}, {0,1,1,0,0,1,1,0}, {0,1,1,1,1,1,0} }
+#define PALM_SPINGS			{ {0,0,1,1,1,0,0}, {0,1,1,1,1,1,0}, {0,1,0,1,0,1,0}, {0,0,0,1,0,0,0}, {0,1,1,1,1,1,0}, {1,1,1,1,1,1,1} }
 
 
 // ASSET FOLDERS

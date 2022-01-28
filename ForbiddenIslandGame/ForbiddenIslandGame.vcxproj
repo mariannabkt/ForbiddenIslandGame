@@ -154,7 +154,10 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="RectClickable.cpp" />
     <ClCompile Include="tile.cpp" />
+    <ClCompile Include="tileLayout.cpp" />
+    <ClCompile Include="tilesLayout.cpp" />
     <ClCompile Include="treasure.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +167,9 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="RectClickable.h" />
     <ClInclude Include="tile.h" />
+    <ClInclude Include="tilesLayout.h" />
     <ClInclude Include="treasure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

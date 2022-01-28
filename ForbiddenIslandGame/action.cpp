@@ -1,5 +1,6 @@
 #include "action.h"
 #include "defines.h"
+#include "player.h"
 #include "sgg/graphics.h"
 
 using namespace graphics;
@@ -34,3 +35,4 @@ void Action::draw()
 void Action::update()
 {
 }
+
