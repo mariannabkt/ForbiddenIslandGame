@@ -24,7 +24,7 @@ Game::Game()
 	m_buttons[HOME]	  = new Button(HOME, 11.7f, -7.0f, 1.0f, 1.0f);
 	m_buttons[HELP]   = new Button(HELP, 10.4f, -7.0f, 1.0f, 1.0f);
 	m_buttons[PLAY]   = new Button(PLAY, -9.0f, 4.5f, 5.0f, 2.0f);
-	m_buttons[HOW_TO] = new Button(HOW_TO, -3.0f, 4.5f, 7.0f, 2.0f);
+	m_buttons[HOW_TO] = new Button(HOW_TO, -2.5f, 4.5f, 7.0f, 2.0f);
 	m_buttons[ABOUT]  = new Button(ABOUT, 4.0f, 4.5f, 4.5f, 2.0f);
 	m_buttons[NEXT]   = new Button(NEXT, 12.5f, 0.0f, 1.5f, 1.5f);
 	m_buttons[PREV]   = new Button(PREV, -12.5f, 0.0f, 1.5f, 1.5f);
@@ -261,7 +261,7 @@ void Game::draw()
 
 		setFont(IMMORTAL_FONT);
 		SETCOLOR(text.fill_color, 0.5f, 0.2f, 0.0f);
-		drawText(CANVAS_WIDTH / 2 - 2.3f, CANVAS_HEIGHT / 2 - 3, 1.0f, "PLAYER  " + to_string(getCurPlayer() + 1), text);
+		drawText(CANVAS_WIDTH / 2 - 2.0f, CANVAS_HEIGHT / 2 - 3.0f, 1.0f, "PLAYER  " + to_string(getCurPlayer() + 1), text);
 
 		for (auto p : m_players)
 			p.second->draw();
