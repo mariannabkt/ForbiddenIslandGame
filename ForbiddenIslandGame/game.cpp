@@ -48,14 +48,10 @@ Game::Game()
 	for (int i = 0; i < TILES_COUNT; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
 
-	m_layouts.push_back(new TilesLayout(SKULL_IMAGE));
-	m_layouts.push_back(new TilesLayout(BAY_IMAGE));
-	m_layouts.push_back(new TilesLayout(HARPOON_IMAGE));
-	m_layouts.push_back(new TilesLayout(ATOLL_IMAGE));
-	m_layouts.push_back(new TilesLayout(SHIPWRECK_IMAGE));
-	m_layouts.push_back(new TilesLayout(DAVY_IMAGE));
-	m_layouts.push_back(new TilesLayout(MUTINY_IMAGE));
-	m_layouts.push_back(new TilesLayout(PALM_IMAGE));
+	string layout_names[] = { SKULL_IMAGE, BAY_IMAGE, HARPOON_IMAGE, ATOLL_IMAGE, SHIPWRECK_IMAGE, DAVY_IMAGE, MUTINY_IMAGE, PALM_IMAGE };
+
+	for (auto l : layout_names)
+		m_layouts.push_back(new TilesLayout(l));
 
 	m_selected_layout = m_layouts.back();
 }
@@ -271,7 +267,7 @@ void Game::draw()
 		break;
 
 	case CHOOSE_ISLAND:
-		background.texture = CHOOSE_PLAYER_BACKGROUND;
+		background.texture = CHOOSE_ISLAND_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 		for (auto l : m_layouts)
 			l->draw();
@@ -335,7 +331,14 @@ void Game::update()
 
 	case LOADING:
 		setState(MAIN_MENU);
-		break;;
+		break;
+
+	case CHOOSE_ISLAND:
+		updateButtons();
+		processEvents();
+		for (auto l : m_layouts)
+			l->update();
+		break;
 
 	case CHOOSE_PLAYER:
 		updateButtons();
@@ -415,7 +418,7 @@ void Game::rearrangeTileGrid()
 			{
 				// set cords for every grid tile
 				m_tiles[t]->setGridPos(i, j);
-				m_tiles[t]->setCords((i + m_selected_layout->getPosXoffset()) * (TILE_SIZE + 0.2f), (j + m_selected_layout->getPosXoffset()) * (TILE_SIZE + 0.2f));
+				m_tiles[t]->setCords((i + m_selected_layout->getPosXoffset()) * (TILE_SIZE + 0.2f), (j + m_selected_layout->getPosYoffset()) * (TILE_SIZE + 0.2f));
 				
 				// set player's pawn cords
 				for (auto p : m_players)

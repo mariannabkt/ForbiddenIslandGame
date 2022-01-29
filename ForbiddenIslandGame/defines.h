@@ -16,7 +16,7 @@ using namespace std;
 #define TILE_SIZE 2.2f
 #define TILES_COUNT 24
 
-#define LAYOUT_IMG_SIZE 2.0f
+#define LAYOUT_IMG_SIZE 3.0f
 
 #define SETCOLOR(c,r,g,b) { c[0]=r; c[1]=g; c[2]=b; }
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
@@ -32,15 +32,15 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 
 // ISLAND TILE LAYOUTS
-//int CLASSIC_ISLAND[6][6] = { {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} };
-//int SKULL_ISLAND[6][6] = { {1,1,1,1,1,1}, {1,0,1,1,0,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,1,1,1,1,0} };
-//int HARPOON_HIDEOUT[6][6] = { {1,1,1,1,0,0}, {1,1,1,0,0,0}, {1,1,1,1,0,1}, {1,0,1,1,1,1}, {0,0,0,1,1,1}, {0,0,1,1,1,1} };
-//int ATOLL_OF_DECISIONS[7][7]=	{ {0,0,1,1,1,0,0}, {0,1,1,0,1,1,0}, {1,1,0,0,0,1,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {0,1,1,0,1,1,0}, {0,0,1,1,1,0,0} };
-//int BAY_OF_GULLS[6][8]=		{ {0,0,0,1,1,0,0,0}, {0,0,0,1,1,0,0,0}, {1,0,0,1,1,0,0,1}, {1,1,1,1,1,1,1}, {0,1,1,1,1,1,0}, {0,0,0,1,1,0,0,0} };
-//int SHIPWRECK_BAY[4][8]=		{ {1,1,1,1,1,1,1,1}, {1,1,0,1,1,0,1,1}, {0,1,1,0,0,1,1,0}, {0,1,1,1,1,1,0} };
-//int PALM_SPINGS[6][7]=			{ {0,0,1,1,1,0,0}, {0,1,1,1,1,1,0}, {0,1,0,1,0,1,0}, {0,0,0,1,0,0,0}, {0,1,1,1,1,1,0}, {1,1,1,1,1,1,1} };
-//int MUTINY_TOWERS[6][7]=		{ {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {1,1,1,1,1,1,1}, {1,1,1,1,1,1,1} };
-//int DAVY_JONES[6][9]=			{ {0,0,0,0,1,0,0,0,0}, {0,1,1,1,1,0,0,0,0}, {1,0,1,1,1,1,1,1,0}, {0,1,1,1,1,0,1,1,1}, {0,0,0,0,1,1,1,1,0}, {0,0,0,0,1,0,0,0,0} };
+//#define CLASSIC_ISLAND { {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} };
+//#define SKULL_ISLAND { {1,1,1,1,1,1}, {1,0,1,1,0,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,1,1,1,1,0} };
+//#define HARPOON_HIDEOUT { {1,1,1,1,0,0}, {1,1,1,0,0,0}, {1,1,1,1,0,1}, {1,0,1,1,1,1}, {0,0,0,1,1,1}, {0,0,1,1,1,1} };
+//#define ATOLL_OF_DECISIONS	{ {0,0,1,1,1,0,0}, {0,1,1,0,1,1,0}, {1,1,0,0,0,1,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {0,1,1,0,1,1,0}, {0,0,1,1,1,0,0} };
+//#define BAY_OF_GULLS	{ {0,0,0,1,1,0,0,0}, {0,0,0,1,1,0,0,0}, {1,0,0,1,1,0,0,1}, {1,1,1,1,1,1,1}, {0,1,1,1,1,1,0}, {0,0,0,1,1,0,0,0} };
+//#define SHIPWRECK_BAY	{ {1,1,1,1,1,1,1,1}, {1,1,0,1,1,0,1,1}, {0,1,1,0,0,1,1,0}, {0,1,1,1,1,1,0} };
+//#define PALM_SPINGS		{ {0,0,1,1,1,0,0}, {0,1,1,1,1,1,0}, {0,1,0,1,0,1,0}, {0,0,0,1,0,0,0}, {0,1,1,1,1,1,0}, {1,1,1,1,1,1,1} };
+//#define MUTINY_TOWERS		{ {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {1,1,1,1,1,1,1}, {1,1,1,1,1,1,1} };
+//#define DAVY_JONES		{ {0,0,0,0,1,0,0,0,0}, {0,1,1,1,1,0,0,0,0}, {1,0,1,1,1,1,1,1,0}, {0,1,1,1,1,0,1,1,1}, {0,0,0,0,1,1,1,1,0}, {0,0,0,0,1,0,0,0,0} };
 
 
 // LAYOUTS IMAGES
@@ -66,9 +66,10 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 // BACKGROUNDS
 #define MAIN_BACKGROUND					".\\assets\\backgrounds\\main_background.png"
+#define CHOOSE_ISLAND_BACKGROUND		".\\assets\\backgrounds\\Choose Island.png"
 #define CHOOSE_PLAYER_BACKGROUND		".\\assets\\backgrounds\\choose_player.png"
 #define CHOOSE_DIFFICULTY_BACKGROUND	".\\assets\\backgrounds\\choose_difficulty.png"
-#define PLAYING_BACKGROUND				".\\assets\\backgrounds\\playing_background.png"
+#define PLAYING_BACKGROUND				".\\assets\\backgrounds\\play back.png"
 
 
 // BUTTONS
