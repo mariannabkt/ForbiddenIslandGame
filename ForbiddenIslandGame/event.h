@@ -58,8 +58,8 @@ inline void MotionEvent<T1, T2>::update()
 
 class SmokeEvent : public Event 
 {
-	float m_event_posX;
-	float m_event_posY;
+	float m_posX;
+	float m_posY;
 	float m_orientation;
 	float m_scale;
 public:

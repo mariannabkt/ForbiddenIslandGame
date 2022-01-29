@@ -8,51 +8,45 @@ using namespace graphics;
   >>>>> CREATE NEW BUTTON AND INITIALIZE IT'S MEMBERS BASED ON IT'S FUNCTION <<<<<
   _______________________________________________________________________________
 */
-Button::Button(button_func b, float center_width_offset, float center_height_offset, float width, float height) 
-	: m_func(b), 
-	  m_button_posX(CANVAS_WIDTH / 2 + center_width_offset), m_button_posY(CANVAS_HEIGHT / 2 + center_height_offset),
-	  m_button_width(width), m_button_height(height)
+Button::Button(BUTTON_FUNC b, float center_width_offset, float center_height_offset, float width, float height) 
+	: m_func(b), Clickable("", width, height, CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset)
 {
 	switch (m_func)
 	{
 	case PLAY:
-		m_button_img = PLAY_BUTTON;
+		m_img = PLAY_BUTTON;
 		break;
 	case HOW_TO:
-		m_button_img = HOW_TO_PLAY_BUTTON;
+		m_img = HOW_TO_PLAY_BUTTON;
 		break;
 	case HOME:
-		m_button_img = HOME_BUTTON;
+		m_img = HOME_BUTTON;
 		break;
 	case EXIT:
-		m_button_img = EXIT_BUTTON;
+		m_img = EXIT_BUTTON;
 		break;
 	case NEXT:
-		m_button_img = NEXT_BUTTON;
+		m_img = NEXT_BUTTON;
 		break;
 	case PREV:
-		m_button_img = PREV_BUTTON;
+		m_img = PREV_BUTTON;
 		break;
 	case OK:
-		m_button_img = OK_BUTTON;
+		m_img = OK_BUTTON;
 		break;
 	case EASY:
-		m_button_img = EASY_BUTTON;
+		m_img = EASY_BUTTON;
 		break;
 	case MEDIUM:
-		m_button_img = MEDIUM_BUTTON;
+		m_img = MEDIUM_BUTTON;
 		break;
 	case HARD:
-		m_button_img = HARD_BUTTON;
+		m_img = HARD_BUTTON;
 		break;
 	case LEGENDARY:
-		m_button_img = LEGENDARY_BUTTON;
+		m_img = LEGENDARY_BUTTON;
 		break;
 	}
-	m_button_left  = m_button_posX - width / 2;
-	m_button_right = CANVAS_WIDTH / 2 + center_width_offset + width / 2;
-	m_button_up    = CANVAS_HEIGHT / 2 + center_height_offset - height / 2;
-	m_button_down  = CANVAS_HEIGHT / 2 + center_height_offset + height / 2;
 }
 
 
@@ -63,10 +57,10 @@ Button::Button(button_func b, float center_width_offset, float center_height_off
 */
 void Button::draw()
 {
-	m_button_br.outline_opacity = 0.0f;
-	m_button_br.fill_opacity = 1.0f * m_highlighted + 0.88f;
-	m_button_br.texture = m_button_img;
-	drawRect(m_button_posX, m_button_posY, m_button_width, m_button_height, m_button_br);
+	m_br.outline_opacity = 0.0f;
+	m_br.fill_opacity = 1.0f * m_highlighted + 0.88f;
+	m_br.texture = m_img;
+	drawRect(m_posX, m_posY, m_width, m_height, m_br);
 }
 
 
@@ -102,7 +96,17 @@ void Button::update()
 
 			case HOW_TO:
 				playSound(BUTTON_CLICK, 1, false);
-				game->setState(HELP);
+				game->setState(SHOW_HOW_TO);
+				break;
+
+			case ABOUT:
+				playSound(BUTTON_CLICK, 1, false);
+				//game->setState(SHOW_HOW_TO);
+				break;
+
+			case HELP:
+				playSound(BUTTON_CLICK, 1, false);
+				game->setState(SHOW_HOW_TO);
 				break;
 
 			case HOME:
@@ -144,15 +148,4 @@ void Button::update()
 	}
 	else 
 		m_highlighted = false;
-}
-
-
-/*____________________________________________
-
-  >>>>> CHECK IF BUTTON IS INSIDE BOUNDS <<<<<
-  ____________________________________________
-*/
-bool Button::contains(float x, float y)
-{
-	return (x > m_button_left && x < m_button_right && y > m_button_up && y < m_button_down);
 }

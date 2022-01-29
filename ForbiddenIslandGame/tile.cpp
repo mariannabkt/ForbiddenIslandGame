@@ -2,6 +2,8 @@
 #include "game.h"
 #include "event.h"
 #include "defines.h"
+#include "action.h"
+#include "player.h"
 
 using namespace graphics;
 
@@ -11,7 +13,7 @@ using namespace graphics;
   >>>>> CREATE NEW TILE AND INITIALIZE IT'S MEMBERS BASED ON IT'S TYPE <<<<<
   __________________________________________________________________________
 */
-Tile::Tile(string tile_name) : RectClickable(tile_name, TILE_SIZE, TILE_SIZE)
+Tile::Tile(string tile_name) : Clickable(tile_name, TILE_SIZE, TILE_SIZE)
 {
 	if (m_img == XEFWTO) {
 		m_type = LANDING;
@@ -40,13 +42,13 @@ Tile::Tile(string tile_name) : RectClickable(tile_name, TILE_SIZE, TILE_SIZE)
 		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
-	else 
+	else
 		m_type = BASIC;
 }
 
 
 /*_________________________________________________________
-
+* 
   >>>>> INIT NECESSARY MEMBERS FOR EVERY PLAY SESSION <<<<<
   _________________________________________________________
 */
@@ -56,27 +58,34 @@ void Tile::init()
 	m_flooded = false;;
 	m_treasureTaken = false;
 	m_hasPlayer = false;
+	if (size_t pos = m_img.find("_nt.png") < m_img.length())
+		m_img.replace(m_img.find("_nt.png"), m_img.length() - 3, ".png");
 }
 
 
 /*_____________________
-
+* 
   >>>>> DRAW TILE <<<<<
   _____________________
 */
 void Tile::draw()
 {
 	m_br.outline_width = 3.0f;
-	//tile.fill_opacity = 0.3f * !m_flooded;
-	//SETCOLOR(tile.fill_color, 0.0f, 0.0f, 0.5f);
+	m_br.fill_opacity = 1.0f * !m_sunken;
 	m_br.outline_opacity = 1.0f * m_canPerformAction;
 	m_br.texture = m_img;
+	drawRect(m_posX, m_posY, m_width, m_height, m_br);
+
+	Brush water;
+	water.outline_opacity = 0.0f;
+	water.fill_opacity = 0.3f * m_flooded;
+	SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.7f);
 	drawRect(m_posX, m_posY, m_width, m_height, m_br);
 }
 
 
 /*_______________________
-
+* 
   >>>>> UPDATE TILE <<<<<
   _______________________
 */
@@ -100,25 +109,34 @@ void Tile::update()
 	{
 		if (ms.button_left_released)
 		{
+			p->getActions()->update();
 			if (m_flooded)
 			{
 				m_flooded = false;
+				
+			}
+			else if (this == t && m_hasTreasure && !m_treasureTaken)
+			{
+				m_img.replace(m_img.find(".png"), m_img.length() + 3, "_nt.png");
+				m_treasureTaken = true;
+				p->getTreasures().find(m_treasure)->second->setCollected(true);
 			}
 			else
 			{
 				game->addEvent(new MotionEvent<Player*, Tile*>(p, this));
 				p->setStandingTile(this);
 				t->setTaken(false);
+				
 			}
 		}
 	}
-	
+
 }
 
 
 
 /*__________________________________________________________________
-
+* 
   >>>>> CHECK IF ACTIVE PLAYER CAN PERFORM ACTION AT THIS TILE <<<<<
   __________________________________________________________________
 */
@@ -128,7 +146,7 @@ void Tile::checkCanPerfomrAction()
 	Player* p = game->getActivePlayer();
 	Tile* t = p->getStandingTile();
 
-	bool isAdjacent = 
+	bool isAdjacent =
 		// left tile
 		(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ()) ||
 		// right tile
@@ -138,7 +156,7 @@ void Tile::checkCanPerfomrAction()
 		// buttom tile
 		(m_grid_j == t->getPosJ() + 1 && m_grid_i == t->getPosI());
 
-	bool isDiagonial = 
+	bool isDiagonial =
 		// left top tile
 		(m_grid_i == t->getPosI() - 1 && m_grid_j == t->getPosJ() - 1) ||
 		// left buttom tile
@@ -148,7 +166,7 @@ void Tile::checkCanPerfomrAction()
 		// right buttom tile
 		(m_grid_i == t->getPosI() + 1 && m_grid_j == t->getPosJ() + 1);
 
-	bool is2TilesAway = 
+	bool is2TilesAway =
 		// left's left tile
 		(m_grid_i == t->getPosI() - 2 && m_grid_j == t->getPosJ()) ||
 		// right's right tile
@@ -165,9 +183,9 @@ void Tile::checkCanPerfomrAction()
 		// explorer can move and/or shore up adjacent and diagonial tiles
 		((((!m_hasPlayer && (isAdjacent || isDiagonial)) || isOnTop) && p->getPlayerRole() == EXPLORER) ||
 
-		// diver can move and/or shore up adjacent tiles
-		(((!m_hasPlayer && isAdjacent) || isOnTop) && p->getPlayerRole() == DIVER) ||
+			// diver can move and/or shore up adjacent tiles
+			(((!m_hasPlayer && isAdjacent) || isOnTop) && p->getPlayerRole() == DIVER) ||
 
-		// pilot can move and/or shore up two tiles away
-		(((!m_hasPlayer && (isAdjacent || is2TilesAway)) || isOnTop) && p->getPlayerRole() == PILOT));
+			// pilot can move and/or shore up two tiles away
+			(((!m_hasPlayer && (isAdjacent || is2TilesAway)) || isOnTop) && p->getPlayerRole() == PILOT));
 }

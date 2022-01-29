@@ -15,7 +15,7 @@ Game* game = Game::getInstance();
   >>>>> CREATE NEW PLAYER AND INITIALIZE IT'S MEMBERS BASED ON IT'S ROLE <<<<<
   ___________________________________________________________________________
 */
-Player::Player(player_role r) : m_role(r), m_actions(new Action(this))
+Player::Player(PLAYER_ROLE r) : m_role(r), m_actions(new Action(this))
 {
 	switch (m_role)
 	{
@@ -119,13 +119,13 @@ void Player::drawPawn()
 	back.fill_opacity = 1.0f * isActive();
 	back.outline_opacity = 0.0f;
 	back.texture = WHITE_PAWN;
-	drawRect(m_pawn_posX, m_pawn_posY, PLAYER_SIZE + 0.3f, PLAYER_SIZE + 0.3f, back);
+	drawRect(m_posX, m_posY, PLAYER_SIZE + 0.3f, PLAYER_SIZE + 0.3f, back);
 
 	//--- DRAW PLAYER'S PAWN ---
 	Brush pawn;
 	pawn.texture = m_pawn_img;
 	pawn.outline_opacity = 0.0f;
-	drawRect(m_pawn_posX, m_pawn_posY, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
+	drawRect(m_posX, m_posY, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
 }
 
 
@@ -204,7 +204,7 @@ void Player::update()
 	}
 	else if (game->getState() == PLAYING)
 	{
-		m_actions->update();
+		
 	}
 }
 

@@ -2,6 +2,7 @@
 #include "game.h"
 #include "button.h"
 #include "tile.h"
+#include "action.h"
 #include <sgg/graphics.h>
 #include <random>
 
@@ -18,11 +19,13 @@ Game* Game::m_instance = nullptr;
 */
 Game::Game()
 {
-	// init button list
+	// init buttons
 	m_buttons[EXIT]   = new Button(EXIT, 13.0f, -7.0f, 1.0f, 1.0f);
 	m_buttons[HOME]	  = new Button(HOME, 11.7f, -7.0f, 1.0f, 1.0f);
-	m_buttons[PLAY]   = new Button(PLAY, -8.0f, 4.5f, 5.0f, 2.0f);
-	m_buttons[HOW_TO] = new Button(HOW_TO, -1.0f, 4.5f, 7.0f, 2.0f);
+	m_buttons[HELP]   = new Button(HELP, 10.4f, -7.0f, 1.0f, 1.0f);
+	m_buttons[PLAY]   = new Button(PLAY, -9.0f, 4.5f, 5.0f, 2.0f);
+	m_buttons[HOW_TO] = new Button(HOW_TO, -3.0f, 4.5f, 7.0f, 2.0f);
+	m_buttons[ABOUT]  = new Button(ABOUT, 4.0f, 4.5f, 4.5f, 2.0f);
 	m_buttons[NEXT]   = new Button(NEXT, 12.5f, 0.0f, 1.5f, 1.5f);
 	m_buttons[PREV]   = new Button(PREV, -12.5f, 0.0f, 1.5f, 1.5f);
 	m_buttons[OK]     = new Button(OK, 11.0f, 6.0f, 1.0f, 1.0f);
@@ -31,7 +34,7 @@ Game::Game()
 	m_buttons[HARD]   = new Button(HARD, 3.0f, 2.0f, 4.0f, 2.0f);
 	m_buttons[LEGENDARY] = new Button(LEGENDARY, 9.0f, 2.0f, 4.0f, 2.0f);
 
-	// init player list
+	// init players
 	m_players[EXPLORER] = new Player(EXPLORER);
 	m_players[DIVER]    = new Player(DIVER);
 	m_players[PILOT]    = new Player(PILOT);
@@ -52,7 +55,7 @@ Game::Game()
   >>>>> INITIALIZATION FOR EACH GAME STATE <<<<<
   ______________________________________________
 */
-void Game::setState(game_state new_state)
+void Game::setState(GAME_STATE new_state)
 {
 	m_prev_state = m_state;
 	m_state = new_state;
@@ -97,9 +100,10 @@ void Game::setState(game_state new_state)
 		m_buttons[EXIT]->enable();
 		m_buttons[PLAY]->enable();
 		m_buttons[HOW_TO]->enable();
+		m_buttons[ABOUT]->enable();
 		break;
 
-	case HELP:
+	case SHOW_HOW_TO:
 
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
@@ -130,7 +134,8 @@ void Game::setState(game_state new_state)
 
 		// player 1 plays first
 		for (auto p : m_players) {
-			if (p.second->getPlayerTurn() == 1) {
+			if (p.second->getPlayerTurn() == 1) 
+			{
 				setActivePlayer(p.second);
 				p.second->setIconCords(1.5f, 12.5f);
 				p.second->getActions()->setCords(3.4f, 13.0f);
@@ -139,7 +144,8 @@ void Game::setState(game_state new_state)
 				p.second->getTreasures()[EARTH]->setCords(4.5f, 14.6f);
 				p.second->getTreasures()[WATER]->setCords(5.7f, 14.5f);
 			} 
-			else if (p.second->getPlayerTurn() == 2) {
+			else if (p.second->getPlayerTurn() == 2) 
+			{
 				p.second->setActive(false);
 				p.second->setIconCords(22.5f, 12.5f);
 				p.second->getActions()->setCords(24.4f, 13.0f);
@@ -174,10 +180,33 @@ void Game::setState(game_state new_state)
 			b.second->disable();
 		m_buttons[HOME]->enable();
 		m_buttons[EXIT]->enable();
+		m_buttons[HELP]->enable();
 		break;
 	}
 	// smooth transition event between states
 	addEvent(new StateTransitionEvent());
+}
+
+void Game::changePlayer()
+{
+	switch (m_state)
+	{
+	case CHOOSE_PLAYER:
+		m_cur_player == 0 ? ++m_cur_player : --m_cur_player;
+		break;
+	case PLAYING:
+		
+			m_active_player->setActive(false);
+			for (auto p : m_players)
+				if (!p.second->isActive() && m_active_player->isSelected())
+					setActivePlayer(p.second);
+			if (m_active_player->getPlayerTurn() == 2)
+				m_active_player->setActive(false);
+			for (auto p : m_players)
+				if (p.second->getPlayerTurn() == 1)
+					setActivePlayer(p.second);
+		break;
+	}
 }
 
 
@@ -196,18 +225,19 @@ void Game::draw()
 	switch (m_state)
 	{
 	case INIT:
+		SETCOLOR(background.fill_color, 1.0f, 0.0f, 0.5f);
+		setWindowBackground(background);
 		setFont(SCRATCHED_FONT);
+
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
 		drawText(CANVAS_WIDTH / 2 - 6.5f, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
 		drawText(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
-
-		SETCOLOR(object.outline_color, 1.0f, 1.0f, 1.0f);
-		SETCOLOR(object.fill_color, 0.7f, 0.1f, 0.1f);
-		object.gradient = true;
-		object.gradient_dir_u = 4.0f;
-		object.gradient_dir_v = 0.0f;
-		SETCOLOR(object.fill_secondary_color, 0.0f, 0.0f, 0.0f);
-		drawRect(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 3.0f, 5.0f, 2.0f, object);
+		
+		object.outline_opacity = 0.0f; 
+		object.texture = ".\\assets\\loading spinner.png";
+		setOrientation(getDeltaTime() / 1000.0f);
+		drawDisk(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 3.0f, 2.0f, object);
+		resetPose();
 		break;
 		
 	case MAIN_MENU:
@@ -215,7 +245,7 @@ void Game::draw()
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 		break;
 		
-	case HELP:
+	case SHOW_HOW_TO:
 		background.texture = m_cur_page_img;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 		break;

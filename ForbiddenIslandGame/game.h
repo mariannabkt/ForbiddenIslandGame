@@ -9,25 +9,30 @@
 #include "tile.h"
 #include "tilesLayout.h"
 
+
+/*
+	A game entity has game objects and stores them into collections.
+	Controls the app's operations and holds it's status to it's members.
+*/
 class Game 
 {
 	static Game* m_instance;
 	
 	int m_difficulty = 0;
-	game_state m_state = INIT;
-	game_state m_prev_state;
+	GAME_STATE m_state = INIT;
+	GAME_STATE m_prev_state;
 
-	help_page m_cur_page = ONE;
+	HELP_PAGE m_cur_page = ONE;
 	string m_cur_page_img = PAGE_ONE;
 
 	int m_cur_player = 0;
 	Player* m_active_player;
 
-	map<player_role, Player*> m_players = map<player_role, Player*>();
-	map<button_func, Button*> m_buttons = map<button_func, Button*>();
+	map<PLAYER_ROLE, Player*> m_players = map<PLAYER_ROLE, Player*>();
+	map<BUTTON_FUNC, Button*> m_buttons = map<BUTTON_FUNC, Button*>();
 	list<Event*> m_events = list<Event*>();
 
-	Tile* m_tiles[24] = { 0 };
+	Tile* m_tiles[TILES_COUNT] = { 0 };
 	TilesLayout* m_selected_layout;
 	vector<TilesLayout*> m_layouts = vector<TilesLayout*>();
 
@@ -52,27 +57,27 @@ public:
 	int getDifficulty() { return m_difficulty; }
 	void setDifficulty(int d) { m_difficulty = d; }
 
-	game_state getState() { return m_state; }
-	void setState(game_state new_state);
+	GAME_STATE getState() { return m_state; }
+	void setState(GAME_STATE new_state);
 
-	help_page getPage() { return m_cur_page; }
-	void setPage(help_page new_page) { m_cur_page = new_page; }
+	HELP_PAGE getPage() { return m_cur_page; }
+	void setPage(HELP_PAGE new_page) { m_cur_page = new_page; }
 	void setPageImage(string new_page_img) { m_cur_page_img = new_page_img; }
 
 	int getCurPlayer() { return m_cur_player; }
-	void changePlayer() { m_cur_player == 0 ? ++m_cur_player : --m_cur_player; }
+	void changePlayer();
 
 	Player* getActivePlayer() { return m_active_player; }
 	void setActivePlayer(Player* pl) { m_active_player = pl; pl->setActive(true); }
 
 	void addEvent(Event* event) { m_events.push_back(event); }
 	
-	map<player_role, Player*>& getPlayers() { return m_players; }
-	map<button_func, Button*>& getButtons() { return m_buttons; }
+	map<PLAYER_ROLE, Player*>& getPlayers() { return m_players; }
+	map<BUTTON_FUNC, Button*>& getButtons() { return m_buttons; }
 	vector<TilesLayout*>& getLayouts() { return m_layouts; }
 	list<Event*>& getEvents() { return m_events; }
 	
-	Tile** getTiles() { return m_tiles; }
+	Tile* (&getTiles())[24] { return m_tiles; }
 	TilesLayout* gatLayout() { return m_selected_layout; }
 	void setLayout(TilesLayout* l) { m_selected_layout = l; m_selected_layout->setSelected(true); }
 };

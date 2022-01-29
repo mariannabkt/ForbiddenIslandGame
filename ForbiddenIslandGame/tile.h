@@ -1,26 +1,17 @@
 #pragma once
 #include "defines.h"
-#include "RectClickable.h"
+#include "clickable.h"
 
 static int m_tiles_grid[6][6] = CLASSIC_ISLAND;
 
-class Tile : public RectClickable
+class Tile : public Clickable
 {
-	//string m_tile_img;
-	tile_type m_type;
-	treasure_type m_treasure;
-
-	/*float m_tile_posX = 0.0f;
-	float m_tile_posY = 0.0f;
-
-	float m_tile_left = 0.0f;
-	float m_tile_right = 0.0f;
-	float m_tile_up = 0.0f;
-	float m_tile_down = 0.0f;*/
+	TILE_TYPE m_type;
+	TREASURE_TYPE m_treasure;
 
 	int m_grid_i = 0;
 	int m_grid_j = 0;
-	
+
 	bool m_sunken = false;
 	bool m_flooded = false;
 
@@ -32,14 +23,14 @@ class Tile : public RectClickable
 
 public:
 
-	Tile(string tile_name); 
+	Tile(string tile_name);
 
 	void init();
 	void draw();
 	void update();
-	
 
-	static int(&getTilesGrid())[6][6] { return m_tiles_grid; }
+
+	static int(&getTilesGrid())[6][6]{ return m_tiles_grid; }
 
 	bool hasPlayer() { return m_hasPlayer; }
 

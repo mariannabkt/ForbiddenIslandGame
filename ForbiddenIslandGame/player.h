@@ -7,14 +7,12 @@
 #include "tile.h"
 #include <map> 
 
-#include "action.h"
+class Action;
 
-class Player
+class Player : public Clickable
 {
 	float m_icon_posX;
 	float m_icon_posY;
-	float m_pawn_posX;
-	float m_pawn_posY;
 	float m_color[3];
 
 	bool m_active = false;
@@ -27,32 +25,28 @@ class Player
 	string m_pawn_img;
 
 	Action* m_actions;
-	player_role m_role;
+	PLAYER_ROLE m_role;
 	Tile* m_standing_tile;
-	map<treasure_type, Treasure*> m_treasures = map<treasure_type, Treasure*>();
+	map<TREASURE_TYPE, Treasure*> m_treasures = map<TREASURE_TYPE, Treasure*>();
 
 	void drawPawn();
 	void drawIcon(float width, float height);
 
 public:
 
-	Player(player_role r);
+	Player(PLAYER_ROLE r);
 
 	void init();
 	void draw();
 	void update();
 	void isStartTile(Tile* t);
-	bool contains(float x, float y);
+	bool contains(float x, float y) override;
 
-	player_role getPlayerRole() { return m_role; }
+	PLAYER_ROLE getPlayerRole() { return m_role; }
 
 	Tile* getStandingTile() { return m_standing_tile; }
 	void setStandingTile(Tile* t) { m_standing_tile = t; m_standing_tile->setTaken(true); }
 
-	float getPosX() { return m_pawn_posX; }
-	float getPosY() { return m_pawn_posY; }
-
-	void setCords(float x, float y) { m_pawn_posX = x; m_pawn_posY = y; }
 	void setIconCords(float x, float y) { m_icon_posX = x; m_icon_posY = y; }
 
 	bool isActive() { return m_active; }
@@ -67,7 +61,7 @@ public:
 	int getPlayerTurn() { return m_turn; }
 	void setPlayerTurn(int t) { m_turn = t; }
 
-	map<treasure_type, Treasure*>& getTreasures() { return m_treasures; }
+	map<TREASURE_TYPE, Treasure*>& getTreasures() { return m_treasures; }
 
 	Action* getActions() { return m_actions; }
 	void setActions(Action* act) { m_actions = act; }

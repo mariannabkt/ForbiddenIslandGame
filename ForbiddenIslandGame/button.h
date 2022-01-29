@@ -1,31 +1,21 @@
 #pragma once
 #include "defines.h"
+#include "clickable.h"
 #include "sgg/graphics.h"
 
 using namespace graphics;
 
-class Button 
+class Button : public Clickable
 {
-	Brush m_button_br;
-	string m_button_img;
-	button_func m_func;
 
-	float m_button_posX;
-	float m_button_posY;
-	float m_button_width;
-	float m_button_height;
-	
-	float m_button_left;
-	float m_button_right;
-	float m_button_up;
-	float m_button_down;
+	BUTTON_FUNC m_func;
 
 	bool m_highlighted = false;
 	bool m_active = false;
 
 public:
 
-	Button(button_func b, float center_width_offset, float center_height_offset, float width, float height);
+	Button(BUTTON_FUNC b, float center_width_offset, float center_height_offset, float width, float height);
 	
 	void draw();
 	void update();
@@ -34,5 +24,4 @@ public:
 	void disable() { m_active = false; }
 	bool isActive() { return m_active; }
 
-	bool contains(float x, float y);
 };

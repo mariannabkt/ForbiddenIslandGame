@@ -27,7 +27,7 @@ void StateTransitionEvent::draw()
 
 
 
-SmokeEvent::SmokeEvent(float x, float y) : Event(2.0f), m_event_posX(x), m_event_posY(y)
+SmokeEvent::SmokeEvent(float x, float y) : Event(2.0f), m_posX(x), m_posY(y)
 {
 	m_orientation = RAND0TO1() * 180.0f - 90.0f;
 	m_scale = 0.8f + RAND0TO1() * 4.0f;
@@ -41,6 +41,6 @@ void SmokeEvent::draw() {
 	br.fill_opacity = 1.0f - s;
 	setScale(m_scale + s, m_scale + s);
 	setOrientation(m_orientation + s * 20.0f);
-	drawRect(m_event_posX, m_event_posY, PLAYER_SIZE, PLAYER_SIZE, br);
+	drawRect(m_posX, m_posY, PLAYER_SIZE, PLAYER_SIZE, br);
 	resetPose();
 }

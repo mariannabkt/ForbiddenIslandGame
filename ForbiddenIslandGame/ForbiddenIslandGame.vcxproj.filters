@@ -42,10 +42,10 @@
     <ClCompile Include="tilesLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tileLayout.cpp">
+    <ClCompile Include="clickable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RectClickable.cpp">
+    <ClCompile Include="gameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +77,10 @@
     <ClInclude Include="tilesLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RectClickable.h">
+    <ClInclude Include="clickable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,12 +22,12 @@ using namespace std;
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
 
 
-enum game_state		{ INIT, LOADING, MAIN_MENU, HELP, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
-enum help_page		{ ONE, TWO, THREE, FOUR };
-enum button_func	{ PLAY, EASY, MEDIUM, HARD, LEGENDARY, HOW_TO, EXIT, HOME, NEXT, PREV, OK };
-enum player_role	{ DIVER, EXPLORER, PILOT };
-enum tile_type		{ BASIC,TREASURE, LANDING };
-enum treasure_type	{ FIRE, WATER, AIR, EARTH };
+enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
+enum HELP_PAGE		{ ONE, TWO, THREE, FOUR };
+enum BUTTON_FUNC	{ EXIT, EASY, MEDIUM, HARD, LEGENDARY, PLAY, HOW_TO, ABOUT, HELP, HOME, NEXT, PREV, OK };
+enum PLAYER_ROLE	{ DIVER, EXPLORER, PILOT };
+enum TILE_TYPE		{ BASIC,TREASURE, LANDING };
+enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 
 // ISLAND TILE LAYOUTS
@@ -62,6 +62,7 @@ enum treasure_type	{ FIRE, WATER, AIR, EARTH };
 // BUTTONS
 #define PLAY_BUTTON        ".\\assets\\buttons\\play button.png"
 #define OK_BUTTON          ".\\assets\\buttons\\ok button.png"
+#define HELP_BUTTON		   ".\\assets\\buttons\\help button.png"
 #define EXIT_BUTTON        ".\\assets\\buttons\\exit button.png"
 #define HOME_BUTTON		   ".\\assets\\buttons\\home button.png"
 #define NEXT_BUTTON        ".\\assets\\buttons\\next button.png"
@@ -70,6 +71,7 @@ enum treasure_type	{ FIRE, WATER, AIR, EARTH };
 #define MEDIUM_BUTTON      ".\\assets\\buttons\\medium button.png"
 #define HARD_BUTTON        ".\\assets\\buttons\\hard button.png"
 #define LEGENDARY_BUTTON   ".\\assets\\buttons\\legendary button.png"
+#define ABOUT_BUTTON	   ".\\assets\\buttons\\about button.png"
 #define HOW_TO_PLAY_BUTTON ".\\assets\\buttons\\how to play button.png"
 
 

@@ -1,24 +1,20 @@
 #pragma once
 #include "defines.h"
+#include "gameObject.h"
 
-class Treasure 
+class Treasure : public GameObject
 {
-	float m_treas_posX = 0.0f;
-	float m_treas_posY = 0.0f;
 
 	string m_treas_img;
-	treasure_type m_type;
-	bool m_collected = false;
+	TREASURE_TYPE m_type;
+	bool m_collected;
 
 public:
 
-	Treasure(treasure_type t, float x = 0.0f, float y = 0.0f, bool c = false);
+	Treasure(TREASURE_TYPE t, float x = 0.0f, float y = 0.0f , bool c = false);
 	void draw();
 	void update();
-	
-	float getPosX() { return m_treas_posX; }
-	float getPosY() { return m_treas_posY; }
-	
+		
 	void setCollected(bool x) { m_collected = x; }
-	void setCords(float x, float y) { m_treas_posX = x; m_treas_posY = y; }
+
 };

@@ -1,12 +1,11 @@
 #ifndef A_H
 #define A_H
-
+#include "game.h"
 class Player;
 
-class Action
+class Action : public GameObject
 {
-	float m_action_posX = 0.0f;
-	float m_action_posY = 0.0f;
+
 
 	int m_remaining = 3;
 	bool m_done = false;
@@ -20,6 +19,5 @@ public:
 	void draw();
 	void update();
 
-	void setCords(float x, float y) { m_action_posX = x; m_action_posY = y; }
 };
 #endif

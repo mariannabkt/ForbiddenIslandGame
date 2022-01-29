@@ -152,11 +152,11 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="RectClickable.cpp" />
+    <ClCompile Include="clickable.cpp" />
     <ClCompile Include="tile.cpp" />
-    <ClCompile Include="tileLayout.cpp" />
     <ClCompile Include="tilesLayout.cpp" />
     <ClCompile Include="treasure.cpp" />
   </ItemGroup>
@@ -166,8 +166,9 @@
     <ClInclude Include="defines.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="gameObject.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="RectClickable.h" />
+    <ClInclude Include="clickable.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="tilesLayout.h" />
     <ClInclude Include="treasure.h" />

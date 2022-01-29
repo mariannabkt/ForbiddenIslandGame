@@ -7,7 +7,7 @@ using namespace graphics;
 
 
 
-Treasure::Treasure(treasure_type t, float x, float y, bool c) : m_type(t), m_collected(c), m_treas_posX(x), m_treas_posY(y)
+Treasure::Treasure(TREASURE_TYPE t, float x, float y, bool c) : GameObject(x, y), m_type(t), m_collected(c)
 {
 	switch (m_type) {
 	case FIRE:
@@ -29,9 +29,9 @@ void Treasure::draw()
 {
 	Brush br;
 	br.outline_opacity = 0.0f;
-	br.fill_opacity = 0.85f + 1.0f * m_collected;
+	br.fill_opacity = 0.7f + 1.0f * m_collected;
 	br.texture = m_treas_img;
-	drawRect(m_treas_posX, m_treas_posY, 2.0f, 2.5f, br);
+	drawRect(m_posX, m_posY, 2.0f, 2.5f, br);
 }
 
 void Treasure::update()
