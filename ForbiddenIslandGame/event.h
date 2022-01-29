@@ -3,7 +3,7 @@
 #include "player.h"
 #include "tile.h"
 
-class Event 
+class Event :public GameObject
 {
 protected:
 
@@ -14,7 +14,7 @@ protected:
 
 public:
 
-	Event(float dur = 2.0f) : m_duration(dur){}
+	Event(float dur = 2.0f, float x = 0.0f, float y = 0.0f) : GameObject(x,y), m_duration(dur){}
 	virtual ~Event() {};
 
 	virtual void draw() {};
@@ -58,8 +58,6 @@ inline void MotionEvent<T1, T2>::update()
 
 class SmokeEvent : public Event 
 {
-	float m_posX;
-	float m_posY;
 	float m_orientation;
 	float m_scale;
 public:

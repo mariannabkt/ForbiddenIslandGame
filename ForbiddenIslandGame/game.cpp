@@ -25,7 +25,7 @@ Game::Game()
 	m_buttons[HELP]   = new Button(HELP, 10.4f, -7.0f, 1.0f, 1.0f);
 	m_buttons[PLAY]   = new Button(PLAY, -9.0f, 4.5f, 5.0f, 2.0f);
 	m_buttons[HOW_TO] = new Button(HOW_TO, -2.5f, 4.5f, 7.0f, 2.0f);
-	m_buttons[ABOUT]  = new Button(ABOUT, 4.0f, 4.5f, 4.5f, 2.0f);
+	m_buttons[ABOUT]  = new Button(ABOUT, 4.0f, 4.5f, 4.f, 2.0f);
 	m_buttons[NEXT]   = new Button(NEXT, 12.5f, 0.0f, 1.5f, 1.5f);
 	m_buttons[PREV]   = new Button(PREV, -12.5f, 0.0f, 1.5f, 1.5f);
 	m_buttons[OK]     = new Button(OK, 11.0f, 6.0f, 1.0f, 1.0f);
@@ -47,6 +47,17 @@ Game::Game()
 	// init grid tiles
 	for (int i = 0; i < TILES_COUNT; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
+
+	m_layouts.push_back(new TilesLayout(SKULL_IMAGE));
+	m_layouts.push_back(new TilesLayout(BAY_IMAGE));
+	m_layouts.push_back(new TilesLayout(HARPOON_IMAGE));
+	m_layouts.push_back(new TilesLayout(ATOLL_IMAGE));
+	m_layouts.push_back(new TilesLayout(SHIPWRECK_IMAGE));
+	m_layouts.push_back(new TilesLayout(DAVY_IMAGE));
+	m_layouts.push_back(new TilesLayout(MUTINY_IMAGE));
+	m_layouts.push_back(new TilesLayout(PALM_IMAGE));
+
+	m_selected_layout = m_layouts.back();
 }
 
 
@@ -82,13 +93,14 @@ void Game::setState(GAME_STATE new_state)
 		playMusic(NATURAL_AMBIENCE, 1.0f, true, 1000);
 
 		m_cur_player = 0;
+		m_cur_flood = 0;
 
 		// init tiles for new play session
 		for (int i = 0; i < TILES_COUNT; ++i)
 			m_tiles[i]->init();
 
 		// shuffle tiles for new play session
-		shuffleTileGrid();
+		rearrangeTileGrid();
 
 		// init players for new play session
 		for (auto p : m_players)
@@ -117,10 +129,19 @@ void Game::setState(GAME_STATE new_state)
 		m_buttons[PREV]->enable();
 		break;
 
-	case CHOOSE_PLAYER:
+	case CHOOSE_ISLAND:
 
 		stopMusic(1);
 		playMusic(INTO_THE_WATER, 1.0f, true, 1000);
+
+		// enable only necessary buttons for this state
+		for (auto b : m_buttons)
+			b.second->disable();
+		m_buttons[HOME]->enable();
+		m_buttons[EXIT]->enable();
+		break;
+
+	case CHOOSE_PLAYER:
 
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
@@ -131,6 +152,8 @@ void Game::setState(GAME_STATE new_state)
 		break;
 
 	case CHOOSE_DIF:
+
+		shuffleTiles();
 
 		// player 1 plays first
 		for (auto p : m_players) {
@@ -225,10 +248,7 @@ void Game::draw()
 	switch (m_state)
 	{
 	case INIT:
-		SETCOLOR(background.fill_color, 1.0f, 0.0f, 0.5f);
-		setWindowBackground(background);
 		setFont(SCRATCHED_FONT);
-
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
 		drawText(CANVAS_WIDTH / 2 - 6.5f, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
 		drawText(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
@@ -236,7 +256,7 @@ void Game::draw()
 		object.outline_opacity = 0.0f; 
 		object.texture = ".\\assets\\loading spinner.png";
 		setOrientation(getDeltaTime() / 1000.0f);
-		drawDisk(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 3.0f, 2.0f, object);
+		drawDisk(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.0f, 2.0f, object);
 		resetPose();
 		break;
 		
@@ -248,6 +268,13 @@ void Game::draw()
 	case SHOW_HOW_TO:
 		background.texture = m_cur_page_img;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+		break;
+
+	case CHOOSE_ISLAND:
+		background.texture = CHOOSE_PLAYER_BACKGROUND;
+		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+		for (auto l : m_layouts)
+			l->draw();
 		break;
 
 	case CHOOSE_DIF:
@@ -272,9 +299,9 @@ void Game::draw()
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 
 		int t = 0;
-		for (int i = 0; i < 6; ++i)
-			for (int j = 0; j < 6; ++j)
-				if (Tile::getTilesGrid()[i][j])
+		for (int i = 0; i < m_selected_layout->getRows(); ++i)
+			for (int j = 0; j < m_selected_layout->getCols(); ++j)
+				if (m_selected_layout->getLayout()[i][j])
 					m_tiles[t++]->draw();
 
 		for (auto p : m_players)
@@ -361,29 +388,34 @@ void Game::processEvents()
 	m_events.remove_if([](Event* e) { return !e->isActive(); });
 }
 
-
-/*___________________________________________
-
-  >>>>> SHUFFLE TILE GRID AND SET CORDS <<<<<
-  ___________________________________________
-*/
-void Game::shuffleTileGrid()
+void Game::shuffleTiles()
 {
 	// To obtain a time-based seed
 	unsigned seed = 0;
 
 	// Shuffling our array
 	shuffle(m_tiles, m_tiles + 24, default_random_engine(seed));
+}
+
+
+/*___________________________________________
+
+  >>>>> SHUFFLE TILE GRID AND SET CORDS <<<<<
+  ___________________________________________
+*/
+void Game::rearrangeTileGrid()
+{
+	shuffleTiles();
 
 	// based on the tile grid
 	int t = 0;
-	for (int i = 0; i < 6; ++i)
-		for (int j = 0; j < 6; ++j)
-			if (Tile::getTilesGrid()[i][j])
+	for (int i = 0; i < m_selected_layout->getRows(); ++i)
+		for (int j = 0; j < m_selected_layout->getCols(); ++j)
+			if (m_selected_layout->getLayout()[i][j])
 			{
 				// set cords for every grid tile
 				m_tiles[t]->setGridPos(i, j);
-				m_tiles[t]->setCords((i + 3.6f) * (TILE_SIZE + 0.2f), (j + 0.7f) * (TILE_SIZE + 0.2f));
+				m_tiles[t]->setCords((i + m_selected_layout->getPosXoffset()) * (TILE_SIZE + 0.2f), (j + m_selected_layout->getPosXoffset()) * (TILE_SIZE + 0.2f));
 				
 				// set player's pawn cords
 				for (auto p : m_players)
@@ -393,6 +425,19 @@ void Game::shuffleTileGrid()
 			}
 }
 
+
+void Game::floodTiles()
+{
+	for (int i = 0; i < m_difficulty; ++i) {
+		if (m_cur_flood >= TILES_COUNT)
+			m_cur_flood = 0;
+		if (!m_tiles[m_cur_flood]->getSunken())
+			m_tiles[m_cur_flood]->flood();
+		else if (m_tiles[m_cur_flood]->getFlooded())
+			m_tiles[m_cur_flood]->sunk();
+		m_cur_flood++;
+	}
+}
 
 /*___________________________________________
 

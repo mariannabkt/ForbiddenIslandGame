@@ -79,8 +79,8 @@ void Tile::draw()
 	Brush water;
 	water.outline_opacity = 0.0f;
 	water.fill_opacity = 0.3f * m_flooded;
-	SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.7f);
-	drawRect(m_posX, m_posY, m_width, m_height, m_br);
+	SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.8f);
+	drawRect(m_posX, m_posY, m_width, m_height, water);
 }
 
 
@@ -109,7 +109,6 @@ void Tile::update()
 	{
 		if (ms.button_left_released)
 		{
-			p->getActions()->update();
 			if (m_flooded)
 			{
 				m_flooded = false;
@@ -128,10 +127,13 @@ void Tile::update()
 				t->setTaken(false);
 				
 			}
+			p->getActions()->update();
+			
 		}
 	}
 
 }
+
 
 
 
@@ -177,9 +179,10 @@ void Tile::checkCanPerfomrAction()
 		(m_grid_j == t->getPosJ() + 2 && m_grid_i == t->getPosI());
 
 	// active player's standing tile
-	bool isOnTop = (m_flooded || (m_hasTreasure && !m_treasureTaken)) && this == t;
+	bool isOnTop = (m_flooded || (m_hasTreasure && !m_treasureTaken && !p->getTreasures().find(m_treasure)->second->isCollected())) 
+		&& this == t ;
 
-	m_canPerformAction =
+	m_canPerformAction = !m_sunken && 
 		// explorer can move and/or shore up adjacent and diagonial tiles
 		((((!m_hasPlayer && (isAdjacent || isDiagonial)) || isOnTop) && p->getPlayerRole() == EXPLORER) ||
 

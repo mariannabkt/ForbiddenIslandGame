@@ -19,6 +19,12 @@ Button::Button(BUTTON_FUNC b, float center_width_offset, float center_height_off
 	case HOW_TO:
 		m_img = HOW_TO_PLAY_BUTTON;
 		break;
+	case ABOUT:
+		m_img = ABOUT_BUTTON;
+		break;
+	case HELP:
+		m_img = HELP_BUTTON;
+		break;
 	case HOME:
 		m_img = HOME_BUTTON;
 		break;
@@ -91,7 +97,7 @@ void Button::update()
 			{
 			case PLAY:
 				playSound(BUTTON_CLICK, 1, false);
-				game->setState(CHOOSE_PLAYER);
+				game->setState(CHOOSE_ISLAND);
 				break;
 
 			case HOW_TO:

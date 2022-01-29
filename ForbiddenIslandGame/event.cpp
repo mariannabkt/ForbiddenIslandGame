@@ -27,7 +27,7 @@ void StateTransitionEvent::draw()
 
 
 
-SmokeEvent::SmokeEvent(float x, float y) : Event(2.0f), m_posX(x), m_posY(y)
+SmokeEvent::SmokeEvent(float x, float y) : Event(2.0f, x, y)
 {
 	m_orientation = RAND0TO1() * 180.0f - 90.0f;
 	m_scale = 0.8f + RAND0TO1() * 4.0f;

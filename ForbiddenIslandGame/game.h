@@ -32,6 +32,7 @@ class Game
 	map<BUTTON_FUNC, Button*> m_buttons = map<BUTTON_FUNC, Button*>();
 	list<Event*> m_events = list<Event*>();
 
+	int m_cur_flood = 0;
 	Tile* m_tiles[TILES_COUNT] = { 0 };
 	TilesLayout* m_selected_layout;
 	vector<TilesLayout*> m_layouts = vector<TilesLayout*>();
@@ -39,7 +40,8 @@ class Game
 	Game();
 	void updateButtons();
 	void processEvents();
-	void shuffleTileGrid();
+	void shuffleTiles();
+	void rearrangeTileGrid();
 
 public:
 
@@ -77,6 +79,9 @@ public:
 	vector<TilesLayout*>& getLayouts() { return m_layouts; }
 	list<Event*>& getEvents() { return m_events; }
 	
+	int getCurFlood() { return m_cur_flood; }
+	void setCurFlood(int f) { m_cur_flood = f; }
+	void floodTiles();
 	Tile* (&getTiles())[24] { return m_tiles; }
 	TilesLayout* gatLayout() { return m_selected_layout; }
 	void setLayout(TilesLayout* l) { m_selected_layout = l; m_selected_layout->setSelected(true); }

@@ -15,6 +15,7 @@ public:
 	void draw();
 	void update();
 		
+	bool isCollected() { return m_collected; }
 	void setCollected(bool x) { m_collected = x; }
 
 };

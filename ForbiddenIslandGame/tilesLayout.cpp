@@ -5,9 +5,72 @@
 using namespace graphics;
 
 
-TilesLayout::TilesLayout(int* l) : m_layout(l), Clickable("", LAYOUT_IMG_SIZE, LAYOUT_IMG_SIZE)
+TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IMG_SIZE)
 {
-
+	if (m_img == SKULL_IMAGE)
+	{
+		m_posX = -8.0f;
+		m_posY = -2.0f;
+		m_rows = 6;
+		m_cols = 6;
+		memcpy(m_layout, SKULL_ISLAND, m_rows * m_cols * sizeof(int));
+	}
+	else if (m_img == BAY_IMAGE)
+	{
+		m_posX = -4.0f;
+		m_posY = -2.0f;
+		m_rows = 6;
+		m_cols = 8;
+		memcpy(m_layout, BAY_OF_GULLS, m_rows * m_cols * sizeof(int));
+	}
+	else if (m_img == HARPOON_IMAGE)
+	{
+		m_posX = 4.0f;
+		m_posY = -2.0f;
+		m_rows = 6;
+		m_cols = 6;
+		memcpy(m_layout, HARPOON_HIDEOUT, m_rows * m_cols * sizeof(int));
+	}
+	else if (m_img == ATOLL_IMAGE)
+	{
+		m_posX = 8.0f;
+		m_posY = -2.0f;
+		m_rows = 7;
+		m_cols = 7;
+		memcpy(m_layout, ATOLL_OF_DECISIONS, m_rows * m_cols * sizeof(int));
+	}
+	else if (m_img == SHIPWRECK_IMAGE)
+	{
+		m_posX = -8.0f;
+		m_posY = 4.0f;
+		m_rows = 4;
+		m_cols = 8;
+		memcpy(m_layout, SHIPWRECK_BAY, m_rows * m_cols * sizeof(int));
+	}
+	else if (m_img == DAVY_IMAGE)
+	{
+		m_posX = -4.0f;
+		m_posY = 4.0f;
+		m_rows = 6;
+		m_cols = 9;
+		memcpy(m_layout, DAVY_JONES, m_rows * m_cols * sizeof(int));
+	}
+	else if (m_img == MUTINY_IMAGE)
+	{
+		m_posX = 4.0f;
+		m_posY = 4.0f;
+		m_rows = 6;
+		m_cols = 7;
+		memcpy(m_layout, MUTINY_TOWERS, m_rows * m_cols * sizeof(int));
+	}
+	else if (m_img == PALM_IMAGE)
+	{
+		m_posX = 8.0f;
+		m_posY = 4.0f;
+		m_rows = 6;
+		m_cols = 5;
+		memcpy(m_layout, PALM_SPINGS, m_rows * m_cols * sizeof(int));
+	}
 }
 
 void TilesLayout::draw()
@@ -34,7 +97,7 @@ void TilesLayout::update()
 	if (contains(mx, my) && !isSelected())
 	{
 		setHighlight(true);
-
+		
 		// set selected for the play session
 		if (ms.button_left_released)
 		{
@@ -44,7 +107,10 @@ void TilesLayout::update()
 			for (auto l : game->getLayouts())
 				if (l->isSelected())
 					setSelected(false);
+
+			game->setState(CHOOSE_PLAYER);
 		}
+		
 	}
 	else
 		setHighlight(false);

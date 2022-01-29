@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "clickable.h"
 
-static int m_tiles_grid[6][6] = CLASSIC_ISLAND;
+//static int m_tiles_grid[6][6] = CLASSIC_ISLAND;
 
 class Tile : public Clickable
 {
@@ -29,8 +29,7 @@ public:
 	void draw();
 	void update();
 
-
-	static int(&getTilesGrid())[6][6]{ return m_tiles_grid; }
+	//static int(&getTilesGrid())[6][6]{ return m_tiles_grid; }
 
 	bool hasPlayer() { return m_hasPlayer; }
 
@@ -38,6 +37,12 @@ public:
 	int getPosJ() { return m_grid_j; }
 
 	void setGridPos(float x, float y) { m_grid_i = x; m_grid_j = y; }
+
+	bool getFlooded() { return m_flooded; }
+	bool getSunken() { return m_sunken; }
+
+	void flood() { m_flooded = true; }
+	void sunk() { m_sunken = true; }
 
 	void setTaken(bool a) { m_hasPlayer = a; }
 	void setCanPerformAction(bool b) { m_canPerformAction = b; }

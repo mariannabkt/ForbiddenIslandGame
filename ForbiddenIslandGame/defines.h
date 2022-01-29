@@ -22,7 +22,7 @@ using namespace std;
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
 
 
-enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
+enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
 enum HELP_PAGE		{ ONE, TWO, THREE, FOUR };
 enum BUTTON_FUNC	{ EXIT, EASY, MEDIUM, HARD, LEGENDARY, PLAY, HOW_TO, ABOUT, HELP, HOME, NEXT, PREV, OK };
 enum PLAYER_ROLE	{ DIVER, EXPLORER, PILOT };
@@ -30,16 +30,28 @@ enum TILE_TYPE		{ BASIC,TREASURE, LANDING };
 enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 
+
 // ISLAND TILE LAYOUTS
-#define CLASSIC_ISLAND		{ {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} }
-#define SKULL_ISLAND		{ {1,1,1,1,1,1}, {1,0,1,1,0,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,1,1,1,1,0} }
-#define TREASURE_ISLAND		{ {1,1,0,0,0,1,1}, {0,1,1,1,1,1,0}, {0,0,1,1,1,0,0}, {0,0,1,1,1,0,0}, {1,1,0,0,0,1,1}, {0,1,1,1,1,1,0} }
-#define ROASTED_REFUGE		{ {0,1,0,0,0,1,0}, {1,1,1,1,1,1,1}, {0,0,1,1,1,0,0}, {0,0,1,1,1,0,0}, {0,1,0,0,0,1,0}, {1,1,1,1,1,1,1} }
-#define HARPOON_HIDEOUT		{ {1,1,1,1,0,0}, {1,1,1,0,0,0}, {1,1,1,1,0,1}, {1,0,1,1,1,1}, {0,0,0,1,1,1}, {0,0,1,1,1,1} }
-#define ATOLL_OF_DECISIONS	{ {0,0,1,1,1,0,0}, {0,1,1,0,1,1,0}, {1,1,0,0,0,1,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {0,1,1,0,1,1,0}, {0,0,1,1,1,0,0} }
-#define BAY_OF_GULLS		{ {0,0,0,1,1,0,0,0}, {0,0,0,1,1,0,0,0}, {1,0,0,1,1,0,0,1}, {1,1,1,1,1,1,1}, {0,1,1,1,1,1,0}, {0,0,0,1,1,0,0,0} }
-#define SHIPWRECK_BAY		{ {1,1,1,1,1,1,1,1}, {1,1,0,1,1,0,1,1}, {0,1,1,0,0,1,1,0}, {0,1,1,1,1,1,0} }
-#define PALM_SPINGS			{ {0,0,1,1,1,0,0}, {0,1,1,1,1,1,0}, {0,1,0,1,0,1,0}, {0,0,0,1,0,0,0}, {0,1,1,1,1,1,0}, {1,1,1,1,1,1,1} }
+//int CLASSIC_ISLAND[6][6] = { {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} };
+//int SKULL_ISLAND[6][6] = { {1,1,1,1,1,1}, {1,0,1,1,0,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,1,1,1,1,0} };
+//int HARPOON_HIDEOUT[6][6] = { {1,1,1,1,0,0}, {1,1,1,0,0,0}, {1,1,1,1,0,1}, {1,0,1,1,1,1}, {0,0,0,1,1,1}, {0,0,1,1,1,1} };
+//int ATOLL_OF_DECISIONS[7][7]=	{ {0,0,1,1,1,0,0}, {0,1,1,0,1,1,0}, {1,1,0,0,0,1,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {0,1,1,0,1,1,0}, {0,0,1,1,1,0,0} };
+//int BAY_OF_GULLS[6][8]=		{ {0,0,0,1,1,0,0,0}, {0,0,0,1,1,0,0,0}, {1,0,0,1,1,0,0,1}, {1,1,1,1,1,1,1}, {0,1,1,1,1,1,0}, {0,0,0,1,1,0,0,0} };
+//int SHIPWRECK_BAY[4][8]=		{ {1,1,1,1,1,1,1,1}, {1,1,0,1,1,0,1,1}, {0,1,1,0,0,1,1,0}, {0,1,1,1,1,1,0} };
+//int PALM_SPINGS[6][7]=			{ {0,0,1,1,1,0,0}, {0,1,1,1,1,1,0}, {0,1,0,1,0,1,0}, {0,0,0,1,0,0,0}, {0,1,1,1,1,1,0}, {1,1,1,1,1,1,1} };
+//int MUTINY_TOWERS[6][7]=		{ {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {1,1,1,1,1,1,1}, {1,1,1,1,1,1,1} };
+//int DAVY_JONES[6][9]=			{ {0,0,0,0,1,0,0,0,0}, {0,1,1,1,1,0,0,0,0}, {1,0,1,1,1,1,1,1,0}, {0,1,1,1,1,0,1,1,1}, {0,0,0,0,1,1,1,1,0}, {0,0,0,0,1,0,0,0,0} };
+
+
+// LAYOUTS IMAGES
+#define SKULL_IMAGE	".\\assets\\layouts\\skull island.png"
+#define HARPOON_IMAGE	".\\assets\\layouts\\harpoon hideout.png"
+#define ATOLL_IMAGE	".\\assets\\layouts\\atoll of decisions.png"
+#define BAY_IMAGE	".\\assets\\layouts\\bay of gulls.png"
+#define SHIPWRECK_IMAGE	".\\assets\\layouts\\shipwreck bay.png"
+#define PALM_IMAGE	".\\assets\\layouts\\palm springs.png"
+#define MUTINY_IMAGE	".\\assets\\layouts\\mutiny towers.png"
+#define DAVY_IMAGE	".\\assets\\layouts\\davy jones.png"
 
 
 // ASSET FOLDERS
