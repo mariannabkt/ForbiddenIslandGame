@@ -48,10 +48,10 @@ Game::Game()
 	for (int i = 0; i < TILES_COUNT; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
 
-	string layout_names[] = { SKULL_IMAGE, BAY_IMAGE, HARPOON_IMAGE, ATOLL_IMAGE, SHIPWRECK_IMAGE, DAVY_IMAGE, MUTINY_IMAGE, PALM_IMAGE };
+	string layout_names[8] = { SKULL_IMAGE, BAY_IMAGE, HARPOON_IMAGE, ATOLL_IMAGE, SHIPWRECK_IMAGE, DAVY_IMAGE, MUTINY_IMAGE, PALM_IMAGE };
 
-	for (auto l : layout_names)
-		m_layouts.push_back(new TilesLayout(l));
+	for (int i = 0; i < 8; ++i)
+		m_layouts.push_back(new TilesLayout(layout_names[i]));
 
 	m_selected_layout = m_layouts.back();
 }

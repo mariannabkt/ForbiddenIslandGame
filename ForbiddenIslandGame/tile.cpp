@@ -118,7 +118,11 @@ void Tile::update()
 			{
 				m_img.replace(m_img.find(".png"), m_img.length() + 3, "_nt.png");
 				m_treasureTaken = true;
-				p->getTreasures().find(m_treasure)->second->setCollected(true);
+				Treasure* tr = new Treasure(m_treasure, m_posX, m_posY, true);
+				game->addEvent(new ZoomOutEvent(tr));
+				//sleep(5000);
+				game->addEvent(new MotionEvent<Treasure*, Treasure*>(tr, p->getTreasures().find(m_treasure)->second));
+				p->getTreasures().find(m_treasure)->second = tr;
 			}
 			else
 			{

@@ -8,13 +8,22 @@ void Event::update()
 {
 	if (!m_active)
 		return;
-
+	if (waiting())
+	{
+		m_elapsed_delay += getDeltaTime() / 1000.0f;
+		return;
+	}
 	m_elapsed_time += getDeltaTime() / 1000.0f;
-
 	if (m_elapsed_time > m_duration)
+	{
 		m_active = false;
+	}
 }
 
+bool Event::waiting()
+{
+	return m_elapsed_delay < m_delay;
+}
 
 void StateTransitionEvent::draw() 
 {
@@ -27,7 +36,7 @@ void StateTransitionEvent::draw()
 
 
 
-SmokeEvent::SmokeEvent(float x, float y) : Event(2.0f, x, y)
+SmokeEvent::SmokeEvent(float x, float y) : Event(2.0f, 0.0f, x, y)
 {
 	m_orientation = RAND0TO1() * 180.0f - 90.0f;
 	m_scale = 0.8f + RAND0TO1() * 4.0f;
@@ -43,4 +52,18 @@ void SmokeEvent::draw() {
 	setOrientation(m_orientation + s * 20.0f);
 	drawRect(m_posX, m_posY, PLAYER_SIZE, PLAYER_SIZE, br);
 	resetPose();
+}
+
+ZoomOutEvent::ZoomOutEvent(Treasure* t) : Event(5.0f , 0.0f), tr(t)
+{
+}
+
+void ZoomOutEvent::update()
+{
+	Event::update();
+
+	float s = m_elapsed_time / m_duration;
+	float w = tr->getWidth() * s;
+	float h = tr->getHeight() * s;
+	tr->setDimensions(w, h);
 }

@@ -4,6 +4,8 @@
 
 class Treasure : public GameObject
 {
+	float m_width = 2.0f;
+	float m_height = 2.5f;
 
 	string m_treas_img;
 	TREASURE_TYPE m_type;
@@ -17,5 +19,10 @@ public:
 		
 	bool isCollected() { return m_collected; }
 	void setCollected(bool x) { m_collected = x; }
+
+
+	float getWidth() { return m_width; }
+	float getHeight() { return m_height; }
+	void setDimensions(float w, float h) { m_width = w; m_height = h; }
 
 };

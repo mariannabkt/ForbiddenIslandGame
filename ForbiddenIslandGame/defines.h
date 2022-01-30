@@ -1,6 +1,9 @@
 #pragma once
 #include <random>
 #include <stdlib.h>
+#include <thread>
+#include <chrono>
+
 
 using namespace std;
 
@@ -20,6 +23,10 @@ using namespace std;
 
 #define SETCOLOR(c,r,g,b) { c[0]=r; c[1]=g; c[2]=b; }
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
+
+inline void sleep(int ms) {
+	this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
 
 
 enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
@@ -66,10 +73,10 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 // BACKGROUNDS
 #define MAIN_BACKGROUND					".\\assets\\backgrounds\\main_background.png"
-#define CHOOSE_ISLAND_BACKGROUND		".\\assets\\backgrounds\\Choose Island.png"
+#define CHOOSE_ISLAND_BACKGROUND		".\\assets\\backgrounds\\choose_island.png"
 #define CHOOSE_PLAYER_BACKGROUND		".\\assets\\backgrounds\\choose_player.png"
 #define CHOOSE_DIFFICULTY_BACKGROUND	".\\assets\\backgrounds\\choose_difficulty.png"
-#define PLAYING_BACKGROUND				".\\assets\\backgrounds\\play back.png"
+#define PLAYING_BACKGROUND				".\\assets\\backgrounds\\sea.png"
 
 
 // BUTTONS

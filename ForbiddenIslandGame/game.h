@@ -41,7 +41,7 @@ class Game
 	void updateButtons();
 	void processEvents();
 	void shuffleTiles();
-	void rearrangeTileGrid();
+	
 
 public:
 
@@ -85,4 +85,5 @@ public:
 	Tile* (&getTiles())[24] { return m_tiles; }
 	TilesLayout* gatLayout() { return m_selected_layout; }
 	void setLayout(TilesLayout* l) { m_selected_layout = l; m_selected_layout->setSelected(true); }
+	void rearrangeTileGrid();
 };

@@ -19,5 +19,7 @@ public:
 	void draw();
 	void update();
 
+	void init() { m_remaining = 3; }
+
 };
 #endif

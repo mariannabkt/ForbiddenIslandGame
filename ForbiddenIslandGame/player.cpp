@@ -61,7 +61,7 @@ void Player::init()
 	m_active = false;
 	m_selected = false;
 	m_highlighted = false;
-
+	m_actions->init();
 	switch (m_role) {
 	case EXPLORER:
 		setIconCords(CANVAS_WIDTH / 2 - 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
