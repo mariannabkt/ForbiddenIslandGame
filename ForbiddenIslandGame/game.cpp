@@ -81,6 +81,7 @@ void Game::setState(GAME_STATE new_state)
 		preloadBitmaps(HELP_PAGES_FOLDER);
 		preloadBitmaps(TREASURES_FOLDER);
 		preloadBitmaps(TILES_FOLDER);
+		preloadBitmaps(LAYOUTS_FOLDER);
 		break;
 
 	case MAIN_MENU:
@@ -310,9 +311,9 @@ void Game::draw()
 		if (b.second->isActive())
 			b.second->draw();
 
-	for (auto e : m_events)
+	/*for (auto e : m_events)
 		if (e->isActive())
-			e->draw();
+			e->draw();*/
 }
 
 

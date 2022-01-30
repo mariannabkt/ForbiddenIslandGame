@@ -17,7 +17,6 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 		for (int i = 0; i < m_rows; i++)
 			for (int j = 0; j < m_cols; j++) {
 				m_layout[i][j] = SKULL_ISLAND[i][j];
-				//int x = m_layout[i][j];
 			}
 	}
 	else if (m_img == BAY_IMAGE)

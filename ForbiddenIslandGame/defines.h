@@ -50,17 +50,6 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 //#define DAVY_JONES		{ {0,0,0,0,1,0,0,0,0}, {0,1,1,1,1,0,0,0,0}, {1,0,1,1,1,1,1,1,0}, {0,1,1,1,1,0,1,1,1}, {0,0,0,0,1,1,1,1,0}, {0,0,0,0,1,0,0,0,0} };
 
 
-// LAYOUTS IMAGES
-#define SKULL_IMAGE	".\\assets\\layouts\\skull island.png"
-#define HARPOON_IMAGE	".\\assets\\layouts\\harpoon hideout.png"
-#define ATOLL_IMAGE	".\\assets\\layouts\\atoll of decisions.png"
-#define BAY_IMAGE	".\\assets\\layouts\\bay of gulls.png"
-#define SHIPWRECK_IMAGE	".\\assets\\layouts\\shipwreck bay.png"
-#define PALM_IMAGE	".\\assets\\layouts\\palm springs.png"
-#define MUTINY_IMAGE	".\\assets\\layouts\\mutiny towers.png"
-#define DAVY_IMAGE	".\\assets\\layouts\\davy jones.png"
-
-
 // ASSET FOLDERS
 #define BACKGROUNDS_FOLDER	".\\assets\\backgrounds\\"
 #define BUTTON_FOLDER		".\\assets\\buttons\\"
@@ -69,6 +58,7 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 #define PLAYING_FOLDER		".\\assets\\playing\\"
 #define TREASURES_FOLDER	".\\assets\\treasures\\"
 #define TILES_FOLDER		".\\assets\\tiles\\"
+#define LAYOUTS_FOLDER		".\\assets\\layouts\\"
 
 
 // BACKGROUNDS
@@ -102,6 +92,17 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 #define BLKCHCRY_FONT     ".\\assets\\fonts\\BLKCHCRY.TTF"
 #define SCRATCHED_FONT    ".\\assets\\fonts\\Scratched.ttf"
 #define THEYPERISHED_FONT ".\\assets\\fonts\\TheyPerished.ttf"
+
+
+// LAYOUTS IMAGES
+#define SKULL_IMAGE	".\\assets\\layouts\\skull island.png"
+#define HARPOON_IMAGE	".\\assets\\layouts\\harpoon hideout.png"
+#define ATOLL_IMAGE	".\\assets\\layouts\\atoll of decisions.png"
+#define BAY_IMAGE	".\\assets\\layouts\\bay of gulls.png"
+#define SHIPWRECK_IMAGE	".\\assets\\layouts\\shipwreck bay.png"
+#define PALM_IMAGE	".\\assets\\layouts\\palm springs.png"
+#define MUTINY_IMAGE	".\\assets\\layouts\\mutiny towers.png"
+#define DAVY_IMAGE	".\\assets\\layouts\\davy jones.png"
 
 
 // HELP PAGES
