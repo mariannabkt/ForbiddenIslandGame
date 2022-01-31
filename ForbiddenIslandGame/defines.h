@@ -121,7 +121,7 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 // PLAYING STATE BITMAPS
 #define PLAYER_CARD		".\\assets\\playing\\old paper card.png"
 #define BUBBLE_IMAGE	".\\assets\\playing\\bubble.png"
-#define WATER_LEVEL		".\\assets\\playing\\bar.png"
+#define WATER_LEVEL		".\\assets\\playing\\water level bar.png"
 #define WHIRLPOOL		".\\assets\\playing\\sea whirlpool.png"
 #define ACTION_ONE		".\\assets\\playing\\action_one.png"
 #define ACTION_TWO		".\\assets\\playing\\action_two.png"
