@@ -11,8 +11,8 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	if (m_img == SKULL_IMAGE)
 	{
 		setCords(CANVAS_WIDTH / 2 - 9.0f, CANVAS_HEIGHT / 2 - 1.0f);
-		m_rows = 6;
-		m_cols = 5;
+		m_posX_offset = 3.3f;
+		m_posY_offset = 1.0f;
 		initArray(m_rows = 6, m_cols = 5);
 		for (int i = 0; i < m_rows; i++)
 			for (int j = 0; j < m_cols; j++) {
@@ -21,8 +21,8 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	}
 	else if (m_img == BAY_IMAGE)
 	{
-		m_rows = 8;
-		m_cols = 6;
+		m_posX_offset = 2.3f;
+		m_posY_offset = 0.7f;
 		setCords(CANVAS_WIDTH / 2 - 3.0f, CANVAS_HEIGHT / 2 - 1.0f);
 		initArray(m_rows = 8, m_cols = 6);
 		for (int i = 0; i < m_rows; i++)
@@ -32,8 +32,8 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	}
 	else if (m_img == HARPOON_IMAGE)
 	{
-		m_rows = 6;
-		m_cols = 6;
+		m_posX_offset = 3.2f;
+		m_posY_offset = 0.7f;
 		setCords(CANVAS_WIDTH / 2 + 3.0f, CANVAS_HEIGHT / 2 - 1.0f);
 		initArray(m_rows = 6, m_cols = 6);
 		for (int i = 0; i < m_rows; i++)
@@ -43,10 +43,10 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	}
 	else if (m_img == ATOLL_IMAGE)
 	{
-		m_rows = 7;
-		m_cols = 7;
+		m_posX_offset = 3.0f;
+		m_posY_offset = 0.7f;
 		setCords(CANVAS_WIDTH / 2 + 9.0f, CANVAS_HEIGHT / 2 - 1.0f);
-		initArray(m_rows = 7, m_cols = 7);
+		initArray(m_rows = 7, m_cols = 6);
 		for (int i = 0; i < m_rows; i++)
 			for (int j = 0; j < m_cols; j++)
 				m_layout[i][j] = ATOLL_OF_DECISIONS[i][j];
@@ -54,8 +54,8 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	}
 	else if (m_img == SHIPWRECK_IMAGE)
 	{
-		m_rows = 8;
-		m_cols = 4;
+		m_posX_offset = 2.5f;
+		m_posY_offset = 0.85f;
 		setCords(CANVAS_WIDTH / 2 - 9.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		initArray(m_rows = 8, m_cols = 4);
 		for (int i = 0; i < m_rows; i++)
@@ -65,8 +65,8 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	}
 	else if (m_img == DAVY_IMAGE)
 	{
-		m_rows = 9;
-		m_cols = 6;
+		m_posX_offset = 1.3f;
+		m_posY_offset = 0.7f;
 		setCords(CANVAS_WIDTH / 2 - 3.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		initArray(m_rows = 9, m_cols = 6);
 		for (int i = 0; i < m_rows; i++)
@@ -76,8 +76,8 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	}
 	else if (m_img == MUTINY_IMAGE)
 	{
-		m_rows = 6;
-		m_cols = 6;
+		m_posX_offset = 3.4f;
+		m_posY_offset = 0.7f;
 		setCords(CANVAS_WIDTH / 2 + 3.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		initArray(m_rows = 6, m_cols = 6);
 		for (int i = 0; i < m_rows; i++)
@@ -87,8 +87,8 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	}
 	else if (m_img == PALM_IMAGE)
 	{
-		m_rows = 7;
-		m_cols = 6;
+		m_posX_offset = 2.9f;
+		m_posY_offset = 0.7f;
 		setCords(CANVAS_WIDTH / 2 + 9.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		initArray(m_rows = 7, m_cols = 6);
 		for (int i = 0; i < m_rows; i++)

@@ -29,9 +29,9 @@ inline void sleep(int ms) {
 }
 
 
-enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING };
+enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING, PLAY_AGAIN };
 enum HELP_PAGE		{ ONE, TWO, THREE, FOUR };
-enum BUTTON_FUNC	{ EXIT, EASY, MEDIUM, HARD, LEGENDARY, PLAY, HOW_TO, ABOUT, HELP, HOME, NEXT, PREV, OK };
+enum BUTTON_FUNC	{ EXIT, OK, EASY, MEDIUM, HARD, LEGENDARY, PLAY, HOW_TO, ABOUT, HELP, HOME, NEXT, PREV };
 enum PLAYER_ROLE	{ DIVER, EXPLORER, PILOT };
 enum TILE_TYPE		{ BASIC,TREASURE, LANDING };
 enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
@@ -59,6 +59,7 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 #define TREASURES_FOLDER	".\\assets\\treasures\\"
 #define TILES_FOLDER		".\\assets\\tiles\\"
 #define LAYOUTS_FOLDER		".\\assets\\layouts\\"
+#define SEA_FRAMES_FOLDER	".\\assets\\sea frames\\"
 
 
 // BACKGROUNDS
@@ -67,6 +68,8 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 #define CHOOSE_PLAYER_BACKGROUND		".\\assets\\backgrounds\\choose_player.png"
 #define CHOOSE_DIFFICULTY_BACKGROUND	".\\assets\\backgrounds\\choose_difficulty.png"
 #define PLAYING_BACKGROUND				".\\assets\\backgrounds\\sea.png"
+#define VICTORY_BACKGROUND				".\\assets\\backgrounds\\victory_background.png"
+#define LOOSERS_BACKGROUND				".\\assets\\backgrounds\\loosers_background.png"
 
 
 // BUTTONS
@@ -95,7 +98,7 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 
 // LAYOUTS IMAGES
-#define SKULL_IMAGE	".\\assets\\layouts\\skull island.png"
+#define SKULL_IMAGE		".\\assets\\layouts\\skull island.png"
 #define HARPOON_IMAGE	".\\assets\\layouts\\harpoon hideout.png"
 #define ATOLL_IMAGE	".\\assets\\layouts\\atoll of decisions.png"
 #define BAY_IMAGE	".\\assets\\layouts\\bay of gulls.png"

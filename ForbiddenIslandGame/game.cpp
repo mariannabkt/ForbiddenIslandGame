@@ -5,9 +5,12 @@
 #include "action.h"
 #include <sgg/graphics.h>
 #include <random>
+#include <cmath>
+
 
 using namespace graphics;
 using namespace std;
+
 
 Game* Game::m_instance = nullptr;
 
@@ -48,12 +51,11 @@ Game::Game()
 	for (int i = 0; i < TILES_COUNT; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
 
-	string layout_names[8] = { SKULL_IMAGE, BAY_IMAGE, HARPOON_IMAGE, ATOLL_IMAGE, SHIPWRECK_IMAGE, DAVY_IMAGE, MUTINY_IMAGE, PALM_IMAGE };
+	string layout_names[8] = { SKULL_IMAGE, BAY_IMAGE, HARPOON_IMAGE, ATOLL_IMAGE, 
+		SHIPWRECK_IMAGE, DAVY_IMAGE, MUTINY_IMAGE, PALM_IMAGE };
 
 	for (int i = 0; i < 8; ++i)
 		m_layouts.push_back(new TilesLayout(layout_names[i]));
-
-	m_selected_layout = m_layouts.back();
 }
 
 
@@ -82,6 +84,7 @@ void Game::setState(GAME_STATE new_state)
 		preloadBitmaps(TREASURES_FOLDER);
 		preloadBitmaps(TILES_FOLDER);
 		preloadBitmaps(LAYOUTS_FOLDER);
+		//preloadBitmaps(SEA_FRAMES_FOLDER);
 		break;
 
 	case MAIN_MENU:
@@ -95,9 +98,6 @@ void Game::setState(GAME_STATE new_state)
 		// init tiles for new play session
 		for (int i = 0; i < TILES_COUNT; ++i)
 			m_tiles[i]->init();
-
-		// shuffle tiles for new play session
-		rearrangeTileGrid();
 
 		// init players for new play session
 		for (auto p : m_players)
@@ -202,6 +202,19 @@ void Game::setState(GAME_STATE new_state)
 		m_buttons[EXIT]->enable();
 		m_buttons[HELP]->enable();
 		break;
+
+	case PLAY_AGAIN:
+
+		stopMusic(1);
+		playSound(START_PLAYING, 1, false);
+		playMusic(FALLING_WATER, 1.0f, true, 1000);
+
+		// enable only necessary buttons for this state
+		for (auto b : m_buttons)
+			b.second->disable();
+		m_buttons[HOME]->enable();
+		m_buttons[EXIT]->enable();
+		break;
 	}
 	// smooth transition event between states
 	addEvent(new StateTransitionEvent());
@@ -237,6 +250,7 @@ void Game::changePlayer()
 */
 void Game::draw()
 {
+	thread th1;
 	Brush text;
 	Brush object;
 	Brush background;
@@ -245,19 +259,22 @@ void Game::draw()
 	switch (m_state)
 	{
 	case INIT:
+	{
 		setFont(SCRATCHED_FONT);
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
 		drawText(CANVAS_WIDTH / 2 - 6.5f, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
 		drawText(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
-		
-		object.outline_opacity = 0.0f; 
+
+		object.outline_opacity = 0.0f;
 		object.texture = ".\\assets\\loading spinner.png";
-		setOrientation(getDeltaTime() / 1000.0f);
-		drawDisk(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.0f, 2.0f, object);
-		resetPose();
+		float x = getDeltaTime() / 1000.0f;
+		setOrientation(log(x / (1 - x)));
+		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.0f, 3.0f, 3.0f, object);
+
 		break;
-		
+	}
 	case MAIN_MENU:
+		resetPose();
 		background.texture = MAIN_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 		break;
@@ -292,8 +309,10 @@ void Game::draw()
 		break;
 
 	case PLAYING:
+	{
 		background.texture = PLAYING_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+			
 
 		int t = 0;
 		for (int i = 0; i < m_selected_layout->getRows(); ++i)
@@ -304,17 +323,26 @@ void Game::draw()
 		for (auto p : m_players)
 			if (p.second->isSelected())
 				p.second->draw();
+		
+		break;
+	}
+	case PLAY_AGAIN:
+		background.texture = PLAYING_BACKGROUND;
+		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 		break;
 	}
 
-	for (auto b : m_buttons)
-		if (b.second->isActive())
-			b.second->draw();
+		for (auto b : m_buttons)
+			if (b.second->isActive())
+				b.second->draw();
 
-	/*for (auto e : m_events)
-		if (e->isActive())
-			e->draw();*/
+		for (auto e : m_events)
+			if (e->isActive())
+				e->draw();
+		
 }
+
+
 
 
 /*________________________________________
@@ -435,10 +463,12 @@ void Game::floodTiles()
 	for (int i = 0; i < m_difficulty; ++i) {
 		if (m_cur_flood >= TILES_COUNT)
 			m_cur_flood = 0;
-		if (!m_tiles[m_cur_flood]->getSunken())
-			m_tiles[m_cur_flood]->flood();
-		else if (m_tiles[m_cur_flood]->getFlooded())
+		if (m_tiles[m_cur_flood]->getFlooded())
 			m_tiles[m_cur_flood]->sunk();
+		else if (!m_tiles[m_cur_flood]->getSunken()) {
+			m_tiles[m_cur_flood]->flood();
+			m_tiles[m_cur_flood]->canPerformAction(false);
+		}
 		m_cur_flood++;
 	}
 }

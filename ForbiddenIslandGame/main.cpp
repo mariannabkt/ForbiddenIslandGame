@@ -1,6 +1,7 @@
 #include "sgg/graphics.h"
 #include "defines.h"
 #include "game.h"
+#include <thread>
 
 using namespace graphics;
 
@@ -19,6 +20,7 @@ void draw()
 }
 
 
+
 int  main(int argc, char** argv) 
 {
 	createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Forbbiden Island Game");
@@ -33,7 +35,9 @@ int  main(int argc, char** argv)
 	Game* game = Game::getInstance();
 	game->setState(INIT);
 
+
 	startMessageLoop();
+
 
 	destroyWindow();
 	Game::releaseInstance();

@@ -9,7 +9,6 @@
 #include "tile.h"
 #include "tilesLayout.h"
 
-
 /*
 	A game entity has game objects and stores them into collections.
 	Controls the app's operations and holds it's status to it's members.

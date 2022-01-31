@@ -78,7 +78,7 @@ void Tile::draw()
 
 	Brush water;
 	water.outline_opacity = 0.0f;
-	water.fill_opacity = 0.3f * m_flooded;
+	water.fill_opacity = 0.2f * (m_flooded && !m_sunken);
 	SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.8f);
 	drawRect(m_posX, m_posY, m_width, m_height, water);
 }
@@ -112,33 +112,43 @@ void Tile::update()
 			if (m_flooded)
 			{
 				m_flooded = false;
+				if (p->getPlayerRole() == DIVER)
+					t->setTaken(false);
+					p->move(this);
 				
 			}
-			else if (this == t && m_hasTreasure && !m_treasureTaken)
+			else if (this == t)
 			{
-				m_img.replace(m_img.find(".png"), m_img.length() + 3, "_nt.png");
-				m_treasureTaken = true;
-				Treasure* tr = new Treasure(m_treasure, m_posX, m_posY, true);
-				game->addEvent(new ZoomOutEvent(tr));
-				//sleep(5000);
-				game->addEvent(new MotionEvent<Treasure*, Treasure*>(tr, p->getTreasures().find(m_treasure)->second));
-				p->getTreasures().find(m_treasure)->second = tr;
+				collectTreasure();
 			}
 			else
 			{
-				game->addEvent(new MotionEvent<Player*, Tile*>(p, this));
-				p->setStandingTile(this);
 				t->setTaken(false);
+				p->move(this);
 				
 			}
 			p->getActions()->update();
-			
+			if (this == t && m_img == XEFWTO && p->AllTreasCollected())
+				game->setState(PLAY_AGAIN);
 		}
 	}
 
 }
 
 
+void Tile::collectTreasure()
+{
+	Game* game = Game::getInstance();
+	Player* p = game->getActivePlayer();
+	Tile* t = p->getStandingTile();
+
+	m_img.replace(m_img.find(".png"), m_img.length() + 3, "_nt.png");
+	m_treasureTaken = true;
+	Treasure* tr = new Treasure(m_treasure, this->getPosX(), this->getPosY(), true);
+	//game->addEvent(new ZoomOutEvent(tr));
+	game->addEvent(new MotionEvent<Treasure*, Treasure*>(tr, p->getTreasures().find(m_treasure)->second));
+	p->getTreasures().find(m_treasure)->second->setCollected(true);
+}
 
 
 /*__________________________________________________________________
@@ -151,6 +161,9 @@ void Tile::checkCanPerfomrAction()
 	Game* game = Game::getInstance();
 	Player* p = game->getActivePlayer();
 	Tile* t = p->getStandingTile();
+
+	if (m_sunken)
+		return;
 
 	bool isAdjacent =
 		// left tile
@@ -186,13 +199,13 @@ void Tile::checkCanPerfomrAction()
 	bool isOnTop = (m_flooded || (m_hasTreasure && !m_treasureTaken && !p->getTreasures().find(m_treasure)->second->isCollected())) 
 		&& this == t ;
 
-	m_canPerformAction = !m_sunken && 
+	m_canPerformAction = 
 		// explorer can move and/or shore up adjacent and diagonial tiles
-		((((!m_hasPlayer && (isAdjacent || isDiagonial)) || isOnTop) && p->getPlayerRole() == EXPLORER) ||
+		(((!m_hasPlayer && isAdjacent || isDiagonial) || isOnTop) && p->getPlayerRole() == EXPLORER) ||
 
 			// diver can move and/or shore up adjacent tiles
 			(((!m_hasPlayer && isAdjacent) || isOnTop) && p->getPlayerRole() == DIVER) ||
 
 			// pilot can move and/or shore up two tiles away
-			(((!m_hasPlayer && (isAdjacent || is2TilesAway)) || isOnTop) && p->getPlayerRole() == PILOT));
+			(((!m_hasPlayer && isAdjacent || is2TilesAway) || isOnTop) && p->getPlayerRole() == PILOT);
 }

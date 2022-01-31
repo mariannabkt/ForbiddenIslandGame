@@ -62,6 +62,7 @@ void Player::init()
 	m_selected = false;
 	m_highlighted = false;
 	m_actions->init();
+
 	switch (m_role) {
 	case EXPLORER:
 		setIconCords(CANVAS_WIDTH / 2 - 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
@@ -225,6 +226,12 @@ void Player::isStartTile(Tile* t)
 	}
 }
 
+void Player::move(Tile* t)
+{
+	game->addEvent(new MotionEvent<Player*, Tile*>(this, t));
+	setStandingTile(t);
+	t->setTaken(true);
+}
 
 /*____________________________________________
 

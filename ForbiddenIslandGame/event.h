@@ -43,13 +43,16 @@ class MotionEvent : public Event
 
 public:
 	MotionEvent(Player* p, Tile* t) : Event(1.0f, 0.0f), m_start(p), m_stop(t) {}
-	MotionEvent(Treasure* a, Treasure* b) : Event(5.0f, 5.0f), m_start(a), m_stop(b) {}
+	MotionEvent(Treasure* a, Treasure* b) : Event(1.0f, 0.0f), m_start(a), m_stop(b) {}
 	void update();
 };
 
 template<class T1, class T2>
 inline void MotionEvent<T1, T2>::update()
 {
+	if (waiting())
+		return;
+
 	Event::update();
 
 	float s = m_elapsed_time / m_duration;

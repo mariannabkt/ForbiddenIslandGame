@@ -54,12 +54,15 @@ void SmokeEvent::draw() {
 	resetPose();
 }
 
-ZoomOutEvent::ZoomOutEvent(Treasure* t) : Event(5.0f , 0.0f), tr(t)
+ZoomOutEvent::ZoomOutEvent(Treasure* t) : Event(3.0f , 0.0f), tr(t)
 {
 }
 
 void ZoomOutEvent::update()
 {
+	if (waiting())
+		return;
+
 	Event::update();
 
 	float s = m_elapsed_time / m_duration;

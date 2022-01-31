@@ -2,7 +2,6 @@
 #include "defines.h"
 #include "clickable.h"
 
-//static int m_tiles_grid[6][6] = CLASSIC_ISLAND;
 
 class Tile : public Clickable
 {
@@ -29,8 +28,6 @@ public:
 	void draw();
 	void update();
 
-	//static int(&getTilesGrid())[6][6]{ return m_tiles_grid; }
-
 	bool hasPlayer() { return m_hasPlayer; }
 
 	int getPosI() { return m_grid_i; }
@@ -41,10 +38,13 @@ public:
 	bool getFlooded() { return m_flooded; }
 	bool getSunken() { return m_sunken; }
 
+	void collectTreasure();
+
 	void flood() { m_flooded = true; }
 	void sunk() { m_sunken = true; }
 
 	void setTaken(bool a) { m_hasPlayer = a; }
 	void setCanPerformAction(bool b) { m_canPerformAction = b; }
 	void checkCanPerfomrAction();
+	void canPerformAction(bool c) { m_canPerformAction = c; }
 };

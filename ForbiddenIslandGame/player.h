@@ -18,6 +18,8 @@ class Player : public Clickable
 	bool m_active = false;
 	bool m_selected = false;
 	bool m_highlighted = false;
+	bool m_allTreasuresCollected = false;
+	bool m_won = false;
 
 	int m_turn = 0;
 	string m_name;
@@ -65,5 +67,14 @@ public:
 
 	Action* getActions() { return m_actions; }
 	void setActions(Action* act) { m_actions = act; }
+
+	bool AllTreasCollected() {
+		for (auto t : m_treasures)
+			m_allTreasuresCollected = m_allTreasuresCollected && t.second->isCollected();
+		return m_allTreasuresCollected;
+	}
+
+	void move(Tile* t);
+	void victory() { m_won = true; }
 };
 #endif
