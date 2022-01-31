@@ -301,12 +301,12 @@ void Game::draw()
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 
 		object.texture = WATER_LEVEL;
-		drawRect(0.7, 3.0f, 4.0f, 6.0f, object);
+		drawRect(0.7, 3.0f, 5.0f, 6.0f, object);
 		{
 			Brush water;
 			water.outline_opacity = 0.0f;
 			SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.5f);
-			drawRect(0.7, 3.0f, 4.0f, m_flooded_tiles / 24, object);
+			drawRect(0.7, 3.0f, 5.0f, m_flooded_tiles / 24, water);
 
 			int t = 0;
 			for (int i = 0; i < m_selected_layout->getRows(); ++i)
