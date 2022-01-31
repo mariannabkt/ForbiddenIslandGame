@@ -129,7 +129,10 @@ void TilesLayout::update()
 	// highlight tile layout image
 	if (contains(mx, my) && !m_selected)
 	{
-		m_highlighted = true;
+		if (!m_highlighted) {
+			playSound(TOUCH_SOUND, 1, false);
+			m_highlighted = true;
+		}
 		
 		// set selected for the play session
 		if (ms.button_left_released)

@@ -40,6 +40,7 @@ void Action::update()
 	--m_remaining;
 	if (m_remaining == 0) {
 		game->changePlayer();
+		playSound(FLOOD_SOUND, 1, false);
 		game->floodTiles();
 		m_remaining = 3;
 	}

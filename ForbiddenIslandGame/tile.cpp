@@ -15,30 +15,36 @@ using namespace graphics;
 */
 Tile::Tile(string tile_name) : Clickable(tile_name, TILE_SIZE, TILE_SIZE)
 {
+	Game* game = Game::getInstance();
+
 	if (m_img == XEFWTO) {
 		m_type = LANDING;
 	}
 	else if (m_img == KIPOS_KRA || m_img == KIPOS_PSI)
 	{
 		m_treasure = new Treasure(AIR);
+		game->getTreasures()[m_img] = m_treasure;
 		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
 	else if (m_img == NAOS_FEGGARIOY || m_img == NAOS_ILIOY)
 	{
 		m_treasure = new Treasure(EARTH);
+		game->getTreasures()[m_img] = m_treasure;
 		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
 	else if (m_img == PALATI_KOR || m_img == PALATI_PAL)
 	{
 		m_treasure = new Treasure(WATER);
+		game->getTreasures()[m_img] = m_treasure;
 		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
 	else if (m_img == SPILIA_LAVAS || m_img == SPILIA_SKIWN)
 	{
 		m_treasure = new Treasure(FIRE);
+		game->getTreasures()[m_img] = m_treasure;
 		m_type = TREASURE;
 		m_hasTreasure = true;
 	}
@@ -56,11 +62,12 @@ void Tile::init()
 {
 	m_sunken = false;;
 	m_flooded = false;;
-	m_treasureTaken = false;
 	m_hasPlayer = false;
 	m_canPerformAction = false;
 	if (m_img.find("_nt.png") < m_img.length())
 		m_img.replace(m_img.find("_nt.png"), m_img.length() - 3, ".png");
+	if (m_hasTreasure)
+		m_treasure->setCollected(false);
 }
 
 
@@ -82,6 +89,9 @@ void Tile::draw()
 	water.fill_opacity = 0.2f * (m_flooded && !m_sunken);
 	SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.8f);
 	drawRect(m_posX, m_posY, m_width, m_height, water);
+
+	/*if (m_hasTreasure && m_treasure->isCollected())
+		m_treasure->draw();*/
 }
 
 
@@ -119,18 +129,17 @@ void Tile::update()
 				p->move(this);
 			}
 		}
-		// or active player is on top of this
-		else if (this == t && m_hasTreasure && !m_treasureTaken)
+		// or active player is on top of this and wants to collect treasure
+		else if (this == t && m_hasTreasure && !m_treasure->isCollected())
 		{
 			// replace tile image with the no treasure one
 			m_img.replace(m_img.find(".png"), m_img.length() + 3, "_nt.png");
 
 			// and collect treasure
-			m_treasureTaken = true;
 			m_treasure->setCollected(true);
 			Treasure* player_tr = p->getTreasures().find(m_treasure->getType())->second;
-
-			//game->addEvent(new ZoomOutEvent(tr));
+			playSound(TREASURE_SOUND, 1.0f, false);
+			//game->addEvent(new ZoomOutEvent(m_treasure));
 			game->addEvent(new MotionEvent<Treasure*, Treasure*>(m_treasure, player_tr));
 			player_tr->setCollected(true);
 		}
@@ -142,8 +151,6 @@ void Tile::update()
 			p->move(this);	
 		}
 		p->getActions()->update();
-		if (this == t && m_img == XEFWTO && p->AllTreasCollected())
-			game->setState(RETRY);
 	}
 }
 
@@ -193,16 +200,16 @@ void Tile::checkCanPerfomrAction()
 		(m_grid_j == t->getPosJ() + 2 && m_grid_i == t->getPosI());
 
 	// active player's standing tile (he can unflood or collect treasure)
-	bool isOnTop = (m_flooded || (m_hasTreasure && !m_treasureTaken && !p->getTreasures().find(m_treasure->getType())->second->isCollected()))
-		&& this == t ;
+	bool isOnTop = ((m_hasTreasure && !m_treasure->isCollected() && !p->getTreasures().find(m_treasure->getType())->second->isCollected()) 
+		|| m_flooded) && this == t ;
 
 	m_canPerformAction = 
 		// explorer can move and/or shore up adjacent and diagonial tiles
-		(((!m_hasPlayer && isAdjacent || isDiagonial) || isOnTop) && p->getPlayerRole() == EXPLORER) ||
+		(((!m_hasPlayer && (isAdjacent || isDiagonial)) || isOnTop) && p->getPlayerRole() == EXPLORER) ||
 
 		// diver can move and/or shore up adjacent tiles
 		(((!m_hasPlayer && isAdjacent) || isOnTop) && p->getPlayerRole() == DIVER) ||
 
 		// pilot can move and/or shore up two tiles away
-		(((!m_hasPlayer && isAdjacent || is2TilesAway) || isOnTop) && p->getPlayerRole() == PILOT);
+		(((!m_hasPlayer && (isAdjacent || is2TilesAway)) || isOnTop) && p->getPlayerRole() == PILOT);
 }

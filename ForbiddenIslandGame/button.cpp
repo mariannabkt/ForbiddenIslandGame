@@ -49,7 +49,11 @@ void Button::update()
 	if (contains(mx, my))
 	{
 		// highlight button
-		m_highlighted = true;
+		if (!m_highlighted) {
+			playSound(TOUCH_SOUND, 1, false);
+			m_highlighted = true;
+			lift();
+		}
 
 		// and if clicked
 		if (ms.button_left_released)
@@ -58,22 +62,22 @@ void Button::update()
 			switch (m_func)
 			{
 			case PLAY:
-				playSound(BUTTON_CLICK, 1, false);
+				playSound(BUTTON_CLICK2, 1, false);
 				game->setState(CHOOSE_ISLAND);
 				break;
 
 			case HOW_TO:
-				playSound(BUTTON_CLICK, 1, false);
+				playSound(BUTTON_CLICK2, 1, false);
 				game->setState(SHOW_HOW_TO);
 				break;
 
 			case ABOUT:
-				playSound(BUTTON_CLICK, 1, false);
-				//game->setState(SHOW_HOW_TO);
+				playSound(BUTTON_CLICK2, 1, false);
+				game->setState(INFO);
 				break;
 
 			case HOME:
-				playSound(BUTTON_CLICK, 1, false);
+				playSound(BUTTON_CLICK1, 1, false);
 				game->setState(MAIN_MENU);
 				break;
 
@@ -82,12 +86,12 @@ void Button::update()
 				break;
 
 			case HELP:
-				playSound(BUTTON_CLICK, 1, false);
+				playSound(BUTTON_CLICK1, 1, false);
 				game->setState(SHOW_HOW_TO);
 				break;
 
 			case PLAY_AGAIN:
-				playSound(BUTTON_CLICK, 1, false);
+				playSound(BUTTON_CLICK2, 1, false);
 				game->setState(CHOOSE_ISLAND);
 				break;
 
@@ -100,7 +104,7 @@ void Button::update()
 				break;
 
 			case OK:
-				playSound(BUTTON_CLICK, 1, false);
+				playSound(BUTTON_CLICK1, 1, false);
 				for (auto dp : game->getPlayers())
 					if (dp.second == game->getActivePlayer())
 					{
@@ -114,12 +118,15 @@ void Button::update()
 				break;
 
 			default:
-				playSound(BUTTON_CLICK, 1, false);
+				playSound(BUTTON_CLICK1, 1, false);
 				game->setDifficulty(m_func);
 				game->setState(PLAYING);
 			}
 		}
 	}
-	else 
+	else {
 		m_highlighted = false;
+		if (m_lifted)
+			unlift();
+	}
 }

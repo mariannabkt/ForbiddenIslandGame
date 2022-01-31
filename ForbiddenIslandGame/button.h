@@ -11,6 +11,7 @@ class Button : public Clickable
 
 	bool m_highlighted = false;
 	bool m_active = false;
+	bool m_lifted = false;
 
 public:
 
@@ -22,4 +23,6 @@ public:
 	void enable() { m_active = true; }
 	void disable() { m_active = false; }
 	bool isActive() { return m_active; }
+	void lift() { m_posY -= 0.1; m_lifted = true; }
+	void unlift() { m_posY += 0.1; m_lifted = false; }
 };

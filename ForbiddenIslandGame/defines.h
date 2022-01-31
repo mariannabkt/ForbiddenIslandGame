@@ -30,25 +30,12 @@ inline void sleep(int ms) {
 }
 
 
-enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING, RETRY };
+enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING, RETRY, INFO };
 enum HELP_PAGE		{ ONE, TWO, THREE, FOUR };
 enum BUTTON_FUNC	{ EXIT, EASY, MEDIUM, HARD, LEGENDARY, PLAY, HOW_TO, ABOUT, HELP, HOME, NEXT, PREV, OK, PLAY_AGAIN };
 enum PLAYER_ROLE	{ DIVER, EXPLORER, PILOT };
 enum TILE_TYPE		{ BASIC,TREASURE, LANDING };
 enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
-
-
-
-// ISLAND TILE LAYOUTS
-//#define CLASSIC_ISLAND { {0,0,1,1,0,0}, {0,1,1,1,1,0}, {1,1,1,1,1,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,0,1,1,0,0} };
-//#define SKULL_ISLAND { {1,1,1,1,1,1}, {1,0,1,1,0,1}, {1,1,1,1,1,1}, {0,1,1,1,1,0}, {0,1,1,1,1,0} };
-//#define HARPOON_HIDEOUT { {1,1,1,1,0,0}, {1,1,1,0,0,0}, {1,1,1,1,0,1}, {1,0,1,1,1,1}, {0,0,0,1,1,1}, {0,0,1,1,1,1} };
-//#define ATOLL_OF_DECISIONS	{ {0,0,1,1,1,0,0}, {0,1,1,0,1,1,0}, {1,1,0,0,0,1,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {0,1,1,0,1,1,0}, {0,0,1,1,1,0,0} };
-//#define BAY_OF_GULLS	{ {0,0,0,1,1,0,0,0}, {0,0,0,1,1,0,0,0}, {1,0,0,1,1,0,0,1}, {1,1,1,1,1,1,1}, {0,1,1,1,1,1,0}, {0,0,0,1,1,0,0,0} };
-//#define SHIPWRECK_BAY	{ {1,1,1,1,1,1,1,1}, {1,1,0,1,1,0,1,1}, {0,1,1,0,0,1,1,0}, {0,1,1,1,1,1,0} };
-//#define PALM_SPINGS		{ {0,0,1,1,1,0,0}, {0,1,1,1,1,1,0}, {0,1,0,1,0,1,0}, {0,0,0,1,0,0,0}, {0,1,1,1,1,1,0}, {1,1,1,1,1,1,1} };
-//#define MUTINY_TOWERS		{ {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,0,0,0,0,0,1}, {1,1,0,0,0,1,1}, {1,1,1,1,1,1,1}, {1,1,1,1,1,1,1} };
-//#define DAVY_JONES		{ {0,0,0,0,1,0,0,0,0}, {0,1,1,1,1,0,0,0,0}, {1,0,1,1,1,1,1,1,0}, {0,1,1,1,1,0,1,1,1}, {0,0,0,0,1,1,1,1,0}, {0,0,0,0,1,0,0,0,0} };
 
 
 // ASSET FOLDERS
@@ -71,6 +58,7 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 #define PLAYING_BACKGROUND				".\\assets\\backgrounds\\sea.png"
 #define VICTORY_BACKGROUND				".\\assets\\backgrounds\\victory_background.png"
 #define LOOSERS_BACKGROUND				".\\assets\\backgrounds\\loosers_background.png"
+#define ABOUT_BACKGROUND				".\\assets\\backgrounds\\about.png"
 
 
 // BUTTONS
@@ -133,7 +121,8 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 // PLAYING STATE BITMAPS
 #define PLAYER_CARD		".\\assets\\playing\\old paper card.png"
 #define BUBBLE_IMAGE	".\\assets\\playing\\bubble.png"
-#define WATER_LEVEL		".\\assets\\playing\\water-level.png"
+#define WATER_LEVEL		".\\assets\\playing\\bar.png"
+#define WHIRLPOOL		".\\assets\\playing\\sea whirlpool.png"
 #define ACTION_ONE		".\\assets\\playing\\action_one.png"
 #define ACTION_TWO		".\\assets\\playing\\action_two.png"
 #define ACTION_THREE	".\\assets\\playing\\action_three.png"
@@ -154,9 +143,17 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 
 // SOUNDS
-#define FLIP_PAGE	   ".\\assets\\sounds\\page_flip.wav"
-#define BUTTON_CLICK   ".\\assets\\sounds\\player-jumping-in-a-video-game.wav"
-#define START_PLAYING  ".\\assets\\sounds\\horn-transition.wav"
+#define FLIP_PAGE		".\\assets\\sounds\\page_flip.wav"
+#define BUTTON_CLICK1	".\\assets\\sounds\\player-jumping-in-a-video-game.wav"
+#define BUTTON_CLICK2	".\\assets\\sounds\\unlock-new-item-game-notification.wav"
+#define START_PLAYING	".\\assets\\sounds\\horn-transition.wav"
+#define VICTORY_SOUND	".\\assets\\sounds\\completion-of-a-level.wav"
+#define GAME_OVER_SOUND	".\\assets\\sounds\\game-over-orchestra.wav"
+#define FLOOD_SOUND		".\\assets\\sounds\\healing-water-spell-with-deep-hit.wav"
+#define SINK_SOUND		".\\assets\\sounds\\jump-into-the-water.wav"
+#define TREASURE_SOUND	".\\assets\\sounds\\magic-sweep-game-trophy.wav"
+#define	TOUCH_SOUND		".\\assets\\sounds\\short-button-click.wav"
+
 
 
 // TILES

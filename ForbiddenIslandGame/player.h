@@ -46,10 +46,10 @@ public:
 	bool contains(float x, float y) override;
 
 	string getPlayerName() const { return m_name; }
-	PLAYER_ROLE getPlayerRole() const { return m_role; }
+	string getIconImage() const { return m_icon_img; }
 
+	PLAYER_ROLE getPlayerRole() const { return m_role; }
 	Tile* getStandingTile() const { return m_standing_tile; }
-	void setStandingTile(Tile* t) { m_standing_tile = t; m_standing_tile->setTaken(true); }
 
 	void setIconCords(float x, float y) { m_icon_posX = x; m_icon_posY = y; }
 
@@ -66,7 +66,7 @@ public:
 
 	Action* getActions() { return m_actions; }
 
-	bool AllTreasCollected();
+	bool allTreasCollected();
 	void move(Tile* t);
 	void victory() { m_won = true; }
 };

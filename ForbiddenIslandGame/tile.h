@@ -18,8 +18,6 @@ class Tile : public Clickable
 	bool m_flooded = false;
 
 	bool m_hasTreasure = false;
-	bool m_treasureTaken = false;
-
 	bool m_hasPlayer = false;
 	bool m_canPerformAction = false;
 
@@ -33,6 +31,8 @@ public:
 
 	int getPosI() const { return m_grid_i; }
 	int getPosJ() const { return m_grid_j; }
+
+	TILE_TYPE getType() const { return m_type; }
 
 	Treasure* getTreasure() { return m_treasure; }
 	bool hasTreasure() { return m_hasTreasure; }

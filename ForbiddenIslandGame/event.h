@@ -53,7 +53,7 @@ class MotionEvent : public Event
 
 public:
 	MotionEvent(Player* p, Tile* t) : Event(1.0f, 0.0f), m_start(p), m_stop(t) {}
-	MotionEvent(Treasure* a, Treasure* b) : Event(3.0f, 0.0f), m_start(a), m_stop(b) {}
+	MotionEvent(Treasure* a, Treasure* b) : Event(3.0f, 2.0f), m_start(a), m_stop(b) {}
 	void update();
 };
 
@@ -101,3 +101,12 @@ public:
 };
 
 
+/*
+	Smooth fade from whirlpool for sunken tile.
+*/
+class SinkEvent : public Event
+{
+public:
+	SinkEvent(Tile* s);
+	void draw();
+};

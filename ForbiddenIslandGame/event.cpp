@@ -55,6 +55,7 @@ void StateTransitionEvent::draw()
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 }
 
+
 /*_____________________________________
 
   >>>>> CREATE NEW ZOOM OUT EVENT <<<<<
@@ -93,6 +94,11 @@ BubbleEvent::BubbleEvent(Tile* t) : Event(3.0f, 0.0f, t->getPosX(), t->getPosY()
 }
 
 
+/*_______________________________________________
+
+  >>>>> DRAW BUBBLES WHEN TILES IS FLOODING <<<<<
+  _______________________________________________
+*/
 void BubbleEvent::draw() {
 	Brush br;
 	float s = m_elapsed_time / m_duration;
@@ -104,4 +110,29 @@ void BubbleEvent::draw() {
 	m_posY -= (1.0f - s) * 0.1f;
 	drawRect(m_posX, m_posY, m_size, m_size, br);
 	resetPose();
+}
+
+
+/*_________________________________
+
+  >>>>> CREATE NEW SINK EVENT <<<<<
+  _________________________________
+*/
+SinkEvent::SinkEvent(Tile* s) : Event(3.0f, 0.0f, s->getPosX(), s->getPosY())
+{
+}
+
+
+/*______________________________________
+
+  >>>>> DRAW FADE FROM BLACK EVENT <<<<<
+  ______________________________________
+*/
+void SinkEvent::draw()
+{
+	Brush br;
+	br.outline_opacity = 0.0f;
+	br.texture = WHIRLPOOL;
+	br.fill_opacity = 1.0f - (m_elapsed_time / m_duration);
+	drawRect(m_posX, m_posY, TILE_SIZE, TILE_SIZE, br);
 }

@@ -20,7 +20,7 @@ Player::Player(PLAYER_ROLE r) : m_role(r), m_actions(new Action(this))
 	switch (m_role)
 	{
 	case EXPLORER:
-		m_name = "EXPLORER";
+		m_name = "Explorer";
 		m_icon_img = EXPLORER_ICON;
 		m_img = EXPLORER_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.3f, 0.0f);
@@ -28,7 +28,7 @@ Player::Player(PLAYER_ROLE r) : m_role(r), m_actions(new Action(this))
 		break;
 
 	case DIVER:
-		m_name = "DIVER";
+		m_name = "Diver";
 		m_icon_img = DIVER_ICON;
 		m_img = DIVER_PAWN;
 		SETCOLOR(m_color, 0.1f, 0.1f, 0.1f);
@@ -36,7 +36,7 @@ Player::Player(PLAYER_ROLE r) : m_role(r), m_actions(new Action(this))
 		break;
 
 	case PILOT:
-		m_name = "PILOT";
+		m_name = "Pilot";
 		m_icon_img = PILOT_ICON;
 		m_img = PILOT_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.0f, 0.3f);
@@ -59,7 +59,7 @@ void Player::init()
 {
 	switch (game->getState())
 	{
-	case MAIN_MENU:
+	case CHOOSE_PLAYER:
 		m_turn = 0;
 		m_active = false;
 		m_selected = false;
@@ -215,7 +215,10 @@ void Player::update()
 	// highlight demo player
 	if (contains(mx, my) && !isSelected())
 	{
-		m_highlighted = true;
+		if (!m_highlighted) {
+			playSound(TOUCH_SOUND, 1, false);
+			m_highlighted = true;
+		}
 		// activate player
 		if (ms.button_left_released)
 		{
@@ -243,7 +246,8 @@ void Player::isStartTile(Tile* t)
 		(t->getImage() == PILI_PROSMONIS && m_role == DIVER) ||
 		(t->getImage() == XEFWTO && m_role == PILOT))
 	{
-		setStandingTile(t);
+		m_standing_tile = t; 
+		m_standing_tile->setTaken(true);
 		setCords(m_standing_tile->getPosX(), m_standing_tile->getPosY());
 	}
 }
@@ -257,8 +261,12 @@ void Player::isStartTile(Tile* t)
 void Player::move(Tile* t)
 {
 	game->addEvent(new MotionEvent<Player*, Tile*>(this, t));
-	setStandingTile(t);
-	t->setTaken(true);
+	m_standing_tile = t;
+	m_standing_tile->setTaken(true);
+	if (t->getType() == LANDING && allTreasCollected()) {
+		game->setResult(1);
+		game->setState(RETRY);
+	}
 }
 
 
@@ -267,7 +275,7 @@ void Player::move(Tile* t)
   >>>>> CHECK IF PLAYER HAS COLLECTED ALL TREASURES <<<<<
   _______________________________________________________
 */
-bool Player::AllTreasCollected()
+bool Player::allTreasCollected()
 {
 	for (auto t : m_treasures)
 		if (!t.second->isCollected())

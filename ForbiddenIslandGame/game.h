@@ -31,6 +31,7 @@ class Game
 
 	map<PLAYER_ROLE, Player*> m_players = map<PLAYER_ROLE, Player*>();
 	map<BUTTON_FUNC, Button*> m_buttons = map<BUTTON_FUNC, Button*>();
+	map<string, Treasure*> m_treasures = map<string, Treasure*>();
 	list<Event*> m_events = list<Event*>();
 
 	int m_cur_flood_tile = 0;	// tile to be flooded or sunken next
@@ -56,6 +57,7 @@ public:
 	static void releaseInstance();
 
 	void setDifficulty(int d) { m_difficulty = d; }
+	void setResult(int r) { m_result = r; }
 
 	GAME_STATE getState() const { return m_state; }
 	void setState(GAME_STATE new_state);
@@ -74,6 +76,7 @@ public:
 	map<PLAYER_ROLE, Player*>& getPlayers() { return m_players; }
 	map<BUTTON_FUNC, Button*>& getButtons() { return m_buttons; }
 	vector<TilesLayout*>& getLayouts() { return m_layouts; }
+	map<string, Treasure*>& getTreasures() { return m_treasures; }
 	list<Event*>& getEvents() { return m_events; }
 	
 	void setLayout(TilesLayout* l) { m_selected_layout = l; m_selected_layout->setSelected(true); }
