@@ -20,6 +20,7 @@ using namespace std;
 #define TILES_COUNT 24
 
 #define LAYOUT_IMG_SIZE 3.0f
+#define BUBBLE_SIZE 0.5f
 
 #define SETCOLOR(c,r,g,b) { c[0]=r; c[1]=g; c[2]=b; }
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
@@ -29,9 +30,9 @@ inline void sleep(int ms) {
 }
 
 
-enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING, PLAY_AGAIN };
+enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING, RETRY };
 enum HELP_PAGE		{ ONE, TWO, THREE, FOUR };
-enum BUTTON_FUNC	{ EXIT, OK, EASY, MEDIUM, HARD, LEGENDARY, PLAY, HOW_TO, ABOUT, HELP, HOME, NEXT, PREV };
+enum BUTTON_FUNC	{ EXIT, EASY, MEDIUM, HARD, LEGENDARY, PLAY, HOW_TO, ABOUT, HELP, HOME, NEXT, PREV, OK, PLAY_AGAIN };
 enum PLAYER_ROLE	{ DIVER, EXPLORER, PILOT };
 enum TILE_TYPE		{ BASIC,TREASURE, LANDING };
 enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
@@ -73,19 +74,20 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 
 // BUTTONS
-#define PLAY_BUTTON        ".\\assets\\buttons\\play button.png"
-#define OK_BUTTON          ".\\assets\\buttons\\ok button.png"
-#define HELP_BUTTON		   ".\\assets\\buttons\\help button.png"
-#define EXIT_BUTTON        ".\\assets\\buttons\\exit button.png"
-#define HOME_BUTTON		   ".\\assets\\buttons\\home button.png"
-#define NEXT_BUTTON        ".\\assets\\buttons\\next button.png"
-#define PREV_BUTTON        ".\\assets\\buttons\\previous button.png"
-#define EASY_BUTTON        ".\\assets\\buttons\\easy button.png"
-#define MEDIUM_BUTTON      ".\\assets\\buttons\\medium button.png"
-#define HARD_BUTTON        ".\\assets\\buttons\\hard button.png"
-#define LEGENDARY_BUTTON   ".\\assets\\buttons\\legendary button.png"
-#define ABOUT_BUTTON	   ".\\assets\\buttons\\about button.png"
-#define HOW_TO_PLAY_BUTTON ".\\assets\\buttons\\how to play button.png"
+#define PLAY_BUTTON			".\\assets\\buttons\\play button.png"
+#define OK_BUTTON			".\\assets\\buttons\\ok button.png"
+#define HELP_BUTTON			".\\assets\\buttons\\help button.png"
+#define EXIT_BUTTON			".\\assets\\buttons\\exit button.png"
+#define HOME_BUTTON			".\\assets\\buttons\\home button.png"
+#define NEXT_BUTTON			".\\assets\\buttons\\next button.png"
+#define PREV_BUTTON			".\\assets\\buttons\\previous button.png"
+#define EASY_BUTTON			".\\assets\\buttons\\easy button.png"
+#define MEDIUM_BUTTON		".\\assets\\buttons\\medium button.png"
+#define HARD_BUTTON			".\\assets\\buttons\\hard button.png"
+#define LEGENDARY_BUTTON	".\\assets\\buttons\\legendary button.png"
+#define ABOUT_BUTTON		".\\assets\\buttons\\about button.png"
+#define HOW_TO_BUTTON		".\\assets\\buttons\\how to play button.png"
+#define RETRY_BUTTON		".\\assets\\buttons\\play again button.png"
 
 
 // FONTS
@@ -130,6 +132,7 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 // PLAYING STATE BITMAPS
 #define PLAYER_CARD		".\\assets\\playing\\old paper card.png"
+#define BUBBLE_IMAGE	".\\assets\\playing\\bubble.png"
 #define WATER_LEVEL		".\\assets\\playing\\water-level.png"
 #define ACTION_ONE		".\\assets\\playing\\action_one.png"
 #define ACTION_TWO		".\\assets\\playing\\action_two.png"

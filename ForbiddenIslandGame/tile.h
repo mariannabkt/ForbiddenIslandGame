@@ -1,15 +1,18 @@
 #pragma once
 #include "defines.h"
 #include "clickable.h"
+#include "treasure.h"
 
-
+/*
+	A tile entity can be clicked and make player perform actions.
+*/
 class Tile : public Clickable
 {
 	TILE_TYPE m_type;
-	TREASURE_TYPE m_treasure;
+	Treasure* m_treasure;
 
-	int m_grid_i = 0;
-	int m_grid_j = 0;
+	int m_grid_i;
+	int m_grid_j;
 
 	bool m_sunken = false;
 	bool m_flooded = false;
@@ -28,23 +31,22 @@ public:
 	void draw();
 	void update();
 
-	bool hasPlayer() { return m_hasPlayer; }
+	int getPosI() const { return m_grid_i; }
+	int getPosJ() const { return m_grid_j; }
 
-	int getPosI() { return m_grid_i; }
-	int getPosJ() { return m_grid_j; }
+	Treasure* getTreasure() { return m_treasure; }
+	bool hasTreasure() { return m_hasTreasure; }
 
 	void setGridPos(float x, float y) { m_grid_i = x; m_grid_j = y; }
 
-	bool getFlooded() { return m_flooded; }
-	bool getSunken() { return m_sunken; }
-
-	void collectTreasure();
+	bool getFlooded() const { return m_flooded; }
+	bool getSunken() const { return m_sunken; }
 
 	void flood() { m_flooded = true; }
-	void sunk() { m_sunken = true; }
+	void sink() { m_sunken = true; }
 
 	void setTaken(bool a) { m_hasPlayer = a; }
-	void setCanPerformAction(bool b) { m_canPerformAction = b; }
-	void checkCanPerfomrAction();
+
 	void canPerformAction(bool c) { m_canPerformAction = c; }
+	void checkCanPerfomrAction();
 };

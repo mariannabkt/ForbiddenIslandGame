@@ -4,7 +4,10 @@
 #include "player.h"
 #include "tile.h"
 
-class Event :public GameObject
+/*
+	An event entity handles graphic animations.
+*/
+class Event : public GameObject
 {
 protected:
 
@@ -17,7 +20,7 @@ protected:
 
 public:
 
-	Event(float dur = 2.0f, float del = 0.0f, float x = 0.0f, float y = 0.0f) : GameObject(x,y), m_duration(dur), m_delay(del) {}
+	Event(float dur = 2.0f, float del = 0.0f, float x = 0.0f, float y = 0.0f);
 	virtual ~Event() {};
 
 	virtual void draw() {};
@@ -29,12 +32,19 @@ public:
 };
 
 
+/*
+	Smooth fade from black transition events between states.
+*/
 class StateTransitionEvent : public Event 
 {
 public:
-	void draw() override;
+	void draw();
 };
 
+
+/*
+	Smooth movement animations.
+*/
 template <class T1, class T2>
 class MotionEvent : public Event 
 {
@@ -43,17 +53,17 @@ class MotionEvent : public Event
 
 public:
 	MotionEvent(Player* p, Tile* t) : Event(1.0f, 0.0f), m_start(p), m_stop(t) {}
-	MotionEvent(Treasure* a, Treasure* b) : Event(1.0f, 0.0f), m_start(a), m_stop(b) {}
+	MotionEvent(Treasure* a, Treasure* b) : Event(3.0f, 0.0f), m_start(a), m_stop(b) {}
 	void update();
 };
 
 template<class T1, class T2>
 inline void MotionEvent<T1, T2>::update()
 {
+	Event::update();
+
 	if (waiting())
 		return;
-
-	Event::update();
 
 	float s = m_elapsed_time / m_duration;
 	float x = m_start->getPosX() * (1.0f - s) + m_stop->getPosX() * s;
@@ -61,23 +71,33 @@ inline void MotionEvent<T1, T2>::update()
 	m_start->setCords(x, y);
 }
 
+
+/*
+	Zoom out animation.
+*/
 class ZoomOutEvent : public Event
 {
-	Treasure* tr;
+	Treasure* m_treas;
 
 public:
 	ZoomOutEvent(Treasure* t);
 	void update();
 };
 
-class SmokeEvent : public Event 
+
+/*
+	Bubble animation.
+*/
+class BubbleEvent : public Event 
 {
+	Tile* m_tile;
 	float m_orientation;
 	float m_scale;
+	float m_size;
+
 public:
-	
-	SmokeEvent(float x, float y);
-	void draw() override;
+	BubbleEvent(Tile* t);
+	void draw();
 };
 
 

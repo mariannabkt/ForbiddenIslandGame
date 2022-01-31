@@ -20,25 +20,25 @@ Player::Player(PLAYER_ROLE r) : m_role(r), m_actions(new Action(this))
 	switch (m_role)
 	{
 	case EXPLORER:
-		m_name = "Explorer";
+		m_name = "EXPLORER";
 		m_icon_img = EXPLORER_ICON;
-		m_pawn_img = EXPLORER_PAWN;
+		m_img = EXPLORER_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.3f, 0.0f);
 		setIconCords(CANVAS_WIDTH / 2 - 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 
 	case DIVER:
-		m_name = "Diver";
+		m_name = "DIVER";
 		m_icon_img = DIVER_ICON;
-		m_pawn_img = DIVER_PAWN;
+		m_img = DIVER_PAWN;
 		SETCOLOR(m_color, 0.1f, 0.1f, 0.1f);
 		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
 
 	case PILOT:
-		m_name = "Pilot";
+		m_name = "PILOT";
 		m_icon_img = PILOT_ICON;
-		m_pawn_img = PILOT_PAWN;
+		m_img = PILOT_PAWN;
 		SETCOLOR(m_color, 0.0f, 0.0f, 0.3f);
 		setIconCords(CANVAS_WIDTH / 2 + 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
 		break;
@@ -57,25 +57,55 @@ Player::Player(PLAYER_ROLE r) : m_role(r), m_actions(new Action(this))
 */
 void Player::init()
 {
-	m_turn = 0;
-	m_active = false;
-	m_selected = false;
-	m_highlighted = false;
-	m_actions->init();
+	switch (game->getState())
+	{
+	case MAIN_MENU:
+		m_turn = 0;
+		m_active = false;
+		m_selected = false;
+		m_highlighted = false;
+		m_actions->init();
 
-	switch (m_role) {
-	case EXPLORER:
-		setIconCords(CANVAS_WIDTH / 2 - 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
+		switch (m_role) {
+		case EXPLORER:
+			setIconCords(CANVAS_WIDTH / 2 - 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
+			break;
+		case DIVER:
+			setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.5f);
+			break;
+		case PILOT:
+			setIconCords(CANVAS_WIDTH / 2 + 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
+			break;
+		}
+		for (auto t : m_treasures)
+			t.second->setCollected(false);
 		break;
-	case DIVER:
-		setIconCords(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.5f);
-		break;
-	case PILOT:
-		setIconCords(CANVAS_WIDTH / 2 + 7.5f, CANVAS_HEIGHT / 2 + 3.5f);
+
+	case PLAYING:
+		if (m_turn == 1)
+		{
+			game->setActivePlayer(this);
+			setIconCords(1.5f, 12.5f);
+			getActions()->setCords(3.4f, 13.0f);
+			getTreasures()[AIR]->setCords(1.5f, 14.5f);
+			getTreasures()[FIRE]->setCords(3.1f, 14.6f);
+			getTreasures()[EARTH]->setCords(4.5f, 14.6f);
+			getTreasures()[WATER]->setCords(5.7f, 14.5f);
+		}
+		else if (m_turn == 2)
+		{
+			setActive(false);
+			setIconCords(22.5f, 12.5f);
+			getActions()->setCords(24.4f, 13.0f);
+			getTreasures()[AIR]->setCords(22.4f, 14.5f);
+			getTreasures()[FIRE]->setCords(24.0f, 14.6f);
+			getTreasures()[EARTH]->setCords(25.4f, 14.6f);
+			getTreasures()[WATER]->setCords(26.7f, 14.5f);
+		}
+		else
+			getStandingTile()->setTaken(false);
 		break;
 	}
-	for (auto t : m_treasures)
-		t.second->setCollected(false);
 }
 
 
@@ -90,7 +120,7 @@ void Player::drawIcon(float width, float height)
 	Brush back;
 	back.outline_opacity = 0.0f;
 
-	back.fill_opacity = (!isActive() && game->getState() == CHOOSE_PLAYER && isHighlighted()) ||
+	back.fill_opacity = (!isActive() && game->getState() == CHOOSE_PLAYER && m_highlighted) ||
 		(isActive() && game->getState() == PLAYING) ? 0.8f : 0.0f;
 
 	if ((isActive() || isSelected()) && game->getState() == CHOOSE_PLAYER)
@@ -124,7 +154,7 @@ void Player::drawPawn()
 
 	//--- DRAW PLAYER'S PAWN ---
 	Brush pawn;
-	pawn.texture = m_pawn_img;
+	pawn.texture = m_img;
 	pawn.outline_opacity = 0.0f;
 	drawRect(m_posX, m_posY, PLAYER_SIZE, PLAYER_SIZE + 0.1, pawn);
 }
@@ -182,31 +212,23 @@ void Player::update()
 	float mx = windowToCanvasX(ms.cur_pos_x);
 	float my = windowToCanvasY(ms.cur_pos_y);
 
-	if (game->getState() == CHOOSE_PLAYER)
+	// highlight demo player
+	if (contains(mx, my) && !isSelected())
 	{
-		// highlight demo player
-		if (contains(mx, my) && !isSelected())
+		m_highlighted = true;
+		// activate player
+		if (ms.button_left_released)
 		{
-			setHighlight(true);
+			game->setActivePlayer(this);
 
-			// activate player
-			if (ms.button_left_released)
-			{
-				game->setActivePlayer(this);
-
-				// disable other players
-				for (auto dp : game->getPlayers())
-					if (dp.second != game->getActivePlayer())
-						dp.second->setActive(false);
-			}
+			// disable other players
+			for (auto dp : game->getPlayers())
+				if (dp.second != game->getActivePlayer())
+					dp.second->setActive(false);
 		}
-		else
-			setHighlight(false);
 	}
-	else if (game->getState() == PLAYING)
-	{
-		
-	}
+	else
+		m_highlighted = false;
 }
 
 
@@ -226,12 +248,33 @@ void Player::isStartTile(Tile* t)
 	}
 }
 
+
+/*____________________________________
+
+  >>>>> MOVE PLAYER TO THIS TILE <<<<<
+  ____________________________________
+*/
 void Player::move(Tile* t)
 {
 	game->addEvent(new MotionEvent<Player*, Tile*>(this, t));
 	setStandingTile(t);
 	t->setTaken(true);
 }
+
+
+/*_______________________________________________________
+
+  >>>>> CHECK IF PLAYER HAS COLLECTED ALL TREASURES <<<<<
+  _______________________________________________________
+*/
+bool Player::AllTreasCollected()
+{
+	for (auto t : m_treasures)
+		if (!t.second->isCollected())
+			return false;
+	return true;;
+}
+
 
 /*____________________________________________
 

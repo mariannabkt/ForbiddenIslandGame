@@ -23,26 +23,27 @@ Game* Game::m_instance = nullptr;
 Game::Game()
 {
 	// init buttons
-	m_buttons[EXIT]   = new Button(EXIT, 13.0f, -7.0f, 1.0f, 1.0f);
-	m_buttons[HOME]	  = new Button(HOME, 11.7f, -7.0f, 1.0f, 1.0f);
-	m_buttons[HELP]   = new Button(HELP, 10.4f, -7.0f, 1.0f, 1.0f);
-	m_buttons[PLAY]   = new Button(PLAY, -9.0f, 4.5f, 5.0f, 2.0f);
-	m_buttons[HOW_TO] = new Button(HOW_TO, -2.5f, 4.5f, 7.0f, 2.0f);
-	m_buttons[ABOUT]  = new Button(ABOUT, 4.0f, 4.5f, 4.f, 2.0f);
-	m_buttons[NEXT]   = new Button(NEXT, 12.5f, 0.0f, 1.5f, 1.5f);
-	m_buttons[PREV]   = new Button(PREV, -12.5f, 0.0f, 1.5f, 1.5f);
-	m_buttons[OK]     = new Button(OK, 11.0f, 6.0f, 1.0f, 1.0f);
-	m_buttons[EASY]   = new Button(EASY, -9.0f, 2.0f, 4.0f, 2.0f);
-	m_buttons[MEDIUM] = new Button(MEDIUM, -3.0f, 2.0f, 4.0f, 2.0f);
-	m_buttons[HARD]   = new Button(HARD, 3.0f, 2.0f, 4.0f, 2.0f);
-	m_buttons[LEGENDARY] = new Button(LEGENDARY, 9.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[EXIT]   = new Button(EXIT, EXIT_BUTTON, 13.0f, -7.0f, 1.0f, 1.0f);
+	m_buttons[HOME]	  = new Button(HOME, HOME_BUTTON, 11.7f, -7.0f, 1.0f, 1.0f);
+	m_buttons[HELP]   = new Button(HELP, HELP_BUTTON, 10.4f, -7.0f, 1.0f, 1.0f);
+	m_buttons[PLAY]   = new Button(PLAY, PLAY_BUTTON, -9.0f, 4.5f, 5.0f, 2.0f);
+	m_buttons[HOW_TO] = new Button(HOW_TO, HOW_TO_BUTTON, -2.5f, 4.5f, 7.0f, 2.0f);
+	m_buttons[ABOUT]  = new Button(ABOUT, ABOUT_BUTTON, 4.0f, 4.5f, 4.f, 2.0f);
+	m_buttons[NEXT]   = new Button(NEXT, NEXT_BUTTON, 12.5f, 0.0f, 1.5f, 1.5f);
+	m_buttons[PREV]   = new Button(PREV, PREV_BUTTON, -12.5f, 0.0f, 1.5f, 1.5f);
+	m_buttons[OK]     = new Button(OK, OK_BUTTON, 11.0f, 6.0f, 1.0f, 1.0f);
+	m_buttons[EASY]   = new Button(EASY, EASY_BUTTON, -9.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[MEDIUM] = new Button(MEDIUM, MEDIUM_BUTTON, -3.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[HARD]   = new Button(HARD, HARD_BUTTON, 3.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[LEGENDARY] = new Button(LEGENDARY, LEGENDARY_BUTTON, 9.0f, 2.0f, 4.0f, 2.0f);
+	m_buttons[PLAY_AGAIN] = new Button(PLAY_AGAIN, RETRY_BUTTON, 0.0f, 4.0f, 5.0f, 2.0f);
 
 	// init players
 	m_players[EXPLORER] = new Player(EXPLORER);
 	m_players[DIVER]    = new Player(DIVER);
 	m_players[PILOT]    = new Player(PILOT);
 
-	// fill tile names(image paths) array
+	// fill tile names array
 	string tile_names[TILES_COUNT] = { LIMNI , DASOS, PARATIRITIRIO, LAGADI, VALTOS, AMMOLOFOI, ASTEROSKOPEIO,
 		VRAXOS, GEFIRA, KIPOS_PSI, KIPOS_KRA, NAOS_ILIOY, NAOS_FEGGARIOY,PALATI_PAL, VRAXOI, PILI_APLISTIAS, 
 		PILI_LITHIS, PALATI_KOR, SPILIA_LAVAS, SPILIA_SKIWN, PILI_AGNOIAS, PILI_PROSMONIS, XEFWTO, PILI_AXARISTIAS };
@@ -51,9 +52,11 @@ Game::Game()
 	for (int i = 0; i < TILES_COUNT; ++i)
 		m_tiles[i] = new Tile(tile_names[i]);
 
+	// fill tile layout names array
 	string layout_names[8] = { SKULL_IMAGE, BAY_IMAGE, HARPOON_IMAGE, ATOLL_IMAGE, 
 		SHIPWRECK_IMAGE, DAVY_IMAGE, MUTINY_IMAGE, PALM_IMAGE };
 
+	// init tile layouts
 	for (int i = 0; i < 8; ++i)
 		m_layouts.push_back(new TilesLayout(layout_names[i]));
 }
@@ -93,13 +96,13 @@ void Game::setState(GAME_STATE new_state)
 		playMusic(NATURAL_AMBIENCE, 1.0f, true, 1000);
 
 		m_cur_player = 0;
-		m_cur_flood = 0;
+		m_cur_flood_tile = 0;
 
 		// init tiles for new play session
 		for (int i = 0; i < TILES_COUNT; ++i)
 			m_tiles[i]->init();
 
-		// init players for new play session
+		// init players for new play session(choose state first)
 		for (auto p : m_players)
 			p.second->init();
 
@@ -150,34 +153,6 @@ void Game::setState(GAME_STATE new_state)
 
 	case CHOOSE_DIF:
 
-		shuffleTiles();
-
-		// player 1 plays first
-		for (auto p : m_players) {
-			if (p.second->getPlayerTurn() == 1) 
-			{
-				setActivePlayer(p.second);
-				p.second->setIconCords(1.5f, 12.5f);
-				p.second->getActions()->setCords(3.4f, 13.0f);
-				p.second->getTreasures()[AIR]->setCords(1.5f, 14.5f);
-				p.second->getTreasures()[FIRE]->setCords(3.1f, 14.6f);
-				p.second->getTreasures()[EARTH]->setCords(4.5f, 14.6f);
-				p.second->getTreasures()[WATER]->setCords(5.7f, 14.5f);
-			} 
-			else if (p.second->getPlayerTurn() == 2) 
-			{
-				p.second->setActive(false);
-				p.second->setIconCords(22.5f, 12.5f);
-				p.second->getActions()->setCords(24.4f, 13.0f);
-				p.second->getTreasures()[AIR]->setCords(22.4f, 14.5f);
-				p.second->getTreasures()[FIRE]->setCords(24.0f, 14.6f);
-				p.second->getTreasures()[EARTH]->setCords(25.4f, 14.6f);
-				p.second->getTreasures()[WATER]->setCords(26.7f, 14.5f);
-			}
-			else
-				p.second->getStandingTile()->setTaken(false);
-		}
-
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
@@ -195,6 +170,13 @@ void Game::setState(GAME_STATE new_state)
 		playSound(START_PLAYING, 1, false);
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
+		// shuffle tiles for random flooding
+		shuffleTiles();
+
+		// get ready
+		for (auto p : m_players) 
+			p.second->init();
+		
 		// enable only necessary buttons for this state
 		for (auto b : m_buttons)
 			b.second->disable();
@@ -203,7 +185,7 @@ void Game::setState(GAME_STATE new_state)
 		m_buttons[HELP]->enable();
 		break;
 
-	case PLAY_AGAIN:
+	case RETRY:
 
 		stopMusic(1);
 		playSound(START_PLAYING, 1, false);
@@ -214,32 +196,11 @@ void Game::setState(GAME_STATE new_state)
 			b.second->disable();
 		m_buttons[HOME]->enable();
 		m_buttons[EXIT]->enable();
+		m_buttons[PLAY_AGAIN]->enable();
 		break;
 	}
 	// smooth transition event between states
 	addEvent(new StateTransitionEvent());
-}
-
-void Game::changePlayer()
-{
-	switch (m_state)
-	{
-	case CHOOSE_PLAYER:
-		m_cur_player == 0 ? ++m_cur_player : --m_cur_player;
-		break;
-	case PLAYING:
-		
-			m_active_player->setActive(false);
-			for (auto p : m_players)
-				if (!p.second->isActive() && m_active_player->isSelected())
-					setActivePlayer(p.second);
-			if (m_active_player->getPlayerTurn() == 2)
-				m_active_player->setActive(false);
-			for (auto p : m_players)
-				if (p.second->getPlayerTurn() == 1)
-					setActivePlayer(p.second);
-		break;
-	}
 }
 
 
@@ -250,10 +211,10 @@ void Game::changePlayer()
 */
 void Game::draw()
 {
-	thread th1;
 	Brush text;
 	Brush object;
 	Brush background;
+	object.outline_opacity = 0.0f;
 	background.outline_opacity = 0.0f;
 	
 	switch (m_state)
@@ -265,16 +226,14 @@ void Game::draw()
 		drawText(CANVAS_WIDTH / 2 - 6.5f, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
 		drawText(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
 
-		object.outline_opacity = 0.0f;
 		object.texture = ".\\assets\\loading spinner.png";
 		float x = getDeltaTime() / 1000.0f;
 		setOrientation(log(x / (1 - x)));
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.0f, 3.0f, 3.0f, object);
-
+		resetPose();
 		break;
 	}
 	case MAIN_MENU:
-		resetPose();
 		background.texture = MAIN_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
 		break;
@@ -287,6 +246,7 @@ void Game::draw()
 	case CHOOSE_ISLAND:
 		background.texture = CHOOSE_ISLAND_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+
 		for (auto l : m_layouts)
 			l->draw();
 		break;
@@ -302,47 +262,56 @@ void Game::draw()
 
 		setFont(IMMORTAL_FONT);
 		SETCOLOR(text.fill_color, 0.5f, 0.2f, 0.0f);
-		drawText(CANVAS_WIDTH / 2 - 2.0f, CANVAS_HEIGHT / 2 - 3.0f, 1.0f, "PLAYER  " + to_string(getCurPlayer() + 1), text);
+		drawText(CANVAS_WIDTH / 2 - 3.0f, CANVAS_HEIGHT / 2 - 3.0f, 1.0f, "PLAYER  " + to_string(getCurPlayer() + 1), text);
 
 		for (auto p : m_players)
 			p.second->draw();
 		break;
 
 	case PLAYING:
-	{
 		background.texture = PLAYING_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
-			
-
-		int t = 0;
-		for (int i = 0; i < m_selected_layout->getRows(); ++i)
-			for (int j = 0; j < m_selected_layout->getCols(); ++j)
-				if (m_selected_layout->getLayout()[i][j])
-					m_tiles[t++]->draw();
-
+		{
+			int t = 0;
+			for (int i = 0; i < m_selected_layout->getRows(); ++i)
+				for (int j = 0; j < m_selected_layout->getCols(); ++j)
+					if (m_selected_layout->getLayout()[i][j])
+						m_tiles[t++]->draw();
+		}
 		for (auto p : m_players)
 			if (p.second->isSelected())
 				p.second->draw();
-		
 		break;
-	}
-	case PLAY_AGAIN:
-		background.texture = PLAYING_BACKGROUND;
-		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+	
+	case RETRY:
+		setFont(IMMORTAL_FONT);
+		SETCOLOR(text.fill_color, 0.5f, 0.2f, 0.0f);
+		object.texture = m_active_player->getImage();
+
+		if (m_result) {
+			background.texture = VICTORY_BACKGROUND;
+			drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+			drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 3.0f, 7.0f, 4.0f, object);
+			string s = "PLAYER  " + to_string(m_active_player->getPlayerTurn()) + "  " + m_active_player->getPlayerName();
+			drawText(CANVAS_WIDTH / 2 - 4.0f, CANVAS_HEIGHT / 2, 1.0f, s, text);
+			drawText(CANVAS_WIDTH / 2 - 4.0f, CANVAS_HEIGHT / 2, 1.0f, "YOU MANAGED TO GET AWAY", text);
+		}
+		else {
+			background.texture = LOOSERS_BACKGROUND;
+			drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+		}
 		break;
 	}
 
-		for (auto b : m_buttons)
-			if (b.second->isActive())
-				b.second->draw();
+	for (auto b : m_buttons)
+		if (b.second->isActive())
+			b.second->draw();
 
-		for (auto e : m_events)
-			if (e->isActive())
-				e->draw();
+	for (auto e : m_events)
+		if (e->isActive())
+			e->draw();
 		
 }
-
-
 
 
 /*________________________________________
@@ -379,10 +348,6 @@ void Game::update()
 	case PLAYING:
 		updateButtons();
 		processEvents();
-		for (auto p : m_players)
-			if (p.second->isSelected())
-				p.second->update();
-
 		for (int i = 0; i < TILES_COUNT; ++i)
 			m_tiles[i]->update();
 		break;
@@ -391,7 +356,7 @@ void Game::update()
 		updateButtons();
 		processEvents();
 		break;
-	}
+	}		
 }
 
 
@@ -420,12 +385,15 @@ void Game::processEvents()
 	m_events.remove_if([](Event* e) { return !e->isActive(); });
 }
 
+
+/*_________________________
+
+  >>>>> SHUFFLE TILES <<<<<
+  _________________________
+*/
 void Game::shuffleTiles()
 {
-	// To obtain a time-based seed
 	unsigned seed = 0;
-
-	// Shuffling our array
 	shuffle(m_tiles, m_tiles + 24, default_random_engine(seed));
 }
 
@@ -445,10 +413,14 @@ void Game::rearrangeTileGrid()
 		for (int j = 0; j < m_selected_layout->getCols(); ++j)
 			if (m_selected_layout->getLayout()[i][j])
 			{
-				// set cords for every grid tile
+				// set cords for every tile
 				m_tiles[t]->setGridPos(i, j);
-				m_tiles[t]->setCords((i + m_selected_layout->getPosXoffset()) * (TILE_SIZE + 0.2f), (j + m_selected_layout->getPosYoffset()) * (TILE_SIZE + 0.2f));
-				
+				float x = (i + m_selected_layout->getPosXoffset()) * (TILE_SIZE + 0.2f);
+				float y = (j + m_selected_layout->getPosYoffset()) * (TILE_SIZE + 0.2f);
+				m_tiles[t]->setCords(x, y);
+				if (m_tiles[t]->hasTreasure())
+					m_tiles[t]->getTreasure()->setCords(x, y);
+
 				// set player's pawn cords
 				for (auto p : m_players)
 					p.second->isStartTile(m_tiles[t]);
@@ -458,20 +430,56 @@ void Game::rearrangeTileGrid()
 }
 
 
+/*_______________________________
+
+  >>>>> FLOOD OR SINK TILES <<<<<
+  _______________________________
+*/
 void Game::floodTiles()
 {
-	for (int i = 0; i < m_difficulty; ++i) {
-		if (m_cur_flood >= TILES_COUNT)
-			m_cur_flood = 0;
-		if (m_tiles[m_cur_flood]->getFlooded())
-			m_tiles[m_cur_flood]->sunk();
-		else if (!m_tiles[m_cur_flood]->getSunken()) {
-			m_tiles[m_cur_flood]->flood();
-			m_tiles[m_cur_flood]->canPerformAction(false);
+	for (int i = 0; i < m_difficulty; ++i) 
+	{
+		if (m_cur_flood_tile >= TILES_COUNT)
+			m_cur_flood_tile = 0;
+
+		Tile* t = m_tiles[m_cur_flood_tile];
+
+		if (t->getFlooded()) {
+			t->sink();
+			++m_flooded_tiles;
+			t->canPerformAction(false);
+			if (t->getImage() == XEFWTO)
+				setState(RETRY);
 		}
-		m_cur_flood++;
+		else if (!t->getSunken()) {
+			t->flood();
+			for (int i = 0; i < 10; ++i)
+				addEvent(new BubbleEvent(t));
+		}
+		++m_cur_flood_tile;
 	}
 }
+
+/*_______________________________________________________________________
+
+  >>>>> CHANGE PLAYER CHOOSING OR ACTIVE PLAYER BASED ON GAME STATE <<<<<
+  _______________________________________________________________________
+*/
+void Game::changePlayer()
+{
+	m_cur_player == 0 ? ++m_cur_player : --m_cur_player;
+
+	if (m_state == PLAYING) {
+		for (auto p : m_players)
+			if ((!m_cur_player && p.second->getPlayerTurn() == 2) ||
+				(m_cur_player && p.second->getPlayerTurn() == 1))
+			{
+				m_active_player->setActive(false);
+				setActivePlayer(p.second);
+			}
+	}
+}
+
 
 /*___________________________________________
 
@@ -481,26 +489,26 @@ void Game::floodTiles()
 void Game::flipNextPage()
 {
 	playSound(FLIP_PAGE, 1, false);
-	switch (getPage())
+	switch (m_cur_page)
 	{
 	case ONE:
-		setPage(TWO);
-		setPageImage(PAGE_TWO);
+		m_cur_page = TWO;
+		m_cur_page_img = PAGE_TWO;
 		break;
 
 	case TWO:
-		setPage(THREE);
-		setPageImage(PAGE_THREE);
+		m_cur_page = THREE;
+		m_cur_page_img = PAGE_THREE;
 		break;
 
 	case THREE:
-		setPage(FOUR);
-		setPageImage(PAGE_FOUR);
+		m_cur_page = FOUR;
+		m_cur_page_img = PAGE_FOUR;
 		break;
 
 	case FOUR:
-		setPage(ONE);
-		setPageImage(PAGE_ONE);
+		m_cur_page = ONE;
+		m_cur_page_img = PAGE_ONE;
 		setState(m_prev_state);
 		break;
 	}
@@ -515,25 +523,25 @@ void Game::flipNextPage()
 void Game::flipPrevPage()
 {
 	playSound(FLIP_PAGE, 1, false);
-	switch (getPage())
+	switch (m_cur_page)
 	{
 	case ONE:
 		setState(m_prev_state);
 		break;
 
 	case TWO:
-		setPage(ONE);
-		setPageImage(PAGE_ONE);
+		m_cur_page = ONE;
+		m_cur_page_img = PAGE_ONE;
 		break;
 
 	case THREE:
-		setPage(TWO);
-		setPageImage(PAGE_TWO);
+		m_cur_page = TWO;
+		m_cur_page_img = PAGE_TWO;
 		break;
 
 	case FOUR:
-		setPage(THREE);
-		setPageImage(PAGE_THREE);
+		m_cur_page = THREE;
+		m_cur_page_img = PAGE_THREE;
 		break;
 	}
 }

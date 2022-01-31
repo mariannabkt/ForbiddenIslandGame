@@ -5,8 +5,11 @@
 
 using namespace graphics;
 
+/*_______________________________
 
-
+  >>>>> CREATE NEW TREASURE <<<<<
+  _______________________________
+*/
 Treasure::Treasure(TREASURE_TYPE t, float x, float y, bool c) : GameObject(x, y), m_type(t), m_collected(c)
 {
 	switch (m_type) {
@@ -25,6 +28,12 @@ Treasure::Treasure(TREASURE_TYPE t, float x, float y, bool c) : GameObject(x, y)
 	}
 }
 
+
+/*_________________________
+
+  >>>>> DRAW TREASURE <<<<<
+  _________________________
+*/
 void Treasure::draw()
 {
 	Brush br;
@@ -33,9 +42,3 @@ void Treasure::draw()
 	br.texture = m_treas_img;
 	drawRect(m_posX, m_posY, m_width, m_height, br);
 }
-
-void Treasure::update()
-{
-	Game* game = Game::getInstance();
-}
-

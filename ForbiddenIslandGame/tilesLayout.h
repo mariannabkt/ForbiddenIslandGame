@@ -12,14 +12,16 @@ static int PALM_SPINGS[7][6] = { {0,1,0,0,0,0}, {0,1,1,0,1,1}, {1,1,0,0,1,1}, {1
 static int MUTINY_TOWERS[6][6] = { {1,1,1,1,1,1}, {0,0,1,1,1,1}, {0,0,0,0,1,1}, {0,0,0,0,1,1}, {0,0,1,1,1,1}, {1,1,1,1,1,1} };
 static int DAVY_JONES[9][6] = { {0,0,1,0,0,0}, {0,1,1,1,0,0}, {0,1,1,1,0,0}, {0,1,0,1,0,0}, {1,1,1,1,1,1}, {0,0,1,0,1,0}, {0,0,1,1,1,0}, {0,0,1,1,1,0}, {0,0,0,1,0,0} };
 
-
+/*
+	A tile layout entity sets tiles positions on the grid.
+*/
 class TilesLayout : public Clickable
 {
 	int m_rows;
 	int m_cols;
 
-	float m_posX_offset = 3.6f;
-	float m_posY_offset = 0.7f;
+	float m_posX_offset;
+	float m_posY_offset;
 
 	int** m_layout;
 
@@ -33,20 +35,15 @@ public:
 	void draw();
 	void update();
 
-	int** &(getLayout());
+	int**& (getLayout()) { return m_layout; }
 
 	void initArray(int rows, int cols);
 
 	const int getRows() const { return m_rows; }
 	const int getCols() const { return m_cols; }
 
-	float getPosXoffset() { return m_posX_offset; }
-	float getPosYoffset() { return m_posY_offset; }
+	float getPosXoffset() const { return m_posX_offset; }
+	float getPosYoffset() const { return m_posY_offset; }
 
-	bool isHighlighted() { return m_highlighted; }
-	void setHighlight(bool h) { m_highlighted = h; }
-
-	bool isSelected() { return m_selected; }
 	void setSelected(bool s) { m_selected = s; }
-
 };

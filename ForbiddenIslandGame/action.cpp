@@ -1,5 +1,6 @@
 #include "action.h"
 #include "defines.h"
+#include "game.h"
 #include "player.h"
 #include "sgg/graphics.h"
 
@@ -38,24 +39,8 @@ void Action::update()
 
 	--m_remaining;
 	if (m_remaining == 0) {
-		
-			if (m_player_performing->getPlayerTurn() == 1 && m_player_performing == game->getActivePlayer())
-				for (auto p : game->getPlayers())
-					if (p.second->getPlayerTurn() == 2)
-					{
-						game->setActivePlayer(p.second);
-						game->floodTiles();
-					}
-			if (m_player_performing->getPlayerTurn() == 2 && m_player_performing == game->getActivePlayer())
-				for (auto p : game->getPlayers())
-					if (p.second->getPlayerTurn() == 1)
-					{
-						game->setActivePlayer(p.second);
-						game->floodTiles();
-					}
-		m_player_performing->setActive(false);
+		game->changePlayer();
+		game->floodTiles();
 		m_remaining = 3;
 	}
-
-	
 }

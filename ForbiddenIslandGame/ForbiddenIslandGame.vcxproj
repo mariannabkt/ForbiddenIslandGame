@@ -167,7 +167,6 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gameObject.h" />
-    <ClInclude Include="grid.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="clickable.h" />
     <ClInclude Include="tile.h" />

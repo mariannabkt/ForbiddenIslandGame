@@ -1,58 +1,17 @@
+#include "sgg/graphics.h"
 #include "button.h"
 #include "game.h"
 
 using namespace graphics;
 
-/*_______________________________________________________________________________
+/*_______________________________________
 
-  >>>>> CREATE NEW BUTTON AND INITIALIZE IT'S MEMBERS BASED ON IT'S FUNCTION <<<<<
-  _______________________________________________________________________________
+  >>>>> CREATE NEW CLICKABLE BUTTON <<<<<
+  _______________________________________
 */
-Button::Button(BUTTON_FUNC b, float center_width_offset, float center_height_offset, float width, float height) 
-	: m_func(b), Clickable("", width, height, CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset)
+Button::Button(BUTTON_FUNC b, string img, float center_width_offset, float center_height_offset, float width, float height) 
+	: m_func(b), Clickable(img, width, height, CANVAS_WIDTH / 2 + center_width_offset, CANVAS_HEIGHT / 2 + center_height_offset)
 {
-	switch (m_func)
-	{
-	case PLAY:
-		m_img = PLAY_BUTTON;
-		break;
-	case HOW_TO:
-		m_img = HOW_TO_PLAY_BUTTON;
-		break;
-	case ABOUT:
-		m_img = ABOUT_BUTTON;
-		break;
-	case HELP:
-		m_img = HELP_BUTTON;
-		break;
-	case HOME:
-		m_img = HOME_BUTTON;
-		break;
-	case EXIT:
-		m_img = EXIT_BUTTON;
-		break;
-	case NEXT:
-		m_img = NEXT_BUTTON;
-		break;
-	case PREV:
-		m_img = PREV_BUTTON;
-		break;
-	case OK:
-		m_img = OK_BUTTON;
-		break;
-	case EASY:
-		m_img = EASY_BUTTON;
-		break;
-	case MEDIUM:
-		m_img = MEDIUM_BUTTON;
-		break;
-	case HARD:
-		m_img = HARD_BUTTON;
-		break;
-	case LEGENDARY:
-		m_img = LEGENDARY_BUTTON;
-		break;
-	}
 }
 
 
@@ -86,13 +45,16 @@ void Button::update()
 	float mx = windowToCanvasX(ms.cur_pos_x);
 	float my = windowToCanvasY(ms.cur_pos_y);
 
+	// if mouse is on top of button
 	if (contains(mx, my))
 	{
 		// highlight button
 		m_highlighted = true;
 
+		// and if clicked
 		if (ms.button_left_released)
 		{
+			// do something based on it's function
 			switch (m_func)
 			{
 			case PLAY:
@@ -110,11 +72,6 @@ void Button::update()
 				//game->setState(SHOW_HOW_TO);
 				break;
 
-			case HELP:
-				playSound(BUTTON_CLICK, 1, false);
-				game->setState(SHOW_HOW_TO);
-				break;
-
 			case HOME:
 				playSound(BUTTON_CLICK, 1, false);
 				game->setState(MAIN_MENU);
@@ -122,6 +79,16 @@ void Button::update()
 
 			case EXIT:
 				stopMessageLoop();
+				break;
+
+			case HELP:
+				playSound(BUTTON_CLICK, 1, false);
+				game->setState(SHOW_HOW_TO);
+				break;
+
+			case PLAY_AGAIN:
+				playSound(BUTTON_CLICK, 1, false);
+				game->setState(CHOOSE_ISLAND);
 				break;
 
 			case NEXT:
@@ -142,7 +109,8 @@ void Button::update()
 					}
 				if (game->getCurPlayer()) 
 					game->setState(CHOOSE_DIF);
-				game->changePlayer();
+				else
+					game->changePlayer();
 				break;
 
 			default:

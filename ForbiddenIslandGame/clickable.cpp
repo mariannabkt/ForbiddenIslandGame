@@ -1,6 +1,10 @@
 #include "clickable.h"
 
+/*_________________________________
 
+  >>>>> CREATE NEW CLICKABLES <<<<<
+  _________________________________
+*/
 Clickable::Clickable(string img, float w, float h, float x, float y) 
 	: m_img(img), m_width(w), m_height(h)
 {

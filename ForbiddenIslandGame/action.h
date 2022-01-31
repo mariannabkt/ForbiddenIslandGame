@@ -1,14 +1,17 @@
 #ifndef A_H
 #define A_H
-#include "game.h"
+
+#pragma once
+#include "gameObject.h"
+
 class Player;
 
+/*
+	An action entity is performed by players on tiles.
+*/
 class Action : public GameObject
 {
-
-
 	int m_remaining = 3;
-	bool m_done = false;
 
 	Player* m_player_performing;
 

@@ -1,5 +1,9 @@
 #pragma once
 
+/*
+	Abstract class for Game entities that live as the program runs.
+	These can be Players, Tiles, Buttons, Events, Actions, Treasures etc.
+*/
 class GameObject
 {
 protected:

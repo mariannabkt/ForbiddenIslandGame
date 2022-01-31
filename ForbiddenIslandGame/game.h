@@ -17,7 +17,9 @@ class Game
 {
 	static Game* m_instance;
 	
-	int m_difficulty = 0;
+	int m_difficulty = 0;	// repreasents how many tiles will flood every turn
+	int m_result = 0;		// 1 is victory else 0
+
 	GAME_STATE m_state = INIT;
 	GAME_STATE m_prev_state;
 
@@ -31,8 +33,10 @@ class Game
 	map<BUTTON_FUNC, Button*> m_buttons = map<BUTTON_FUNC, Button*>();
 	list<Event*> m_events = list<Event*>();
 
-	int m_cur_flood = 0;
+	int m_cur_flood_tile = 0;	// tile to be flooded or sunken next
+	int m_flooded_tiles = 0;	// flooaded or sunken tiles
 	Tile* m_tiles[TILES_COUNT] = { 0 };
+
 	TilesLayout* m_selected_layout;
 	vector<TilesLayout*> m_layouts = vector<TilesLayout*>();
 
@@ -41,7 +45,6 @@ class Game
 	void processEvents();
 	void shuffleTiles();
 	
-
 public:
 
 	~Game();
@@ -49,26 +52,21 @@ public:
 	void draw();
 	void update();
 
-	void flipNextPage();
-	void flipPrevPage();
-
 	static Game* getInstance();
 	static void releaseInstance();
 
-	int getDifficulty() { return m_difficulty; }
 	void setDifficulty(int d) { m_difficulty = d; }
 
-	GAME_STATE getState() { return m_state; }
+	GAME_STATE getState() const { return m_state; }
 	void setState(GAME_STATE new_state);
 
-	HELP_PAGE getPage() { return m_cur_page; }
-	void setPage(HELP_PAGE new_page) { m_cur_page = new_page; }
-	void setPageImage(string new_page_img) { m_cur_page_img = new_page_img; }
+	void flipNextPage();
+	void flipPrevPage();
 
-	int getCurPlayer() { return m_cur_player; }
+	int getCurPlayer() const { return m_cur_player; }
 	void changePlayer();
 
-	Player* getActivePlayer() { return m_active_player; }
+	Player* getActivePlayer() const { return m_active_player; }
 	void setActivePlayer(Player* pl) { m_active_player = pl; pl->setActive(true); }
 
 	void addEvent(Event* event) { m_events.push_back(event); }
@@ -78,11 +76,8 @@ public:
 	vector<TilesLayout*>& getLayouts() { return m_layouts; }
 	list<Event*>& getEvents() { return m_events; }
 	
-	int getCurFlood() { return m_cur_flood; }
-	void setCurFlood(int f) { m_cur_flood = f; }
-	void floodTiles();
-	Tile* (&getTiles())[24] { return m_tiles; }
-	TilesLayout* gatLayout() { return m_selected_layout; }
 	void setLayout(TilesLayout* l) { m_selected_layout = l; m_selected_layout->setSelected(true); }
+
+	void floodTiles();
 	void rearrangeTileGrid();
 };

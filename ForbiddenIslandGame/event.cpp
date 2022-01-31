@@ -4,6 +4,26 @@
 
 using namespace graphics;
 
+/*____________________________
+
+  >>>>> CREATE NEW EVENT <<<<<
+  ____________________________
+*/
+Event::Event(float dur, float del, float x, float y) : GameObject(x, y), m_duration(dur), m_delay(del)
+{ }
+
+
+bool Event::waiting()
+{
+	return m_elapsed_delay < m_delay;
+}
+
+
+/*________________________
+
+  >>>>> UPDATE EVENT <<<<<
+  ________________________
+*/
 void Event::update()
 {
 	if (!m_active)
@@ -20,11 +40,12 @@ void Event::update()
 	}
 }
 
-bool Event::waiting()
-{
-	return m_elapsed_delay < m_delay;
-}
 
+/*______________________________________
+
+  >>>>> DRAW FADE FROM BLACK EVENT <<<<<
+  ______________________________________
+*/
 void StateTransitionEvent::draw() 
 {
 	Brush br;
@@ -34,39 +55,53 @@ void StateTransitionEvent::draw()
 	drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, br);
 }
 
+/*_____________________________________
 
+  >>>>> CREATE NEW ZOOM OUT EVENT <<<<<
+  _____________________________________
+*/
+ZoomOutEvent::ZoomOutEvent(Treasure* t) : Event(3.0f, 0.0f), m_treas(t)
+{ }
 
-SmokeEvent::SmokeEvent(float x, float y) : Event(2.0f, 0.0f, x, y)
-{
-	m_orientation = RAND0TO1() * 180.0f - 90.0f;
-	m_scale = 0.8f + RAND0TO1() * 4.0f;
-}
-
-void SmokeEvent::draw() {
-	Brush br;
-	float s = m_elapsed_time / m_duration;
-	//br.texture = ASSET_PATH + string();
-	br.outline_opacity = 0.0f;
-	br.fill_opacity = 1.0f - s;
-	setScale(m_scale + s, m_scale + s);
-	setOrientation(m_orientation + s * 20.0f);
-	drawRect(m_posX, m_posY, PLAYER_SIZE, PLAYER_SIZE, br);
-	resetPose();
-}
-
-ZoomOutEvent::ZoomOutEvent(Treasure* t) : Event(3.0f , 0.0f), tr(t)
-{
-}
 
 void ZoomOutEvent::update()
 {
+	Event::update();
+
 	if (waiting())
 		return;
 
-	Event::update();
-
 	float s = m_elapsed_time / m_duration;
-	float w = tr->getWidth() * s;
-	float h = tr->getHeight() * s;
-	tr->setDimensions(w, h);
+	float w = m_treas->getWidth() * s;
+	float h = m_treas->getHeight() * s;
+	m_treas->setDimensions(w, h);
+}
+
+
+/*___________________________________
+
+  >>>>> CREATE NEW BUBBLE EVENT <<<<<
+  ___________________________________
+*/
+BubbleEvent::BubbleEvent(Tile* t) : Event(3.0f, 0.0f, t->getPosX(), t->getPosY())
+{
+	m_orientation = RAND0TO1() * 180.0f - 90.0f;
+	m_scale = 0.8f + RAND0TO1() * 4.0f;
+	m_posX = t->getLeft() + RAND0TO1() * TILE_SIZE;
+	m_posY = t->getUp() + RAND0TO1() * TILE_SIZE;
+	m_size = RAND0TO1() * BUBBLE_SIZE;
+}
+
+
+void BubbleEvent::draw() {
+	Brush br;
+	float s = m_elapsed_time / m_duration;
+	br.texture = BUBBLE_IMAGE;
+	br.outline_opacity = 0.0f;
+	br.fill_opacity = 0.5f;
+	setScale(m_scale + s, m_scale + s);
+	setOrientation(m_orientation + s * 20.0f);
+	m_posY -= (1.0f - s) * 0.1f;
+	drawRect(m_posX, m_posY, m_size, m_size, br);
+	resetPose();
 }
