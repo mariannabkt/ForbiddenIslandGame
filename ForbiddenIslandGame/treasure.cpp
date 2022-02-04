@@ -38,7 +38,7 @@ void Treasure::draw()
 {
 	Brush br;
 	br.outline_opacity = 0.0f;
-	br.fill_opacity = 0.7f + 1.0f * m_collected;
+	br.fill_opacity = 0.5f + 1.0f * m_collected;
 	br.texture = m_treas_img;
-	drawRect(m_posX, m_posY, m_width, m_height, br);
+	drawRect(m_posX, m_posY, 2.0f, 2.5f, br);
 }

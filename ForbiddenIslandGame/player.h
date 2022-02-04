@@ -21,7 +21,6 @@ class Player : public Clickable
 	bool m_active = false;
 	bool m_selected = false;
 	bool m_highlighted = false;
-	bool m_won = false;
 
 	int m_turn = 0;
 	string m_name;
@@ -42,6 +41,9 @@ public:
 	void init();
 	void draw();
 	void update();
+
+	bool allTreasCollected();
+	void move(Tile* t);
 	void isStartTile(Tile* t);
 	bool contains(float x, float y) override;
 
@@ -63,11 +65,6 @@ public:
 	void setPlayerTurn(int t) { m_turn = t; }
 
 	map<TREASURE_TYPE, Treasure*>& getTreasures() { return m_treasures; }
-
 	Action* getActions() { return m_actions; }
-
-	bool allTreasCollected();
-	void move(Tile* t);
-	void victory() { m_won = true; }
 };
 #endif

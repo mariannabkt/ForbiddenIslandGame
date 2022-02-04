@@ -20,11 +20,10 @@ void draw()
 }
 
 
-
 int  main(int argc, char** argv) 
 {
 	createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Forbbiden Island Game");
-	//setFullScreen(true);
+	setFullScreen(true);
 	
 	setCanvasSize(CANVAS_WIDTH, CANVAS_HEIGHT);
 	setCanvasScaleMode(CANVAS_SCALE_FIT);
@@ -35,9 +34,7 @@ int  main(int argc, char** argv)
 	Game* game = Game::getInstance();
 	game->setState(INIT);
 
-
 	startMessageLoop();
-
 
 	destroyWindow();
 	Game::releaseInstance();

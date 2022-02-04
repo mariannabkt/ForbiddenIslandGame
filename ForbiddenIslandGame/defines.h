@@ -1,9 +1,6 @@
 #pragma once
 #include <random>
 #include <stdlib.h>
-#include <thread>
-#include <chrono>
-
 
 using namespace std;
 
@@ -25,10 +22,6 @@ using namespace std;
 #define SETCOLOR(c,r,g,b) { c[0]=r; c[1]=g; c[2]=b; }
 #define RAND0TO1() ( rand() / (float)RAND_MAX )
 
-inline void sleep(int ms) {
-	this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
-
 
 enum GAME_STATE		{ INIT, LOADING, MAIN_MENU, SHOW_HOW_TO, CHOOSE_ISLAND, CHOOSE_DIF, CHOOSE_PLAYER, PLAYING, RETRY, INFO };
 enum HELP_PAGE		{ ONE, TWO, THREE, FOUR };
@@ -47,7 +40,6 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 #define TREASURES_FOLDER	".\\assets\\treasures\\"
 #define TILES_FOLDER		".\\assets\\tiles\\"
 #define LAYOUTS_FOLDER		".\\assets\\layouts\\"
-#define SEA_FRAMES_FOLDER	".\\assets\\sea frames\\"
 
 
 // BACKGROUNDS
@@ -79,23 +71,20 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 
 
 // FONTS
-#define SKYTREE_FONT      ".\\assets\\fonts\\Skytree.ttf"
 #define IMMORTAL_FONT     ".\\assets\\fonts\\IMMORTAL.ttf"
 #define FREESANS_FONT     ".\\assets\\fonts\\FreeSans.ttf"
-#define BLKCHCRY_FONT     ".\\assets\\fonts\\BLKCHCRY.TTF"
 #define SCRATCHED_FONT    ".\\assets\\fonts\\Scratched.ttf"
-#define THEYPERISHED_FONT ".\\assets\\fonts\\TheyPerished.ttf"
 
 
 // LAYOUTS IMAGES
 #define SKULL_IMAGE		".\\assets\\layouts\\skull island.png"
 #define HARPOON_IMAGE	".\\assets\\layouts\\harpoon hideout.png"
-#define ATOLL_IMAGE	".\\assets\\layouts\\atoll of decisions.png"
-#define BAY_IMAGE	".\\assets\\layouts\\bay of gulls.png"
+#define ATOLL_IMAGE		".\\assets\\layouts\\atoll of decisions.png"
+#define BAY_IMAGE		".\\assets\\layouts\\bay of gulls.png"
 #define SHIPWRECK_IMAGE	".\\assets\\layouts\\shipwreck bay.png"
-#define PALM_IMAGE	".\\assets\\layouts\\palm springs.png"
+#define PALM_IMAGE		".\\assets\\layouts\\palm springs.png"
 #define MUTINY_IMAGE	".\\assets\\layouts\\mutiny towers.png"
-#define DAVY_IMAGE	".\\assets\\layouts\\davy jones.png"
+#define DAVY_IMAGE		".\\assets\\layouts\\davy jones.png"
 
 
 // HELP PAGES
@@ -150,10 +139,8 @@ enum TREASURE_TYPE	{ FIRE, WATER, AIR, EARTH };
 #define VICTORY_SOUND	".\\assets\\sounds\\completion-of-a-level.wav"
 #define GAME_OVER_SOUND	".\\assets\\sounds\\game-over-orchestra.wav"
 #define FLOOD_SOUND		".\\assets\\sounds\\healing-water-spell-with-deep-hit.wav"
-#define SINK_SOUND		".\\assets\\sounds\\jump-into-the-water.wav"
 #define TREASURE_SOUND	".\\assets\\sounds\\magic-sweep-game-trophy.wav"
 #define	TOUCH_SOUND		".\\assets\\sounds\\short-button-click.wav"
-
 
 
 // TILES

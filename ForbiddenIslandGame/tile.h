@@ -45,6 +45,7 @@ public:
 	void flood() { m_flooded = true; }
 	void sink() { m_sunken = true; }
 
+	bool hasPlayer() const { return m_hasPlayer; }
 	void setTaken(bool a) { m_hasPlayer = a; }
 
 	void canPerformAction(bool c) { m_canPerformAction = c; }

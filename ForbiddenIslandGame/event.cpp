@@ -9,14 +9,8 @@ using namespace graphics;
   >>>>> CREATE NEW EVENT <<<<<
   ____________________________
 */
-Event::Event(float dur, float del, float x, float y) : GameObject(x, y), m_duration(dur), m_delay(del)
+Event::Event(float dur, float x, float y) : GameObject(x, y), m_duration(dur)
 { }
-
-
-bool Event::waiting()
-{
-	return m_elapsed_delay < m_delay;
-}
 
 
 /*________________________
@@ -28,16 +22,11 @@ void Event::update()
 {
 	if (!m_active)
 		return;
-	if (waiting())
-	{
-		m_elapsed_delay += getDeltaTime() / 1000.0f;
-		return;
-	}
+
 	m_elapsed_time += getDeltaTime() / 1000.0f;
+
 	if (m_elapsed_time > m_duration)
-	{
 		m_active = false;
-	}
 }
 
 
@@ -56,35 +45,12 @@ void StateTransitionEvent::draw()
 }
 
 
-/*_____________________________________
-
-  >>>>> CREATE NEW ZOOM OUT EVENT <<<<<
-  _____________________________________
-*/
-ZoomOutEvent::ZoomOutEvent(Treasure* t) : Event(3.0f, 0.0f), m_treas(t)
-{ }
-
-
-void ZoomOutEvent::update()
-{
-	Event::update();
-
-	if (waiting())
-		return;
-
-	float s = m_elapsed_time / m_duration;
-	float w = m_treas->getWidth() * s;
-	float h = m_treas->getHeight() * s;
-	m_treas->setDimensions(w, h);
-}
-
-
 /*___________________________________
 
   >>>>> CREATE NEW BUBBLE EVENT <<<<<
   ___________________________________
 */
-BubbleEvent::BubbleEvent(Tile* t) : Event(3.0f, 0.0f, t->getPosX(), t->getPosY())
+BubbleEvent::BubbleEvent(Tile* t) : Event(3.0f, t->getPosX(), t->getPosY())
 {
 	m_orientation = RAND0TO1() * 180.0f - 90.0f;
 	m_scale = 0.8f + RAND0TO1() * 4.0f;
@@ -118,7 +84,7 @@ void BubbleEvent::draw() {
   >>>>> CREATE NEW SINK EVENT <<<<<
   _________________________________
 */
-SinkEvent::SinkEvent(Tile* s) : Event(3.0f, 0.0f, s->getPosX(), s->getPosY())
+SinkEvent::SinkEvent(Tile* s) : Event(3.0f, s->getPosX(), s->getPosY())
 {
 }
 

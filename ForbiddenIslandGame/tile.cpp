@@ -4,6 +4,7 @@
 #include "defines.h"
 #include "action.h"
 #include "player.h"
+#include "tilesLayout.h"
 
 using namespace graphics;
 
@@ -86,12 +87,9 @@ void Tile::draw()
 
 	Brush water;
 	water.outline_opacity = 0.0f;
-	water.fill_opacity = 0.2f * (m_flooded && !m_sunken);
+	water.fill_opacity = 0.4f * (m_flooded && !m_sunken);
 	SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.8f);
 	drawRect(m_posX, m_posY, m_width, m_height, water);
-
-	/*if (m_hasTreasure && m_treasure->isCollected())
-		m_treasure->draw();*/
 }
 
 
@@ -123,6 +121,7 @@ void Tile::update()
 		{
 			// unflood
 			m_flooded = false;
+			game->unfloodTile();
 			// and if diver also move
 			if (p->getPlayerRole() == DIVER) {
 				t->setTaken(false);
@@ -139,7 +138,6 @@ void Tile::update()
 			m_treasure->setCollected(true);
 			Treasure* player_tr = p->getTreasures().find(m_treasure->getType())->second;
 			playSound(TREASURE_SOUND, 1.0f, false);
-			//game->addEvent(new ZoomOutEvent(m_treasure));
 			game->addEvent(new MotionEvent<Treasure*, Treasure*>(m_treasure, player_tr));
 			player_tr->setCollected(true);
 		}

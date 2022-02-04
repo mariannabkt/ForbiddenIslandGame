@@ -71,16 +71,16 @@ public:
 	Player* getActivePlayer() const { return m_active_player; }
 	void setActivePlayer(Player* pl) { m_active_player = pl; pl->setActive(true); }
 
-	void addEvent(Event* event) { m_events.push_back(event); }
-	
 	map<PLAYER_ROLE, Player*>& getPlayers() { return m_players; }
 	map<BUTTON_FUNC, Button*>& getButtons() { return m_buttons; }
 	vector<TilesLayout*>& getLayouts() { return m_layouts; }
 	map<string, Treasure*>& getTreasures() { return m_treasures; }
 	list<Event*>& getEvents() { return m_events; }
 	
+	void addEvent(Event* event) { m_events.push_back(event); }
 	void setLayout(TilesLayout* l) { m_selected_layout = l; m_selected_layout->setSelected(true); }
 
 	void floodTiles();
+	void unfloodTile() { m_flooded_tiles -= 1; };
 	void rearrangeTileGrid();
 };

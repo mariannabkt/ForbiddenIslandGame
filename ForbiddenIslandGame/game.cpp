@@ -189,6 +189,7 @@ void Game::setState(GAME_STATE new_state)
 		playMusic(FALLING_WATER, 1.0f, true, 1000);
 
 		m_result = 0;
+		m_flooded_tiles = 0;
 
 		// shuffle tiles for random flooding
 		shuffleTiles();
@@ -248,12 +249,6 @@ void Game::draw()
 		SETCOLOR(text.fill_color, 0.7f, 0.1f, 0.1f);
 		drawText(CANVAS_WIDTH / 2 - 6.5f, CANVAS_HEIGHT / 2, 2.0f, "LOADING ASSETS", text);
 		drawText(CANVAS_WIDTH / 2 - 4.5f, CANVAS_HEIGHT / 2 + 1.0f, 1.0f, "THIS MAY TAKE A MINUTE", text);
-
-		object.texture = ".\\assets\\loading spinner.png";
-		float x = getDeltaTime() / 1000.0f;
-		setOrientation(log(x / (1 - x)));
-		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 3.0f, 3.0f, 3.0f, object);
-		resetPose();
 		break;
 	}
 	case MAIN_MENU:
@@ -299,20 +294,20 @@ void Game::draw()
 	case PLAYING:
 		background.texture = PLAYING_BACKGROUND;
 		drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
+		{
+		Brush water;
+		water.outline_opacity = 0.0f;
+		SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.5f);
+		drawRect(0.7f, 6.5f - ((m_flooded_tiles / 4.0f) / 2.0f), 0.7f, m_flooded_tiles / 4.0f, water);
 
 		object.texture = WATER_LEVEL;
-		drawRect(0.7, 3.0f, 2.0f, 6.0f, object);
-		{
-			Brush water;
-			water.outline_opacity = 0.0f;
-			SETCOLOR(water.fill_color, 0.0f, 0.0f, 0.5f);
-			drawRect(0.7, 3.0f, 2.0f, m_flooded_tiles / 24, water);
-
-			int t = 0;
-			for (int i = 0; i < m_selected_layout->getRows(); ++i)
-				for (int j = 0; j < m_selected_layout->getCols(); ++j)
-					if (m_selected_layout->getLayout()[i][j])
-						m_tiles[t++]->draw();
+		drawRect(1.2f, 3.5f, 7.0f, 7.0f, object);
+		
+		int t = 0;
+		for (int i = 0; i < m_selected_layout->getRows(); ++i)
+			for (int j = 0; j < m_selected_layout->getCols(); ++j)
+				if (m_selected_layout->getLayout()[i][j])
+					m_tiles[t++]->draw();
 		}
 		for (auto p : m_players)
 			if (p.second->isSelected())
@@ -339,9 +334,10 @@ void Game::draw()
 		else {
 			background.texture = LOOSERS_BACKGROUND;
 			drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT, background);
-			drawText(CANVAS_WIDTH / 2 - 10.0f, CANVAS_HEIGHT / 2, 0.8f, "FOOLS   LANDING   OR/AND   TREASURE   TILE", text);
-			drawText(CANVAS_WIDTH / 2 - 10.0f, CANVAS_HEIGHT / 2 + 1.0f, 0.8f, "GOT   SUNK   WITHOUT   BEING   COLLECTED", text);
-			drawText(CANVAS_WIDTH / 2 - 10.0f, CANVAS_HEIGHT / 2 + 2.0f, 0.8f, "AND   NOW   YOU   CAN'T   GET   AWAY", text);
+			drawText(CANVAS_WIDTH / 2 - 8.0f, CANVAS_HEIGHT / 2 - 1.0f, 0.8f, "FOOLS   LANDING   OR/AND", text);
+			drawText(CANVAS_WIDTH / 2 - 8.0f, CANVAS_HEIGHT / 2, 0.8f, "TREASURE   TILE   GOT   SUNK", text);
+			drawText(CANVAS_WIDTH / 2 - 8.0f, CANVAS_HEIGHT / 2 + 1.0f, 0.8f, "WITHOUT   BEING   COLLECTED", text);
+			drawText(CANVAS_WIDTH / 2 - 8.0f, CANVAS_HEIGHT / 2 + 2.0f, 0.8f, "AND   NOW   YOU   CAN'T   GET   AWAY", text);
 		}
 		break;
 	}
@@ -350,10 +346,9 @@ void Game::draw()
 		if (b.second->isActive())
 			b.second->draw();
 
-	for (auto e : m_events)
-		if (e->isActive())
-			e->draw();
-		
+		for (auto e : m_events)
+			if (e->isActive())
+				e->draw();
 }
 
 
@@ -393,10 +388,6 @@ void Game::update()
 		processEvents();
 		for (int i = 0; i < TILES_COUNT; ++i)
 			m_tiles[i]->update();
-		break;
-
-	case RETRY:
-		updateButtons();
 		break;
 
 	default:
@@ -493,14 +484,14 @@ void Game::floodTiles()
 
 		if (t->getFlooded()) {
 			t->sink();
-			++m_flooded_tiles;
 			t->canPerformAction(false);
-			if (t->getImage() == XEFWTO || (t->hasTreasure() && !t->getTreasure()->isCollected()))
-				setState(RETRY);
+			if (t->hasPlayer() || t->getImage() == XEFWTO || (t->hasTreasure() && !t->getTreasure()->isCollected())) 
+				setState(RETRY);			
 			addEvent(new SinkEvent(t));
 		}
 		else if (!t->getSunken()) {
 			t->flood();
+			++m_flooded_tiles;
 			for (int i = 0; i < 10; ++i)
 				addEvent(new BubbleEvent(t));
 		}
@@ -633,8 +624,8 @@ void Game::releaseInstance()
 */
 Game::~Game() 
 {
-	for (auto demo : m_players)
-		delete demo.second;
+	for (auto player : m_players)
+		delete player.second;
 	m_players.clear();
 
 	for (auto button : m_buttons)
@@ -645,33 +636,15 @@ Game::~Game()
 		delete event;
 	m_events.clear();
 
+	for (auto treasure : m_treasures)
+		delete treasure.second;
+	m_treasures.clear();
+
+	for (auto layout : m_layouts)
+		delete layout;
+	m_layouts.clear();
+
 	for (int i = 0; i < TILES_COUNT; ++i)
 		delete m_tiles[i];
 
-	delete m_selected_layout;
-	m_selected_layout = nullptr;
 }
-
-
-/*
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 2; j++) {
-			Player* p = new Player();
-			m_players.push_front(p);
-
-			p->setPosX(CANVAS_WIDTH * (i + 0.5f) / 4.0f);
-			p->setPosY(CANVAS_HEIGHT * (j + 0.5f) / 2.0f);
-		}
-	}
-*/
-
-/*
-	Brush sq;
-	sq.outline_opacity = 0.3f;
-	sq.fill_opacity = 0.0f;
-	for (int i = 0; i < CANVAS_WIDTH / PLAYER_SIZE; i++) {
-		for (int j = 0; j < CANVAS_HEIGHT / PLAYER_SIZE; j++) {
-			drawRect((i + 0.5f) * PLAYER_SIZE, (j + 0.5f) * PLAYER_SIZE, PLAYER_SIZE, PLAYER_SIZE, sq);
-		}
-	}
-*/

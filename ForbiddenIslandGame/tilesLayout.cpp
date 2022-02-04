@@ -55,7 +55,7 @@ TilesLayout::TilesLayout(string img) : Clickable(img, LAYOUT_IMG_SIZE, LAYOUT_IM
 	else if (m_img == SHIPWRECK_IMAGE)
 	{
 		m_posX_offset = 2.5f;
-		m_posY_offset = 0.85f;
+		m_posY_offset = 0.9f;
 		setCords(CANVAS_WIDTH / 2 - 9.0f, CANVAS_HEIGHT / 2 + 4.0f);
 		initArray(m_rows = 8, m_cols = 4);
 		for (int i = 0; i < m_rows; i++)
