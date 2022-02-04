@@ -92,7 +92,6 @@ void Game::setState(GAME_STATE new_state)
 		preloadBitmaps(TREASURES_FOLDER);
 		preloadBitmaps(TILES_FOLDER);
 		preloadBitmaps(LAYOUTS_FOLDER);
-		//preloadBitmaps(SEA_FRAMES_FOLDER);
 		break;
 
 	case MAIN_MENU:
