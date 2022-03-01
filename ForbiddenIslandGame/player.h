@@ -1,13 +1,9 @@
-#ifndef P_H
-#define P_H
-
 #pragma once
 #include "defines.h"
 #include "treasure.h"
 #include "tile.h"
 #include <map> 
 
-class Action;
 
 /*
 	A player entity can collect treasures performing actions on tiles.
@@ -27,7 +23,7 @@ class Player : public Clickable
 	string m_icon_img;
 
 	PLAYER_ROLE m_role;
-	Action* m_actions;
+	class Action* m_actions;
 	Tile* m_standing_tile;
 	map<TREASURE_TYPE, Treasure*> m_treasures = map<TREASURE_TYPE, Treasure*>();
 
@@ -67,4 +63,3 @@ public:
 	map<TREASURE_TYPE, Treasure*>& getTreasures() { return m_treasures; }
 	Action* getActions() { return m_actions; }
 };
-#endif

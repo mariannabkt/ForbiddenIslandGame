@@ -92,6 +92,7 @@ void Game::setState(GAME_STATE new_state)
 		preloadBitmaps(TREASURES_FOLDER);
 		preloadBitmaps(TILES_FOLDER);
 		preloadBitmaps(LAYOUTS_FOLDER);
+		//preloadBitmaps(SEA_FRAMES_FOLDER);
 		break;
 
 	case MAIN_MENU:
@@ -484,8 +485,8 @@ void Game::floodTiles()
 		if (t->getFlooded()) {
 			t->sink();
 			t->canPerformAction(false);
-			if (t->hasPlayer() || t->getImage() == XEFWTO || (t->hasTreasure() && !t->getTreasure()->isCollected())) 
-				setState(RETRY);			
+			if (t->hasPlayer() || t->getImage() == XEFWTO || (t->hasTreasure() && !t->getTreasure()->isCollected()))
+				setState(RETRY);
 			addEvent(new SinkEvent(t));
 		}
 		else if (!t->getSunken()) {

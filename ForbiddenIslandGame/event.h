@@ -49,8 +49,7 @@ class MotionEvent : public Event
 	T2 m_stop;
 
 public:
-	MotionEvent(Player* p, Tile* t) : Event(1.0f), m_start(p), m_stop(t) {}
-	MotionEvent(Treasure* a, Treasure* b) : Event(3.0f), m_start(a), m_stop(b) {}
+	MotionEvent(T1 a, T2 b) : Event(2.0f), m_start(a), m_stop(b) {}
 	void update();
 };
 
